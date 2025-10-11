@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Vite - Purple Admin</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .container {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 40px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      p {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        opacity: 0.9;
+      }
+      .status {
+        background: rgba(76, 175, 80, 0.2);
+        border: 2px solid #4caf50;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 20px 0;
+      }
+      .btn {
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+        color: white;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        margin: 10px;
+        transition: transform 0.3s ease;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 Purple Admin</h1>
+      <p>¡Vite está funcionando correctamente!</p>
+
+      <div class="status">
+        <strong>✅ Estado:</strong> Servidor de desarrollo activo<br />
+        <strong>🌐 Puerto:</strong> 3000<br />
+        <strong>⚡ Vite:</strong> Configurado y funcionando
+      </div>
+
+      <a href="/" class="btn">Ir al Dashboard</a>
+      <a href="/src/views/auth/login.html" class="btn">Página de Login</a>
+
+      <p style="margin-top: 30px; font-size: 0.9rem; opacity: 0.7">
+        Si puedes ver esta página, significa que Vite está funcionando
+        correctamente.<br />
+        Ahora puedes acceder al dashboard principal en la ruta raíz.
+      </p>
+    </div>
+  </body>
+</html>

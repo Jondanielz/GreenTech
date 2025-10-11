@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>GreenTech</title>
+    <!-- plugins:css -->
+    <link
+      rel="stylesheet"
+      href="src/assets/vendors/mdi/css/materialdesignicons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="src/assets/vendors/ti-icons/css/themify-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="src/assets/vendors/css/vendor.bundle.base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="src/assets/vendors/font-awesome/css/font-awesome.min.css"
+    />
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link
+      rel="stylesheet"
+      href="src/assets/vendors/font-awesome/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="src/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css"
+    />
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="src/assets/css/style.css" />
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="src/assets/images/favicon.png" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      <div class="row p-0 m-0 proBanner" id="proBanner">
+        <div class="col-md-12 p-0 m-0">
+          <div
+            class="card-body card-body-padding d-flex align-items-center justify-content-between"
+          >
+            <div class="ps-lg-3">
+              <div class="d-flex align-items-center justify-content-between">
+                <p class="mb-0 font-weight-medium me-3 buy-now-text">
+                  Free 24/7 customer support, updates, and more with this
+                  template!
+                </p>
+                <a
+                  href="https://www.bootstrapdash.com/product/purple-bootstrap-admin-template/"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn me-2 buy-now-btn border-0"
+                  >Buy Now</a
+                >
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+              <a
+                href="https://www.bootstrapdash.com/product/purple-bootstrap-admin-template/"
+                title="BootstrapDash Home"
+                ><i class="mdi mdi-home me-3 text-white"></i
+              ></a>
+              <button
+                id="bannerClose"
+                class="btn border-0 p-0"
+                title="Cerrar banner"
+              >
+                <i class="mdi mdi-close text-white mr-0"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- partial:partials/_navbar.html -->
+      <nav
+        class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row"
+      >
+        <div
+          class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start"
+        >
+          <a class="navbar-brand brand-logo" href="/"
+            ><img src="src/assets/images/logo.svg" alt="logo"
+          /></a>
+          <a class="navbar-brand brand-logo-mini" href="/"
+            ><img src="src/assets/images/logo-mini.svg" alt="logo"
+          /></a>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-stretch">
+          <button
+            class="navbar-toggler navbar-toggler align-self-center"
+            type="button"
+            data-toggle="minimize"
+            title="Minimizar menú"
+          >
+            <span class="mdi mdi-menu"></span>
+          </button>
+          <div class="search-field d-none d-md-block">
+            <form class="d-flex align-items-center h-100" action="#">
+              <div class="input-group">
+                <div class="input-group-prepend bg-transparent">
+                  <i class="input-group-text border-0 mdi mdi-magnify"></i>
+                </div>
+                <input
+                  type="text"
+                  class="form-control bg-transparent border-0"
+                  placeholder="Search projects"
+                />
+              </div>
+            </form>
+          </div>
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item nav-profile dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                id="profileDropdown"
+                href="#"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <div class="nav-profile-img">
+                  <img src="src/assets/images/faces/face1.jpg" alt="image" />
+                  <span class="availability-status online"></span>
+                </div>
+                <div class="nav-profile-text">
+                  <p class="mb-1 text-black">David Greymaax</p>
+                </div>
+              </a>
+              <div
+                class="dropdown-menu navbar-dropdown"
+                aria-labelledby="profileDropdown"
+              >
+                <a class="dropdown-item" href="#">
+                  <i class="mdi mdi-cached me-2 text-success"></i> Activity Log
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">
+                  <i class="mdi mdi-logout me-2 text-primary"></i> Signout
+                </a>
+              </div>
+            </li>
+            <li class="nav-item d-none d-lg-block full-screen-link">
+              <a class="nav-link" title="Pantalla completa">
+                <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link count-indicator dropdown-toggle"
+                id="messageDropdown"
+                href="#"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="mdi mdi-email-outline"></i>
+                <span class="count-symbol bg-warning"></span>
+              </a>
+              <div
+                class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list"
+                aria-labelledby="messageDropdown"
+              >
+                <h6 class="p-3 mb-0">Messages</h6>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <img
+                      src="src/assets/images/faces/face4.jpg"
+                      alt="image"
+                      class="profile-pic"
+                    />
+                  </div>
+                  <div
+                    class="preview-item-content d-flex align-items-start flex-column justify-content-center"
+                  >
+                    <h6
+                      class="preview-subject ellipsis mb-1 font-weight-normal"
+                    >
+                      Mark send you a message
+                    </h6>
+                    <p class="text-gray mb-0">1 Minutes ago</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <img
+                      src="src/assets/images/faces/face2.jpg"
+                      alt="image"
+                      class="profile-pic"
+                    />
+                  </div>
+                  <div
+                    class="preview-item-content d-flex align-items-start flex-column justify-content-center"
+                  >
+                    <h6
+                      class="preview-subject ellipsis mb-1 font-weight-normal"
+                    >
+                      Cregh send you a message
+                    </h6>
+                    <p class="text-gray mb-0">15 Minutes ago</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <img
+                      src="src/assets/images/faces/face3.jpg"
+                      alt="image"
+                      class="profile-pic"
+                    />
+                  </div>
+                  <div
+                    class="preview-item-content d-flex align-items-start flex-column justify-content-center"
+                  >
+                    <h6
+                      class="preview-subject ellipsis mb-1 font-weight-normal"
+                    >
+                      Profile picture updated
+                    </h6>
+                    <p class="text-gray mb-0">18 Minutes ago</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <h6 class="p-3 mb-0 text-center">4 new messages</h6>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link count-indicator dropdown-toggle"
+                id="notificationDropdown"
+                href="#"
+                data-bs-toggle="dropdown"
+              >
+                <i class="mdi mdi-bell-outline"></i>
+                <span class="count-symbol bg-danger"></span>
+              </a>
+              <div
+                class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list"
+                aria-labelledby="notificationDropdown"
+              >
+                <h6 class="p-3 mb-0">Notifications</h6>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-success">
+                      <i class="mdi mdi-calendar"></i>
+                    </div>
+                  </div>
+                  <div
+                    class="preview-item-content d-flex align-items-start flex-column justify-content-center"
+                  >
+                    <h6 class="preview-subject font-weight-normal mb-1">
+                      Event today
+                    </h6>
+                    <p class="text-gray ellipsis mb-0">
+                      Just a reminder that you have an event today
+                    </p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-warning">
+                      <i class="mdi mdi-cog"></i>
+                    </div>
+                  </div>
+                  <div
+                    class="preview-item-content d-flex align-items-start flex-column justify-content-center"
+                  >
+                    <h6 class="preview-subject font-weight-normal mb-1">
+                      Settings
+                    </h6>
+                    <p class="text-gray ellipsis mb-0">Update dashboard</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-info">
+                      <i class="mdi mdi-link-variant"></i>
+                    </div>
+                  </div>
+                  <div
+                    class="preview-item-content d-flex align-items-start flex-column justify-content-center"
+                  >
+                    <h6 class="preview-subject font-weight-normal mb-1">
+                      Launch Admin
+                    </h6>
+                    <p class="text-gray ellipsis mb-0">New admin wow!</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <h6 class="p-3 mb-0 text-center">See all notifications</h6>
+              </div>
+            </li>
+            <li class="nav-item nav-logout d-none d-lg-block">
+              <a class="nav-link" href="#" title="Cerrar sesión">
+                <i class="mdi mdi-power"></i>
+              </a>
+            </li>
+            <li class="nav-item nav-settings d-none d-lg-block">
+              <a class="nav-link" href="#" title="Configuración">
+                <i class="mdi mdi-format-line-spacing"></i>
+              </a>
+            </li>
+          </ul>
+          <button
+            class="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
+            type="button"
+            data-toggle="offcanvas"
+            title="Abrir menú"
+          >
+            <span class="mdi mdi-menu"></span>
+          </button>
+        </div>
+      </nav>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <!-- El sidebar se cargará dinámicamente aquí según el rol del usuario -->
+        <div id="sidebar-container">
+          <!-- Cargando sidebar... -->
+        </div>
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">
+                <span
+                  class="page-title-icon bg-gradient-primary text-white me-2"
+                >
+                  <i class="mdi mdi-home"></i>
+                </span>
+                Dashboard
+              </h3>
+              <nav aria-label="breadcrumb">
+                <ul class="breadcrumb">
+                  <li class="breadcrumb-item active" aria-current="page">
+                    <span></span>Overview
+                    <i
+                      class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"
+                    ></i>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+            <div class="row">
+              <!-- Proyectos Activos -->
+              <div class="col-md-3 stretch-card grid-margin">
+                <div class="card bg-gradient-danger card-img-holder text-white">
+                  <div class="card-body">
+                    <img
+                      src="src/assets/images/dashboard/circle.svg"
+                      class="card-img-absolute"
+                      alt="circle-image"
+                    />
+                    <h4 class="font-weight-normal mb-3">
+                      Proyectos Activos
+                      <i class="mdi mdi-briefcase mdi-24px float-end"></i>
+                    </h4>
+                    <h2 class="mb-5" id="activeProjects">
+                      <span
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                      ></span>
+                    </h2>
+                    <h6 class="card-text" id="activeProjectsPercent">
+                      Cargando...
+                    </h6>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tareas Completadas -->
+              <div class="col-md-3 stretch-card grid-margin">
+                <div class="card bg-gradient-info card-img-holder text-white">
+                  <div class="card-body">
+                    <img
+                      src="src/assets/images/dashboard/circle.svg"
+                      class="card-img-absolute"
+                      alt="circle-image"
+                    />
+                    <h4 class="font-weight-normal mb-3">
+                      Tareas Completadas
+                      <i class="mdi mdi-check-circle mdi-24px float-end"></i>
+                    </h4>
+                    <h2 class="mb-5" id="completedTasks">
+                      <span
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                      ></span>
+                    </h2>
+                    <h6 class="card-text" id="completedTasksPercent">
+                      Cargando...
+                    </h6>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Usuarios Activos -->
+              <div class="col-md-3 stretch-card grid-margin">
+                <div
+                  class="card bg-gradient-success card-img-holder text-white"
+                >
+                  <div class="card-body">
+                    <img
+                      src="src/assets/images/dashboard/circle.svg"
+                      class="card-img-absolute"
+                      alt="circle-image"
+                    />
+                    <h4 class="font-weight-normal mb-3">
+                      Usuarios Activos
+                      <i
+                        class="mdi mdi-account-multiple mdi-24px float-end"
+                      ></i>
+                    </h4>
+                    <h2 class="mb-5" id="activeUsers">
+                      <span
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                      ></span>
+                    </h2>
+                    <h6 class="card-text" id="activeUsersPercent">
+                      Cargando...
+                    </h6>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Presupuesto Disponible -->
+              <div class="col-md-3 stretch-card grid-margin">
+                <div
+                  class="card bg-gradient-warning card-img-holder text-white"
+                >
+                  <div class="card-body">
+                    <img
+                      src="src/assets/images/dashboard/circle.svg"
+                      class="card-img-absolute"
+                      alt="circle-image"
+                    />
+                    <h4 class="font-weight-normal mb-3">
+                      Presupuesto Disponible
+                      <i class="mdi mdi-cash-multiple mdi-24px float-end"></i>
+                    </h4>
+                    <h2 class="mb-5" id="remainingBudget">
+                      <span
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                      ></span>
+                    </h2>
+                    <h6 class="card-text" id="remainingBudgetPercent">
+                      Cargando...
+                    </h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-7 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="clearfix">
+                      <h4 class="card-title float-start">
+                        Visit And Sales Statistics
+                      </h4>
+                      <div
+                        id="visit-sale-chart-legend"
+                        class="rounded-legend legend-horizontal legend-top-right float-end"
+                      ></div>
+                    </div>
+                    <canvas id="visit-sale-chart" class="mt-4"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Traffic Sources</h4>
+                    <div
+                      class="doughnutjs-wrapper d-flex justify-content-center"
+                    >
+                      <canvas id="traffic-chart"></canvas>
+                    </div>
+                    <div
+                      id="traffic-chart-legend"
+                      class="rounded-legend legend-vertical legend-bottom-left pt-4"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Tareas Recientes</h4>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Asignado a</th>
+                            <th>Tarea</th>
+                            <th>Estado</th>
+                            <th>Fecha de Vencimiento</th>
+                            <th>Proyecto</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td colspan="5" class="text-center">
+                              <div
+                                class="spinner-border text-primary"
+                                role="status"
+                              >
+                                <span class="visually-hidden">Cargando...</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:partials/_footer.html -->
+          <footer class="footer">
+            <div
+              class="d-sm-flex justify-content-center justify-content-sm-between"
+            >
+              <span
+                class="text-muted text-center text-sm-left d-block d-sm-inline-block"
+                >Copyright © 2023
+                <a
+                  href="https://www.bootstrapdash.com/"
+                  target="_blank"
+                  rel="noopener"
+                  >BootstrapDash</a
+                >. All rights reserved.</span
+              >
+              <span
+                class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"
+                >Hand-crafted & made with
+                <i class="mdi mdi-heart text-danger"></i
+              ></span>
+            </div>
+          </footer>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="src/assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="src/assets/vendors/chart.js/chart.umd.js"></script>
+    <script src="src/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="src/assets/js/off-canvas.js"></script>
+    <script src="src/assets/js/misc.js"></script>
+    <script src="src/assets/js/settings.js"></script>
+    <script src="src/assets/js/todolist.js"></script>
+    <script src="src/assets/js/jquery.cookie.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="src/assets/js/dashboard.js"></script>
+    <!-- End custom js for this page -->
+
+    <!-- Logout Confirmation Modal -->
+    <style>
+      #logoutModal .modal-content {
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      #logoutModal .logout-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: scaleIn 0.3s ease-out;
+      }
+
+      #logoutModal .logout-icon-wrapper i {
+        color: white !important;
+        font-size: 40px;
+      }
+
+      @keyframes scaleIn {
+        from {
+          transform: scale(0);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      #logoutModal .modal-title {
+        font-weight: 600;
+        color: #2c2c2c;
+      }
+
+      #logoutModal .modal-footer {
+        gap: 10px;
+      }
+
+      #logoutModal .btn {
+        min-width: 120px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: 500;
+      }
+    </style>
+
+    <div
+      class="modal fade"
+      id="logoutModal"
+      tabindex="-1"
+      aria-labelledby="logoutModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body text-center pt-0 px-4">
+            <div class="logout-icon-wrapper">
+              <i class="mdi mdi-logout"></i>
+            </div>
+            <h5 class="modal-title mb-2">Cerrar Sesión</h5>
+            <p class="text-muted mb-0">¿Estás seguro de que deseas salir?</p>
+          </div>
+          <div class="modal-footer border-0 justify-content-center pb-4 px-4">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-gradient-primary"
+              id="confirmLogoutBtn"
+            >
+              <i class="mdi mdi-check-circle me-1"></i>
+              Sí, salir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Data Loader & Auth Guard -->
+    <script type="module">
+      import AuthService from "./src/services/auth.js";
+      import DashboardService from "./src/services/dashboard.js";
+      import SidebarLoader from "./src/utils/sidebar-loader.js";
+
+      // Verificar autenticación
+      if (!AuthService.isAuthenticated()) {
+        console.log("⚠️ Usuario no autenticado, redirigiendo al login...");
+        window.location.href = "/src/views/auth/login.html";
+      } else {
+        // Función principal async para cargar todo
+        (async function initDashboard() {
+          const userData = AuthService.getCurrentUser();
+          console.log("✅ Usuario autenticado:", userData);
+
+          // Mostrar información del rol
+          const roleInfo = SidebarLoader.getRoleInfo();
+          console.log("🎭 Información del rol:", roleInfo);
+
+          // ========== CARGAR SIDEBAR DINÁMICAMENTE ==========
+          async function loadDynamicSidebar() {
+            try {
+              console.log("📂 Cargando sidebar dinámicamente...");
+              const loaded = await SidebarLoader.loadSidebar(
+                "/src/components/",
+                "#sidebar-container"
+              );
+
+              if (loaded) {
+                console.log("✅ Sidebar dinámico cargado correctamente");
+                // Actualizar información del usuario en el sidebar después de cargarlo
+                updateSidebarUserInfo();
+              } else {
+                console.error("❌ Error al cargar sidebar dinámico");
+              }
+            } catch (error) {
+              console.error("💥 Error crítico al cargar sidebar:", error);
+            }
+          }
+
+          // Función para actualizar info del usuario en el sidebar
+          function updateSidebarUserInfo() {
+            const sidebarUserName = document.getElementById("sidebarUserName");
+            if (sidebarUserName) {
+              sidebarUserName.textContent = userData.name || userData.username;
+            }
+
+            const sidebarUserRole = document.getElementById("sidebarUserRole");
+            if (sidebarUserRole) {
+              const roleName = userData.role_name || userData.role || "Usuario";
+              sidebarUserRole.textContent = roleName;
+            }
+          }
+
+          // Cargar sidebar antes de actualizar UI
+          await loadDynamicSidebar();
+
+          // Actualizar UI con datos del usuario
+          if (userData) {
+            // Actualizar nombre en navbar
+            const profileNameElements = document.querySelectorAll(
+              ".nav-profile-text p"
+            );
+            profileNameElements.forEach((el) => {
+              if (el.textContent.includes("David Greymaax")) {
+                el.textContent = userData.name || userData.username;
+              }
+            });
+
+            // Actualizar nombre en sidebar
+            const sidebarNameElements = document.querySelectorAll(
+              ".nav-profile-text span"
+            );
+            sidebarNameElements.forEach((el) => {
+              if (el.classList.contains("font-weight-bold")) {
+                el.textContent = userData.name || userData.username;
+              }
+            });
+
+            // Actualizar rol en sidebar
+            const roleElements = document.querySelectorAll(
+              ".nav-profile-text .text-secondary"
+            );
+            roleElements.forEach((el) => {
+              // Usar role_name de la base de datos
+              const roleName = userData.role_name || userData.role || "Usuario";
+              el.textContent = roleName;
+            });
+
+            // Actualizar rol específico en sidebar si existe
+            const sidebarUserRole2 = document.getElementById("sidebarUserRole");
+            if (sidebarUserRole2) {
+              const roleName = userData.role_name || userData.role || "Usuario";
+              sidebarUserRole2.textContent = roleName;
+            }
+          }
+
+          // ========== CARGAR DATOS DEL DASHBOARD ==========
+          async function loadDashboardData() {
+            console.log("📊 Cargando datos del dashboard...");
+
+            try {
+              const response = await DashboardService.getDashboardData();
+
+              if (response.success) {
+                const data = response.data;
+                console.log("✅ Datos del dashboard cargados:", data);
+
+                // Actualizar estadísticas generales
+                updateGeneralStats(data.general_stats);
+
+                // Actualizar estadísticas financieras
+                updateFinancialStats(data.financial_stats);
+
+                // Actualizar tareas recientes
+                updateRecentTasks(data.recent_tasks);
+
+                // Actualizar proyectos recientes (si tienes sección)
+                if (data.recent_projects) {
+                  console.log("📁 Proyectos recientes:", data.recent_projects);
+                }
+              } else {
+                console.error(
+                  "❌ Error al cargar dashboard:",
+                  response.message
+                );
+                showDashboardError(response.message);
+              }
+            } catch (error) {
+              console.error("💥 Error crítico en dashboard:", error);
+              showDashboardError("Error de conexión con el servidor");
+            }
+          }
+
+          // Actualizar estadísticas generales
+          function updateGeneralStats(stats) {
+            if (!stats) return;
+
+            // Proyectos Activos
+            const activeProjects = stats.active_projects || 0;
+            const totalProjects = stats.total_projects || 0;
+            const projectsPercent = DashboardService.calculatePercentage(
+              activeProjects,
+              totalProjects
+            );
+
+            document.getElementById("activeProjects").textContent =
+              DashboardService.formatNumber(activeProjects);
+            document.getElementById(
+              "activeProjectsPercent"
+            ).textContent = `${projectsPercent}% del total (${totalProjects})`;
+
+            // Tareas Completadas
+            const completedTasks = stats.completed_tasks || 0;
+            const totalTasks = stats.total_tasks || 0;
+            const tasksPercent = DashboardService.calculatePercentage(
+              completedTasks,
+              totalTasks
+            );
+
+            document.getElementById("completedTasks").textContent =
+              DashboardService.formatNumber(completedTasks);
+            document.getElementById(
+              "completedTasksPercent"
+            ).textContent = `${tasksPercent}% completadas (${totalTasks} totales)`;
+
+            // Usuarios Activos
+            const activeUsers = stats.active_users || 0;
+            const totalUsers = stats.total_users || 0;
+            const usersPercent = DashboardService.calculatePercentage(
+              activeUsers,
+              totalUsers
+            );
+
+            document.getElementById("activeUsers").textContent =
+              DashboardService.formatNumber(activeUsers);
+            document.getElementById(
+              "activeUsersPercent"
+            ).textContent = `${usersPercent}% del total (${totalUsers})`;
+          }
+
+          // Actualizar estadísticas financieras
+          function updateFinancialStats(stats) {
+            if (!stats) return;
+
+            const remainingBudget = parseFloat(stats.remaining_budget || 0);
+            const totalBudget = parseFloat(stats.total_budget || 0);
+            const budgetPercent = DashboardService.calculatePercentage(
+              remainingBudget,
+              totalBudget
+            );
+
+            document.getElementById("remainingBudget").textContent =
+              DashboardService.formatCurrency(remainingBudget);
+            document.getElementById(
+              "remainingBudgetPercent"
+            ).textContent = `${budgetPercent}% disponible`;
+          }
+
+          // Actualizar tareas recientes en la tabla
+          function updateRecentTasks(tasks) {
+            if (!tasks || tasks.length === 0) return;
+
+            const tbody = document.querySelector(".table tbody");
+            if (!tbody) return;
+
+            tbody.innerHTML = "";
+
+            tasks.forEach((task) => {
+              const statusClass = DashboardService.getStatusClass(task.status);
+              const priorityClass = DashboardService.getPriorityClass(
+                task.priority
+              );
+              const dueDate = task.due_date
+                ? DashboardService.formatDate(task.due_date)
+                : "Sin fecha";
+
+              const row = `
+              <tr>
+                <td>
+                  <span class="text-muted">${
+                    task.assignee_name || "Sin asignar"
+                  }</span>
+                </td>
+                <td>${task.title || "Sin título"}</td>
+                <td>
+                  <label class="badge badge-gradient-${statusClass}">${
+                task.status
+              }</label>
+                </td>
+                <td>${dueDate}</td>
+                <td>${task.project_name || "Sin proyecto"}</td>
+              </tr>
+            `;
+
+              tbody.innerHTML += row;
+            });
+          }
+
+          // Mostrar error en el dashboard
+          function showDashboardError(message) {
+            const errorHtml = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Error:</strong> ${message}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          `;
+
+            const contentWrapper = document.querySelector(".content-wrapper");
+            if (contentWrapper) {
+              contentWrapper.insertAdjacentHTML("afterbegin", errorHtml);
+            }
+          }
+
+          // Cargar datos al iniciar
+          loadDashboardData();
+
+          // Inicializar modal de Bootstrap
+          const logoutModal = new bootstrap.Modal(
+            document.getElementById("logoutModal")
+          );
+
+          // Función para mostrar modal de logout
+          function showLogoutModal(e) {
+            e.preventDefault();
+            logoutModal.show();
+          }
+
+          // Configurar botón de logout en navbar
+          const logoutButtons = document.querySelectorAll(
+            '.nav-logout a, a[href="#"]:has(i.mdi-power)'
+          );
+          logoutButtons.forEach((btn) => {
+            btn.addEventListener("click", showLogoutModal);
+          });
+
+          // Configurar logout en dropdown
+          const dropdownLogout = document.querySelector(
+            ".dropdown-item:has(i.mdi-logout)"
+          );
+          if (dropdownLogout) {
+            dropdownLogout.addEventListener("click", showLogoutModal);
+          }
+
+          // Confirmar logout
+          document
+            .getElementById("confirmLogoutBtn")
+            .addEventListener("click", () => {
+              logoutModal.hide();
+
+              // Mostrar mensaje de despedida
+              const btn = document.getElementById("confirmLogoutBtn");
+              btn.innerHTML =
+                '<i class="mdi mdi-loading mdi-spin"></i> Cerrando...';
+              btn.disabled = true;
+
+              // Cerrar sesión después de un breve delay
+              setTimeout(() => {
+                AuthService.logout();
+              }, 300);
+            });
+        })(); // Ejecutar función async inmediatamente
+      }
+    </script>
+  </body>
+</html>
