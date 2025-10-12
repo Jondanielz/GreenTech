@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test - Conexión API</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+      }
+      .status {
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+      .success {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+      }
+      .error {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+      }
+      .loading {
+        background: #d1ecf1;
+        border: 1px solid #bee5eb;
+        color: #0c5460;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      pre {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+      .info {
+        background: #e7f3ff;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔍 Test de Conexión a la API</h1>
+
+    <div class="info">
+      <h3>Instrucciones:</h3>
+      <ol>
+        <li>
+          Asegúrate de que <strong>Apache</strong> está corriendo en XAMPP
+        </li>
+        <li>Asegúrate de que <strong>MySQL</strong> está corriendo en XAMPP</li>
+        <li>Haz click en el botón "Probar Conexión"</li>
+      </ol>
+    </div>
+
+    <button onclick="testConnection()">🔄 Probar Conexión a la API</button>
+
+    <div id="result"></div>
+
+    <script>
+      async function testConnection() {
+        const resultDiv = document.getElementById("result");
+        resultDiv.innerHTML =
+          '<div class="status loading">⏳ Probando conexión...</div>';
+
+        try {
+          // Test 1: Probar endpoint raíz
+          console.log(
+            "📡 Intentando conectar a: http://localhost/purple-free/api"
+          );
+
+          const response = await fetch("http://localhost/purple-free/api", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          });
+
+          console.log("✅ Respuesta recibida:", response.status);
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+
+          const data = await response.json();
+          console.log("📦 Datos recibidos:", data);
+
+          // Mostrar resultado exitoso
+          resultDiv.innerHTML = `
+                    <div class="status success">
+                        <h3>✅ Conexión Exitosa</h3>
+                        <p><strong>Estado HTTP:</strong> ${response.status}</p>
+                        <p><strong>API:</strong> ${data.message || "OK"}</p>
+                        <p><strong>Versión:</strong> ${
+                          data.version || "N/A"
+                        }</p>
+                        <h4>Datos Completos:</h4>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+        } catch (error) {
+          console.error("❌ Error:", error);
+
+          // Determinar el tipo de error
+          let errorMessage = "";
+          let suggestion = "";
+
+          if (
+            error.message === "Failed to fetch" ||
+            error.name === "TypeError"
+          ) {
+            errorMessage = "No se puede conectar con el servidor";
+            suggestion = `
+                        <h4>Soluciones:</h4>
+                        <ol>
+                            <li><strong>Inicia Apache en XAMPP</strong>
+                                <ul>
+                                    <li>Abre el Panel de Control de XAMPP</li>
+                                    <li>Click en "Start" junto a Apache</li>
+                                    <li>Espera a que el botón cambie a "Stop" (con fondo verde)</li>
+                                </ul>
+                            </li>
+                            <li><strong>Inicia MySQL en XAMPP</strong>
+                                <ul>
+                                    <li>Click en "Start" junto a MySQL</li>
+                                </ul>
+                            </li>
+                            <li><strong>Verifica la URL</strong>
+                                <ul>
+                                    <li>Abre en el navegador: <a href="http://localhost/purple-free/api" target="_blank">http://localhost/purple-free/api</a></li>
+                                    <li>Debería mostrar información de la API</li>
+                                </ul>
+                            </li>
+                            <li><strong>Verifica que el proyecto esté en:</strong>
+                                <ul>
+                                    <li>C:\\xampp\\htdocs\\purple-free</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    `;
+          } else if (error.message.includes("404")) {
+            errorMessage = "API no encontrada (Error 404)";
+            suggestion = `
+                        <h4>Soluciones:</h4>
+                        <ul>
+                            <li>Verifica que la carpeta del proyecto esté en: <code>C:\\xampp\\htdocs\\purple-free</code></li>
+                            <li>Verifica que existe el archivo: <code>api/index.php</code></li>
+                            <li>Verifica que existe el archivo: <code>.htaccess</code></li>
+                        </ul>
+                    `;
+          } else if (error.message.includes("500")) {
+            errorMessage = "Error interno del servidor (Error 500)";
+            suggestion = `
+                        <h4>Soluciones:</h4>
+                        <ul>
+                            <li>Revisa el log de errores de Apache en XAMPP</li>
+                            <li>Verifica la configuración de PHP en <code>api/config/database.php</code></li>
+                            <li>Asegúrate de que MySQL esté corriendo</li>
+                        </ul>
+                    `;
+          }
+
+          resultDiv.innerHTML = `
+                    <div class="status error">
+                        <h3>❌ Error de Conexión</h3>
+                        <p><strong>Error:</strong> ${errorMessage}</p>
+                        <p><strong>Detalle:</strong> ${error.message}</p>
+                        ${suggestion}
+                        <h4>Detalles Técnicos:</h4>
+                        <pre>${error.stack || error.toString()}</pre>
+                    </div>
+                `;
+        }
+      }
+
+      // Auto-test al cargar la página
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          console.log("🚀 Ejecutando test automático...");
+          testConnection();
+        }, 500);
+      });
+    </script>
+  </body>
+</html>

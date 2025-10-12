@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Mis Proyectos - GreenTech</title>
+    <!-- plugins:css -->
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/mdi/css/materialdesignicons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/ti-icons/css/themify-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/css/vendor.bundle.base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/font-awesome/css/font-awesome.min.css"
+    />
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../../assets/images/favicon.png" />
+    <!-- Estilos personalizados -->
+    <style>
+      .project-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        height: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      }
+      .project-header {
+        position: relative;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+      .project-status-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      .project-role-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.7rem;
+        background: rgba(255, 255, 255, 0.3);
+        margin-top: 0.5rem;
+      }
+      .project-body {
+        padding: 1.5rem;
+      }
+      .project-stat {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.75rem;
+      }
+      .project-stat i {
+        font-size: 1.25rem;
+        margin-right: 0.5rem;
+      }
+      .project-progress {
+        margin: 1rem 0;
+      }
+      .project-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e9ecef;
+      }
+      .project-action-btn {
+        flex: 1;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+      }
+      .project-action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .btn-view {
+        background: #4e73df;
+        color: white;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+      }
+      .empty-state i {
+        font-size: 4rem;
+        color: #ccc;
+        margin-bottom: 1rem;
+      }
+      .filters-bar {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      #loadingSpinner {
+        text-align: center;
+        padding: 3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- Navbar Container -->
+      <div id="navbar-container">
+        <!-- Cargando navbar... -->
+      </div>
+
+      <div class="container-fluid page-body-wrapper">
+        <!-- Sidebar Container -->
+        <div id="sidebar-container">
+          <!-- Cargando sidebar... -->
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-panel mt-5">
+          <div class="content-wrapper">
+            <!-- Page Header -->
+            <div class="page-header">
+              <h3 class="page-title">
+                <span
+                  class="page-title-icon bg-gradient-success text-white me-2"
+                >
+                  <i class="mdi mdi-folder-account"></i>
+                </span>
+                Mis Proyectos
+              </h3>
+              <nav aria-label="breadcrumb">
+                <ul class="breadcrumb">
+                  <li class="breadcrumb-item active" aria-current="page">
+                    <span id="projectCount" class="badge bg-success"
+                      >0 proyectos</span
+                    >
+                  </li>
+                </ul>
+              </nav>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filters-bar">
+              <div class="filter-group">
+                <label for="filterStatus" class="mb-0">Estado:</label>
+                <select id="filterStatus" class="form-select form-select-sm">
+                  <option value="">Todos</option>
+                  <option value="Planificacion">Planificación</option>
+                  <option value="En progreso">En Progreso</option>
+                  <option value="Completado">Completado</option>
+                  <option value="En espera">En Espera</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="filterSearch" class="mb-0">Buscar:</label>
+                <input
+                  type="text"
+                  id="filterSearch"
+                  class="form-control form-control-sm"
+                  placeholder="Nombre del proyecto..."
+                />
+              </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loadingSpinner" style="display: none">
+              <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+              <p class="mt-2">Cargando tus proyectos...</p>
+            </div>
+
+            <!-- Projects Grid -->
+            <div id="projectsGrid" class="row">
+              <!-- Los proyectos se cargarán aquí dinámicamente -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display: none">
+              <i class="mdi mdi-folder-open"></i>
+              <h4>No estás asignado a ningún proyecto</h4>
+              <p class="text-muted">
+                Aún no has sido asignado a ningún proyecto. Contacta con tu
+                coordinador o administrador.
+              </p>
+            </div>
+          </div>
+
+          <!-- Footer Container -->
+          <div id="footer-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Logout -->
+    <div
+      class="modal fade"
+      id="logoutModal"
+      tabindex="-1"
+      aria-labelledby="logoutModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="logoutModalLabel">
+              <i class="mdi mdi-logout"></i> Cerrar Sesión
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>¿Estás seguro de que deseas cerrar sesión?</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="confirmLogoutBtn">
+              Sí, cerrar sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- plugins:js -->
+    <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- inject:js -->
+    <script src="../../assets/js/off-canvas.js"></script>
+    <script src="../../assets/js/misc.js"></script>
+    <script src="../../assets/js/settings.js"></script>
+    <script src="../../assets/js/todolist.js"></script>
+    <!-- endinject -->
+
+    <!-- Script para el banner -->
+    <script>
+      (function () {
+        const bannerClose = document.querySelector("#bannerClose");
+        if (bannerClose) {
+          bannerClose.addEventListener("click", function () {
+            const proBanner = document.querySelector("#proBanner");
+            if (proBanner) {
+              proBanner.classList.add("d-none");
+            }
+          });
+        }
+      })();
+    </script>
+
+    <!-- Script Principal -->
+    <script type="module">
+      import AuthService from "../../services/auth.js";
+      import ProjectService from "../../services/projects.js";
+      import ComponentsLoader from "../../utils/components-loader.js";
+
+      // Verificar autenticación
+      if (!AuthService.isAuthenticated()) {
+        window.location.href = "/src/views/auth/login.html";
+      } else {
+        const userData = AuthService.getCurrentUser();
+
+        // Cargar componentes
+        ComponentsLoader.loadCommonComponents({
+          navbar: true,
+          sidebar: true,
+          footer: true,
+          basePath: "../../components/",
+        });
+
+        let allProjects = [];
+        let filteredProjects = [];
+
+        // Cargar proyectos del usuario
+        async function loadMyProjects() {
+          const spinner = document.getElementById("loadingSpinner");
+          const grid = document.getElementById("projectsGrid");
+          const emptyState = document.getElementById("emptyState");
+
+          try {
+            spinner.style.display = "block";
+            grid.innerHTML = "";
+            emptyState.style.display = "none";
+
+            const response = await ProjectService.getMyProjects();
+
+            if (response.success) {
+              allProjects = response.data || [];
+              filteredProjects = [...allProjects];
+              renderProjects(filteredProjects);
+              updateProjectCount(filteredProjects.length);
+            } else {
+              showError(response.message || "Error al cargar proyectos");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            showError("Error de conexión con el servidor");
+          } finally {
+            spinner.style.display = "none";
+          }
+        }
+
+        // Renderizar proyectos
+        function renderProjects(projects) {
+          const grid = document.getElementById("projectsGrid");
+          const emptyState = document.getElementById("emptyState");
+
+          if (!projects || projects.length === 0) {
+            grid.innerHTML = "";
+            emptyState.style.display = "block";
+            return;
+          }
+
+          emptyState.style.display = "none";
+          grid.innerHTML = projects
+            .map((project) => createProjectCard(project))
+            .join("");
+        }
+
+        // Crear tarjeta de proyecto
+        function createProjectCard(project) {
+          const progress = ProjectService.calculateProgress(project);
+          const statusClass = ProjectService.getStatusClass(project.status);
+          const daysText = ProjectService.getDaysRemainingText(
+            project.end_date,
+            project.status
+          );
+          const isOverdue = ProjectService.isOverdue(
+            project.end_date,
+            project.status
+          );
+
+          // Mostrar rol del usuario en el proyecto (si está disponible)
+          const userRole = project.user_role_in_project || "";
+
+          return `
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
+              <div class="card project-card">
+                <div class="project-header">
+                  <span class="project-status-badge bg-${statusClass}">
+                    ${project.status}
+                  </span>
+                  <h5 class="mb-2">${project.name}</h5>
+                  <small>Creado: ${ProjectService.formatDate(
+                    project.created_at
+                  )}</small>
+                  ${
+                    userRole
+                      ? `<div class="project-role-badge">${userRole}</div>`
+                      : ""
+                  }
+                </div>
+                <div class="project-body">
+                  <p class="text-muted mb-3" style="font-size: 0.875rem;">
+                    ${project.description.substring(0, 100)}${
+            project.description.length > 100 ? "..." : ""
+          }
+                  </p>
+                  
+                  <div class="project-stat">
+                    <i class="mdi mdi-account-circle text-primary"></i>
+                    <span><strong>Creador:</strong> ${
+                      project.creator_name || "N/A"
+                    }</span>
+                  </div>
+                  
+                  <div class="project-stat">
+                    <i class="mdi mdi-clipboard-check text-success"></i>
+                    <span><strong>Tareas:</strong> ${
+                      project.completed_tasks || 0
+                    }/${project.total_tasks || 0} completadas</span>
+                  </div>
+                  
+                  <div class="project-stat">
+                    <i class="mdi mdi-account-multiple text-info"></i>
+                    <span><strong>Miembros:</strong> ${
+                      project.members_count || 0
+                    }</span>
+                  </div>
+                  
+                  ${
+                    project.budget && project.budget > 0
+                      ? `
+                  <div class="project-stat">
+                    <i class="mdi mdi-currency-usd text-warning"></i>
+                    <span><strong>Presupuesto:</strong> ${ProjectService.formatBudget(
+                      project.budget
+                    )}</span>
+                  </div>
+                  `
+                      : ""
+                  }
+                  
+                  <div class="project-progress">
+                    <div class="d-flex justify-content-between mb-1">
+                      <small>Progreso</small>
+                      <small><strong>${progress}%</strong></small>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                      <div
+                        class="progress-bar bg-${
+                          progress === 100
+                            ? "success"
+                            : progress > 50
+                            ? "info"
+                            : "warning"
+                        }"
+                        role="progressbar"
+                        style="width: ${progress}%"
+                      ></div>
+                    </div>
+                  </div>
+                  
+                  ${
+                    project.end_date
+                      ? `
+                  <div class="text-center mt-2">
+                    <small class="${isOverdue ? "text-danger" : "text-muted"}">
+                      <i class="mdi mdi-clock-outline"></i> ${daysText}
+                    </small>
+                  </div>
+                  `
+                      : ""
+                  }
+                  
+                  <div class="project-actions">
+                    <button class="project-action-btn btn-view" onclick="viewProject(${
+                      project.id
+                    })">
+                      <i class="mdi mdi-eye"></i> Ver Detalles
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // Ver detalles del proyecto
+        window.viewProject = function (id) {
+          window.location.href = `/src/views/projects/project-details.html?id=${id}`;
+        };
+
+        // Filtros
+        document
+          .getElementById("filterStatus")
+          .addEventListener("change", applyFilters);
+        document
+          .getElementById("filterSearch")
+          .addEventListener("input", applyFilters);
+
+        function applyFilters() {
+          const statusFilter = document.getElementById("filterStatus").value;
+          const searchFilter = document
+            .getElementById("filterSearch")
+            .value.toLowerCase();
+
+          filteredProjects = allProjects.filter((project) => {
+            const matchesStatus =
+              !statusFilter || project.status === statusFilter;
+            const matchesSearch =
+              !searchFilter ||
+              project.name.toLowerCase().includes(searchFilter);
+            return matchesStatus && matchesSearch;
+          });
+
+          renderProjects(filteredProjects);
+          updateProjectCount(filteredProjects.length);
+        }
+
+        // Actualizar contador
+        function updateProjectCount(count) {
+          document.getElementById(
+            "projectCount"
+          ).textContent = `${count} proyecto${count !== 1 ? "s" : ""}`;
+        }
+
+        // Mostrar mensajes
+        function showError(message) {
+          alert("Error: " + message);
+        }
+
+        // Cargar proyectos al iniciar
+        loadMyProjects();
+
+        // Configurar logout
+        const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+        if (confirmLogoutBtn) {
+          confirmLogoutBtn.addEventListener("click", () => {
+            const logoutModal = bootstrap.Modal.getInstance(
+              document.getElementById("logoutModal")
+            );
+            if (logoutModal) logoutModal.hide();
+
+            confirmLogoutBtn.innerHTML =
+              '<i class="mdi mdi-loading mdi-spin"></i> Cerrando...';
+            confirmLogoutBtn.disabled = true;
+
+            setTimeout(() => {
+              AuthService.logout();
+            }, 300);
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -89,6 +89,11 @@ class AuthController {
 
                 // Remover contraseña de la respuesta
                 unset($row['password']);
+                
+                // Asegurar que el campo se llame user_id para consistencia en el backend
+                if (isset($row['id']) && !isset($row['user_id'])) {
+                    $row['user_id'] = $row['id'];
+                }
 
                 return [
                     'success' => true,
@@ -191,6 +196,11 @@ class AuthController {
                 if (isset($userData['permissions'])) {
                     $userData['permissions'] = json_decode($userData['permissions'], true);
                 }
+                
+                // Asegurar que el campo se llame user_id para consistencia en el backend
+                if (isset($userData['id']) && !isset($userData['user_id'])) {
+                    $userData['user_id'] = $userData['id'];
+                }
 
                 return [
                     'success' => true,
@@ -253,6 +263,11 @@ class AuthController {
             // Token válido
             unset($userData['password']); // No enviar contraseña
             
+            // Asegurar que el campo se llame user_id para consistencia en el backend
+            if (isset($userData['id']) && !isset($userData['user_id'])) {
+                $userData['user_id'] = $userData['id'];
+            }
+            
             return [
                 'success' => true,
                 'message' => 'Sesión válida',
@@ -292,6 +307,11 @@ class AuthController {
                 // Parsear permisos
                 if (isset($fullUserData['permissions'])) {
                     $fullUserData['permissions'] = json_decode($fullUserData['permissions'], true);
+                }
+                
+                // Asegurar que el campo se llame user_id para consistencia en el backend
+                if (isset($fullUserData['id']) && !isset($fullUserData['user_id'])) {
+                    $fullUserData['user_id'] = $fullUserData['id'];
                 }
                 
                 return [

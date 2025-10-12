@@ -10,6 +10,8 @@ require_once 'config/cors.php';
 // Incluir controladores
 require_once 'controllers/AuthController.php';
 require_once 'controllers/DashboardController.php';
+require_once 'controllers/ProjectController.php';
+require_once 'controllers/TaskController.php';
 
 // Manejo de errores
 error_reporting(E_ALL);
@@ -40,6 +42,32 @@ function getBearerToken() {
     }
     
     return null;
+}
+
+/**
+ * Función auxiliar para verificar autenticación y obtener usuario del token
+ */
+function getUserFromToken() {
+    $token = getBearerToken();
+    
+    if (!$token) {
+        sendResponse([
+            'success' => false,
+            'message' => 'Token no proporcionado'
+        ], 401);
+    }
+    
+    $authController = new AuthController();
+    $result = $authController->verifySession($token);
+    
+    if (!$result['success']) {
+        sendResponse([
+            'success' => false,
+            'message' => 'Token inválido o expirado'
+        ], 401);
+    }
+    
+    return $result['user'];
 }
 
 try {
@@ -158,6 +186,147 @@ try {
         }
     }
     
+    // ========== RUTAS DE PROYECTOS ==========
+    else if (isset($uri_parts[0]) && $uri_parts[0] === 'projects') {
+        require_once 'config/database.php';
+        $database = new Database();
+        $db = $database->getConnection();
+        $projectController = new ProjectController($db);
+        
+        $userData = getUserFromToken();
+        $action = $uri_parts[1] ?? '';
+        
+        switch ($action) {
+            // GET/POST /api/projects - Obtener todos los proyectos o crear uno nuevo
+            case '':
+                if ($method === 'GET') {
+                    // Si es admin, obtener todos, si no, obtener los del usuario
+                    if ($userData['role_id'] == 1) {
+                        $response = $projectController->getAllProjects($userData);
+                    } else {
+                        $response = $projectController->getUserProjects($userData);
+                    }
+                    sendResponse($response, 200);
+                } else if ($method === 'POST') {
+                    // Crear nuevo proyecto
+                    $response = $projectController->createProject($input, $userData);
+                    $statusCode = $response['success'] ? 201 : 400;
+                    sendResponse($response, $statusCode);
+                } else {
+                    sendResponse(['error' => 'Método no permitido. Use GET o POST'], 405);
+                }
+                break;
+            
+            // GET /api/projects/my - Obtener proyectos del usuario
+            case 'my':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $response = $projectController->getUserProjects($userData);
+                sendResponse($response, 200);
+                break;
+            
+            // GET /api/projects/{id} - Obtener proyecto por ID
+            case (is_numeric($action) ? $action : ''):
+                if ($method === 'GET') {
+                    $response = $projectController->getProjectById($action, $userData);
+                    sendResponse($response, 200);
+                } 
+                else if ($method === 'PUT' || $method === 'PATCH') {
+                    $response = $projectController->updateProject($action, $input, $userData);
+                    sendResponse($response, 200);
+                } 
+                else if ($method === 'DELETE') {
+                    $response = $projectController->cancelProject($action, $userData);
+                    sendResponse($response, 200);
+                } 
+                else {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                break;
+            
+            // Ruta no encontrada
+            default:
+                sendResponse([
+                    'error' => 'Ruta no encontrada',
+                    'path' => '/projects/' . $action
+                ], 404);
+                break;
+        }
+    }
+    
+    // ========== RUTAS DE TAREAS ==========
+    else if (isset($uri_parts[0]) && $uri_parts[0] === 'tasks') {
+        require_once 'config/database.php';
+        $database = new Database();
+        $db = $database->getConnection();
+        $taskController = new TaskController($db);
+        
+        $userData = getUserFromToken();
+        $action = $uri_parts[1] ?? '';
+        
+        switch ($action) {
+            // GET /api/tasks/project/{project_id} - Obtener tareas de un proyecto
+            case 'project':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $project_id = $uri_parts[2] ?? null;
+                
+                if (!$project_id) {
+                    sendResponse(['error' => 'ID de proyecto requerido'], 400);
+                }
+                
+                $response = $taskController->getProjectTasks($project_id, $userData);
+                sendResponse($response, 200);
+                break;
+            
+            // POST /api/tasks - Crear tarea
+            case '':
+                if ($method === 'POST') {
+                    $response = $taskController->createTask($input, $userData);
+                    $statusCode = $response['success'] ? 201 : 400;
+                    sendResponse($response, $statusCode);
+                } else {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                break;
+            
+            // GET/PUT/DELETE /api/tasks/{id}
+            case (is_numeric($action) ? $action : ''):
+                if ($method === 'GET') {
+                    $response = $taskController->getTaskById($action, $userData);
+                    sendResponse($response, 200);
+                } 
+                else if ($method === 'PUT' || $method === 'PATCH') {
+                    // Si solo se envía status, actualizar solo el status (para Kanban)
+                    if (isset($input['status']) && count($input) === 1) {
+                        $response = $taskController->updateTaskStatus($action, $input['status'], $userData);
+                    } else {
+                        $response = $taskController->updateTask($action, $input, $userData);
+                    }
+                    sendResponse($response, 200);
+                } 
+                else if ($method === 'DELETE') {
+                    $response = $taskController->deleteTask($action, $userData);
+                    sendResponse($response, 200);
+                } 
+                else {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                break;
+            
+            default:
+                sendResponse([
+                    'error' => 'Ruta no encontrada',
+                    'path' => '/tasks/' . $action
+                ], 404);
+                break;
+        }
+    }
+    
     // ========== RUTAS DEL DASHBOARD ==========
     else if (isset($uri_parts[0]) && $uri_parts[0] === 'dashboard') {
         $dashboardController = new DashboardController();
@@ -258,7 +427,7 @@ try {
     else if (empty($uri_parts[0])) {
         sendResponse([
             'success' => true,
-            'message' => 'API de Purple Admin - Eco System',
+            'message' => 'API de GreenTech - Eco System',
             'version' => '1.0.0',
             'endpoints' => [
                 'auth' => [
@@ -267,6 +436,22 @@ try {
                     'POST /auth/logout' => 'Cerrar sesión',
                     'POST /auth/verify' => 'Verificar token',
                     'GET /auth/me' => 'Obtener usuario actual'
+                ],
+                'projects' => [
+                    'GET /projects' => 'Obtener proyectos (todos o del usuario según rol)',
+                    'GET /projects/my' => 'Obtener proyectos del usuario',
+                    'GET /projects/{id}' => 'Obtener proyecto por ID',
+                    'POST /projects' => 'Crear proyecto',
+                    'PUT /projects/{id}' => 'Actualizar proyecto',
+                    'DELETE /projects/{id}' => 'Cancelar proyecto'
+                ],
+                'tasks' => [
+                    'GET /tasks/project/{project_id}' => 'Obtener tareas de un proyecto',
+                    'GET /tasks/{id}' => 'Obtener tarea por ID',
+                    'POST /tasks' => 'Crear tarea',
+                    'PUT /tasks/{id}' => 'Actualizar tarea',
+                    'PATCH /tasks/{id}' => 'Actualizar estado de tarea (Kanban)',
+                    'DELETE /tasks/{id}' => 'Eliminar tarea'
                 ],
                 'dashboard' => [
                     'GET /dashboard' => 'Obtener todos los datos del dashboard',

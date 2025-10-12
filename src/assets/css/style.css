@@ -23834,13 +23834,13 @@ code {
 .btn-outline-dark:hover,
 .btn-outline-dark:focus,
 .btn-outline-dark:active {
-  background: linear-gradient(89deg, #5e7188, #3e4b5b);
+  background: linear-gradient(89deg, #58c786, #63ab85);
   color: #000000;
 }
 
 /* gradient buttons */
 .btn-gradient-primary {
-  background: linear-gradient(to right, #da8cff, #9a55ff);
+  background: linear-gradient(to right, #58c786, #63ab85);
   border: 0;
   -webkit-transition: opacity 0.3s ease;
   -moz-transition: opacity 0.3s ease;
@@ -23849,10 +23849,17 @@ code {
   -o-transition: opacity 0.3s ease;
   transition: opacity 0.3s ease;
 }
+.project-header {
+  position: relative;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #58c786, #63ab85 100%);
+  color: #ffffff;
+
+}
 .btn-gradient-primary:not([disabled]):not(.disabled):active,
 .btn-gradient-primary:not([disabled]):not(.disabled).active,
 .show > .btn-gradient-primary.dropdown-toggle {
-  background: linear-gradient(to right, #da8cff, #9a55ff);
+  background: linear-gradient(to right, #58c786, #63ab85);
 }
 .btn-gradient-primary:hover {
   opacity: 0.8;
@@ -23867,7 +23874,7 @@ code {
 }
 
 .btn-gradient-secondary {
-  background: linear-gradient(to right, #e7ebf0, #868e96);
+  background: linear-gradient(to right, #58c786, #63ab85);
   border: 0;
   -webkit-transition: opacity 0.3s ease;
   -moz-transition: opacity 0.3s ease;

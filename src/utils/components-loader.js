@@ -191,10 +191,10 @@ export class ComponentsLoader {
     const basePath = settings.basePath;
 
     try {
-      // Cargar navbar
+      // Cargar navbar (usar navbar-dashboard para páginas autenticadas)
       if (settings.navbar) {
         await this.loadComponent(
-          `${basePath}_navbar.html`,
+          `${basePath}_navbar-dashboard.html`,
           "#navbar-container"
         );
       }

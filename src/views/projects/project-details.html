@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Detalles del Proyecto - GreenTech</title>
+    <!-- plugins:css -->
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/mdi/css/materialdesignicons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/ti-icons/css/themify-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/css/vendor.bundle.base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/font-awesome/css/font-awesome.min.css"
+    />
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../../assets/images/favicon.png" />
+    <!-- Sortable.js para Drag & Drop -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <!-- Estilos personalizados -->
+    <style>
+      .project-header-banner {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+      }
+      .project-header-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      .project-meta {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+      }
+      .project-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .project-meta-item i {
+        font-size: 1.25rem;
+      }
+      .nav-tabs .nav-link {
+        color: #6c757d;
+        border: none;
+        padding: 1rem 1.5rem;
+        font-weight: 500;
+      }
+      .nav-tabs .nav-link.active {
+        color: #667eea;
+        background: white;
+        border-bottom: 3px solid #667eea;
+      }
+      .tab-content {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+      }
+
+      /* Estilos del Kanban Board */
+      .kanban-board {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+      .kanban-column {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem;
+        min-height: 400px;
+      }
+      .kanban-column-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #dee2e6;
+      }
+      .kanban-column-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .kanban-column-count {
+        background: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+      .kanban-tasks {
+        min-height: 300px;
+      }
+      .kanban-task {
+        background: white;
+        border-radius: 6px;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        cursor: move;
+        transition: all 0.2s;
+      }
+      .kanban-task:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+      }
+      .kanban-task.sortable-ghost {
+        opacity: 0.4;
+        background: #e9ecef;
+      }
+      .kanban-task.sortable-drag {
+        opacity: 0.8;
+        transform: rotate(3deg);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+      .kanban-task-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+      }
+      .kanban-task-description {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-bottom: 0.75rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .kanban-task-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid #e9ecef;
+      }
+      .kanban-task-priority {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      .kanban-task-assignees {
+        display: flex;
+        gap: 0.25rem;
+      }
+      .kanban-task-assignee {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #667eea;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      .kanban-task-due {
+        font-size: 0.75rem;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+      .kanban-task-due.overdue {
+        color: #dc3545;
+        font-weight: 600;
+      }
+      .kanban-add-task {
+        background: white;
+        border: 2px dashed #dee2e6;
+        border-radius: 6px;
+        padding: 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: #6c757d;
+        font-weight: 500;
+      }
+      .kanban-add-task:hover {
+        border-color: #667eea;
+        color: #667eea;
+        background: #f8f9ff;
+      }
+      .info-card {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+      .info-card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #2c3e50;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .info-row {
+        display: flex;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      .info-row:last-child {
+        border-bottom: none;
+      }
+      .info-label {
+        font-weight: 600;
+        color: #6c757d;
+        width: 150px;
+        flex-shrink: 0;
+      }
+      .info-value {
+        color: #2c3e50;
+        flex: 1;
+      }
+      .members-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .member-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 6px;
+      }
+      .member-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 1.25rem;
+      }
+      .member-info {
+        flex: 1;
+      }
+      .member-name {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+      .member-role {
+        font-size: 0.875rem;
+        color: #6c757d;
+      }
+      #loadingSpinner {
+        text-align: center;
+        padding: 3rem;
+      }
+      .back-button {
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- Navbar Container -->
+      <div id="navbar-container">
+        <!-- Cargando navbar... -->
+      </div>
+
+      <div class="container-fluid page-body-wrapper">
+        <!-- Sidebar Container -->
+        <div id="sidebar-container">
+          <!-- Cargando sidebar... -->
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-panel mt-5">
+          <div class="content-wrapper">
+            <!-- Back Button -->
+            <div class="back-button">
+              <button
+                class="btn btn-outline-secondary btn-sm"
+                onclick="history.back()"
+              >
+                <i class="mdi mdi-arrow-left"></i> Volver
+              </button>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loadingSpinner" style="display: block">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+              <p class="mt-2">Cargando detalles del proyecto...</p>
+            </div>
+
+            <!-- Project Content -->
+            <div id="projectContent" style="display: none">
+              <!-- Project Header Banner -->
+              <div class="project-header-banner" id="projectHeader">
+                <!-- Se llenará dinámicamente -->
+              </div>
+
+              <!-- Navigation Tabs -->
+              <ul class="nav nav-tabs mb-3" id="projectTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link active"
+                    id="info-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#info"
+                    type="button"
+                    role="tab"
+                  >
+                    <i class="mdi mdi-information"></i> Información
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="tasks-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tasks"
+                    type="button"
+                    role="tab"
+                  >
+                    <i class="mdi mdi-view-column"></i> Tablero Kanban
+                  </button>
+                </li>
+              </ul>
+
+              <!-- Tab Content -->
+              <div class="tab-content" id="projectTabContent">
+                <!-- Pestaña de Información -->
+                <div
+                  class="tab-pane fade show active"
+                  id="info"
+                  role="tabpanel"
+                  aria-labelledby="info-tab"
+                >
+                  <div class="row">
+                    <div class="col-lg-8">
+                      <!-- Información General -->
+                      <div class="info-card">
+                        <h5 class="info-card-title">
+                          <i class="mdi mdi-information-outline"></i>
+                          Información General
+                        </h5>
+                        <div id="projectInfo">
+                          <!-- Se llenará dinámicamente -->
+                        </div>
+                      </div>
+
+                      <!-- Descripción -->
+                      <div class="info-card">
+                        <h5 class="info-card-title">
+                          <i class="mdi mdi-text"></i>
+                          Descripción
+                        </h5>
+                        <p id="projectDescription" class="text-muted"></p>
+                      </div>
+
+                      <!-- Objetivos -->
+                      <div
+                        class="info-card"
+                        id="objectivesCard"
+                        style="display: none"
+                      >
+                        <h5 class="info-card-title">
+                          <i class="mdi mdi-target"></i>
+                          Objetivos
+                        </h5>
+                        <p id="projectObjectives" class="text-muted"></p>
+                      </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                      <!-- Estadísticas -->
+                      <div class="info-card">
+                        <h5 class="info-card-title">
+                          <i class="mdi mdi-chart-bar"></i>
+                          Estadísticas
+                        </h5>
+                        <div id="projectStats">
+                          <!-- Se llenará dinámicamente -->
+                        </div>
+                      </div>
+
+                      <!-- Miembros del Proyecto -->
+                      <div class="info-card">
+                        <h5 class="info-card-title">
+                          <i class="mdi mdi-account-multiple"></i>
+                          Miembros del Equipo
+                        </h5>
+                        <div id="projectMembers" class="members-grid">
+                          <!-- Se llenará dinámicamente -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Pestaña del Tablero Kanban -->
+                <div
+                  class="tab-pane fade"
+                  id="tasks"
+                  role="tabpanel"
+                  aria-labelledby="tasks-tab"
+                >
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-3"
+                  >
+                    <h4>Tablero de Tareas</h4>
+                    <button
+                      class="btn btn-primary btn-sm"
+                      id="addTaskBtn"
+                      style="display: none"
+                    >
+                      <i class="mdi mdi-plus"></i> Nueva Tarea
+                    </button>
+                  </div>
+
+                  <!-- Kanban Board -->
+                  <div class="kanban-board">
+                    <!-- Columna: Pendiente -->
+                    <div class="kanban-column">
+                      <div class="kanban-column-header">
+                        <div class="kanban-column-title">
+                          <i class="mdi mdi-clock-outline text-warning"></i>
+                          Pendiente
+                        </div>
+                        <span class="kanban-column-count" id="countPendiente"
+                          >0</span
+                        >
+                      </div>
+                      <div
+                        class="kanban-tasks"
+                        id="columnPendiente"
+                        data-status="Pendiente"
+                      >
+                        <!-- Las tareas se cargarán aquí -->
+                      </div>
+                    </div>
+
+                    <!-- Columna: En Progreso -->
+                    <div class="kanban-column">
+                      <div class="kanban-column-header">
+                        <div class="kanban-column-title">
+                          <i class="mdi mdi-progress-clock text-info"></i>
+                          En Progreso
+                        </div>
+                        <span class="kanban-column-count" id="countEnProgreso"
+                          >0</span
+                        >
+                      </div>
+                      <div
+                        class="kanban-tasks"
+                        id="columnEnProgreso"
+                        data-status="En progreso"
+                      >
+                        <!-- Las tareas se cargarán aquí -->
+                      </div>
+                    </div>
+
+                    <!-- Columna: Completada -->
+                    <div class="kanban-column">
+                      <div class="kanban-column-header">
+                        <div class="kanban-column-title">
+                          <i class="mdi mdi-check-circle text-success"></i>
+                          Completada
+                        </div>
+                        <span class="kanban-column-count" id="countCompletada"
+                          >0</span
+                        >
+                      </div>
+                      <div
+                        class="kanban-tasks"
+                        id="columnCompletada"
+                        data-status="Completada"
+                      >
+                        <!-- Las tareas se cargarán aquí -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer Container -->
+          <div id="footer-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Logout -->
+    <div
+      class="modal fade"
+      id="logoutModal"
+      tabindex="-1"
+      aria-labelledby="logoutModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="logoutModalLabel">
+              <i class="mdi mdi-logout"></i> Cerrar Sesión
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>¿Estás seguro de que deseas cerrar sesión?</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="confirmLogoutBtn">
+              Sí, cerrar sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Crear/Editar Tarea -->
+    <div
+      class="modal fade"
+      id="taskModal"
+      tabindex="-1"
+      aria-labelledby="taskModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="taskModalLabel">
+              <i class="mdi mdi-clipboard-plus"></i>
+              <span id="taskModalTitle">Nueva Tarea</span>
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="taskForm">
+              <input type="hidden" id="taskId" />
+              <input type="hidden" id="taskProjectId" />
+
+              <div class="mb-3">
+                <label for="taskTitle" class="form-label"
+                  >Título <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="taskTitle"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="taskDescription" class="form-label"
+                  >Descripción</label
+                >
+                <textarea
+                  class="form-control"
+                  id="taskDescription"
+                  rows="3"
+                ></textarea>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label for="taskStatus" class="form-label">Estado</label>
+                  <select class="form-select" id="taskStatus">
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="En progreso">En Progreso</option>
+                    <option value="Completada">Completada</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="taskPriority" class="form-label">Prioridad</label>
+                  <select class="form-select" id="taskPriority">
+                    <option value="Baja">Baja</option>
+                    <option value="Media" selected>Media</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Crítica">Crítica</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="taskDueDate" class="form-label"
+                    >Fecha de Vencimiento</label
+                  >
+                  <input type="date" class="form-control" id="taskDueDate" />
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="taskHours" class="form-label"
+                  >Horas Estimadas</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="taskHours"
+                  min="0"
+                  step="0.5"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="deleteTaskBtn"
+              style="display: none"
+            >
+              <i class="mdi mdi-delete"></i> Eliminar
+            </button>
+            <button type="button" class="btn btn-primary" id="saveTaskBtn">
+              <i class="mdi mdi-content-save"></i>
+              <span id="saveTaskBtnText">Guardar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- plugins:js -->
+    <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- inject:js -->
+    <script src="../../assets/js/off-canvas.js"></script>
+    <script src="../../assets/js/misc.js"></script>
+    <script src="../../assets/js/settings.js"></script>
+    <script src="../../assets/js/todolist.js"></script>
+    <!-- endinject -->
+
+    <!-- Script para el banner -->
+    <script>
+      (function () {
+        const bannerClose = document.querySelector("#bannerClose");
+        if (bannerClose) {
+          bannerClose.addEventListener("click", function () {
+            const proBanner = document.querySelector("#proBanner");
+            if (proBanner) {
+              proBanner.classList.add("d-none");
+            }
+          });
+        }
+      })();
+    </script>
+
+    <!-- Script Principal -->
+    <script type="module">
+      import AuthService from "../../services/auth.js";
+      import ProjectService from "../../services/projects.js";
+      import TaskService from "../../services/tasks.js";
+      import ComponentsLoader from "../../utils/components-loader.js";
+
+      // Verificar autenticación
+      if (!AuthService.isAuthenticated()) {
+        window.location.href = "/src/views/auth/login.html";
+      } else {
+        const userData = AuthService.getCurrentUser();
+        const canEditTasks = userData.role_id === 1 || userData.role_id === 2; // Admin o Coordinador
+
+        // Cargar componentes
+        ComponentsLoader.loadCommonComponents({
+          navbar: true,
+          sidebar: true,
+          footer: true,
+          basePath: "../../components/",
+        });
+
+        // Obtener ID del proyecto de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get("id");
+
+        if (!projectId) {
+          alert("ID de proyecto no especificado");
+          window.location.href = "/";
+        }
+
+        let currentProject = null;
+        let currentTasks = [];
+
+        // Cargar detalles del proyecto
+        async function loadProjectDetails() {
+          try {
+            const response = await ProjectService.getProjectById(projectId);
+
+            if (response.success) {
+              currentProject = response.data;
+              renderProjectHeader(currentProject);
+              renderProjectInfo(currentProject);
+              renderProjectStats(currentProject);
+              renderProjectMembers(currentProject.members || []);
+
+              document.getElementById("loadingSpinner").style.display = "none";
+              document.getElementById("projectContent").style.display = "block";
+            } else {
+              alert(response.message || "Error al cargar proyecto");
+              window.location.href = "/";
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("Error al cargar proyecto");
+            window.location.href = "/";
+          }
+        }
+
+        // Renderizar encabezado del proyecto
+        function renderProjectHeader(project) {
+          const statusClass = ProjectService.getStatusClass(project.status);
+          const progress = ProjectService.calculateProgress(project);
+
+          document.getElementById("projectHeader").innerHTML = `
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div class="project-header-title">${project.name}</div>
+                <div class="project-meta">
+                  <div class="project-meta-item">
+                    <i class="mdi mdi-calendar"></i>
+                    <span>Inicio: ${ProjectService.formatDate(
+                      project.start_date
+                    )}</span>
+                  </div>
+                  <div class="project-meta-item">
+                    <i class="mdi mdi-calendar-check"></i>
+                    <span>Fin: ${ProjectService.formatDate(
+                      project.end_date
+                    )}</span>
+                  </div>
+                  <div class="project-meta-item">
+                    <i class="mdi mdi-account-circle"></i>
+                    <span>Creador: ${project.creator_name}</span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <span class="badge bg-${statusClass}" style="font-size: 1rem; padding: 0.5rem 1rem;">
+                  ${project.status}
+                </span>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="d-flex justify-content-between mb-2">
+                <small>Progreso del Proyecto</small>
+                <small><strong>${progress}%</strong></small>
+              </div>
+              <div class="progress" style="height: 12px; background: rgba(255,255,255,0.3);">
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  style="width: ${progress}%; background: rgba(255,255,255,0.9);"
+                ></div>
+              </div>
+            </div>
+          `;
+        }
+
+        // Renderizar información del proyecto
+        function renderProjectInfo(project) {
+          document.getElementById("projectDescription").textContent =
+            project.description;
+
+          if (project.objectives) {
+            document.getElementById("projectObjectives").textContent =
+              project.objectives;
+            document.getElementById("objectivesCard").style.display = "block";
+          }
+
+          document.getElementById("projectInfo").innerHTML = `
+            <div class="info-row">
+              <div class="info-label">Estado:</div>
+              <div class="info-value">
+                <span class="badge bg-${ProjectService.getStatusClass(
+                  project.status
+                )}">
+                  ${project.status}
+                </span>
+              </div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">Fecha de Creación:</div>
+              <div class="info-value">${ProjectService.formatDate(
+                project.created_at
+              )}</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">Fecha de Inicio:</div>
+              <div class="info-value">${ProjectService.formatDate(
+                project.start_date
+              )}</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">Fecha de Finalización:</div>
+              <div class="info-value">${ProjectService.formatDate(
+                project.end_date
+              )}</div>
+            </div>
+            ${
+              project.budget && project.budget > 0
+                ? `
+            <div class="info-row">
+              <div class="info-label">Presupuesto:</div>
+              <div class="info-value">${ProjectService.formatBudget(
+                project.budget
+              )}</div>
+            </div>
+            `
+                : ""
+            }
+            ${
+              project.location
+                ? `
+            <div class="info-row">
+              <div class="info-label">Ubicación:</div>
+              <div class="info-value">${project.location}</div>
+            </div>
+            `
+                : ""
+            }
+            <div class="info-row">
+              <div class="info-label">Días Restantes:</div>
+              <div class="info-value ${
+                ProjectService.isOverdue(project.end_date, project.status)
+                  ? "text-danger"
+                  : ""
+              }">
+                ${ProjectService.getDaysRemainingText(
+                  project.end_date,
+                  project.status
+                )}
+              </div>
+            </div>
+          `;
+        }
+
+        // Renderizar estadísticas
+        function renderProjectStats(project) {
+          const total = parseInt(project.total_tasks) || 0;
+          const completed = parseInt(project.completed_tasks) || 0;
+          const inProgress = parseInt(project.in_progress_tasks) || 0;
+          const pending = parseInt(project.pending_tasks) || 0;
+
+          document.getElementById("projectStats").innerHTML = `
+            <div class="info-row">
+              <div class="info-label">Total de Tareas:</div>
+              <div class="info-value"><strong>${total}</strong></div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">Completadas:</div>
+              <div class="info-value text-success"><strong>${completed}</strong></div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">En Progreso:</div>
+              <div class="info-value text-info"><strong>${inProgress}</strong></div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">Pendientes:</div>
+              <div class="info-value text-warning"><strong>${pending}</strong></div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">Miembros:</div>
+              <div class="info-value"><strong>${
+                project.members_count || 0
+              }</strong></div>
+            </div>
+          `;
+        }
+
+        // Renderizar miembros
+        function renderProjectMembers(members) {
+          if (!members || members.length === 0) {
+            document.getElementById("projectMembers").innerHTML = `
+              <p class="text-muted text-center">No hay miembros asignados</p>
+            `;
+            return;
+          }
+
+          document.getElementById("projectMembers").innerHTML = members
+            .map(
+              (member) => `
+            <div class="member-card">
+              <div class="member-avatar">
+                ${member.name.charAt(0).toUpperCase()}
+              </div>
+              <div class="member-info">
+                <div class="member-name">${member.name}</div>
+                <div class="member-role">${
+                  member.role_name || member.role || "Miembro"
+                }</div>
+              </div>
+            </div>
+          `
+            )
+            .join("");
+        }
+
+        // Cargar tareas y configurar Kanban
+        async function loadTasks() {
+          try {
+            const response = await TaskService.getProjectTasks(projectId);
+
+            if (response.success) {
+              currentTasks = response.data || [];
+              renderKanbanBoard(currentTasks);
+
+              // Mostrar botón de agregar tarea si tiene permisos
+              if (canEditTasks) {
+                document.getElementById("addTaskBtn").style.display =
+                  "inline-block";
+              }
+            } else {
+              console.error("Error al cargar tareas:", response.message);
+            }
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        }
+
+        // Renderizar tablero Kanban
+        function renderKanbanBoard(tasks) {
+          const kanbanData = TaskService.organizeTasksForKanban(tasks);
+
+          // Limpiar columnas
+          document.getElementById("columnPendiente").innerHTML = "";
+          document.getElementById("columnEnProgreso").innerHTML = "";
+          document.getElementById("columnCompletada").innerHTML = "";
+
+          // Actualizar contadores
+          document.getElementById("countPendiente").textContent =
+            kanbanData["Pendiente"].length;
+          document.getElementById("countEnProgreso").textContent =
+            kanbanData["En progreso"].length;
+          document.getElementById("countCompletada").textContent =
+            kanbanData["Completada"].length;
+
+          // Renderizar tareas en cada columna
+          Object.keys(kanbanData).forEach((status) => {
+            const columnId =
+              status === "Pendiente"
+                ? "columnPendiente"
+                : status === "En progreso"
+                ? "columnEnProgreso"
+                : "columnCompletada";
+
+            const column = document.getElementById(columnId);
+
+            kanbanData[status].forEach((task) => {
+              column.innerHTML += createTaskCard(task);
+            });
+          });
+
+          // Inicializar Sortable.js
+          initSortable();
+        }
+
+        // Crear tarjeta de tarea
+        function createTaskCard(task) {
+          const priorityClass = TaskService.getPriorityClass(task.priority);
+          const priorityIcon = TaskService.getPriorityIcon(task.priority);
+          const priorityColor = TaskService.getPriorityColor(task.priority);
+          const isOverdue = TaskService.isOverdue(task.due_date, task.status);
+          const daysText = TaskService.getDaysRemainingText(
+            task.due_date,
+            task.status
+          );
+
+          // Obtener iniciales de assignees
+          const assignees = task.assignees
+            ? task.assignees
+                .split(", ")
+                .map((name) => name.charAt(0).toUpperCase())
+            : [];
+
+          return `
+            <div class="kanban-task" data-task-id="${
+              task.id
+            }" onclick="viewTask(${task.id})">
+              <div class="kanban-task-title">${task.title}</div>
+              ${
+                task.description
+                  ? `<div class="kanban-task-description">${task.description}</div>`
+                  : ""
+              }
+              <div class="kanban-task-footer">
+                <div>
+                  <span class="kanban-task-priority" style="background-color: ${priorityColor}; color: white;">
+                    <i class="mdi ${priorityIcon}"></i>
+                    ${task.priority}
+                  </span>
+                </div>
+                ${
+                  assignees.length > 0
+                    ? `
+                <div class="kanban-task-assignees">
+                  ${assignees
+                    .map(
+                      (initial) =>
+                        `<div class="kanban-task-assignee">${initial}</div>`
+                    )
+                    .join("")}
+                </div>
+                `
+                    : ""
+                }
+              </div>
+              ${
+                task.due_date
+                  ? `
+              <div class="kanban-task-due ${isOverdue ? "overdue" : ""} mt-2">
+                <i class="mdi mdi-clock-outline"></i>
+                ${daysText}
+              </div>
+              `
+                  : ""
+              }
+            </div>
+          `;
+        }
+
+        // Inicializar Sortable.js para drag & drop
+        function initSortable() {
+          const columns = [
+            "columnPendiente",
+            "columnEnProgreso",
+            "columnCompletada",
+          ];
+
+          columns.forEach((columnId) => {
+            const el = document.getElementById(columnId);
+
+            Sortable.create(el, {
+              group: "kanban",
+              animation: 150,
+              ghostClass: "sortable-ghost",
+              dragClass: "sortable-drag",
+              onEnd: async function (evt) {
+                const taskId = evt.item.dataset.taskId;
+                const newStatus = evt.to.dataset.status;
+
+                // Actualizar estado de la tarea en el backend
+                try {
+                  const response = await TaskService.updateTaskStatus(
+                    taskId,
+                    newStatus
+                  );
+
+                  if (response.success) {
+                    console.log("✅ Tarea movida:", taskId, "→", newStatus);
+                    // Recargar tareas para actualizar contadores
+                    await loadTasks();
+                  } else {
+                    console.error("Error al mover tarea:", response.message);
+                    alert("Error al mover la tarea");
+                    // Revertir el movimiento
+                    await loadTasks();
+                  }
+                } catch (error) {
+                  console.error("Error:", error);
+                  alert("Error al mover la tarea");
+                  await loadTasks();
+                }
+              },
+            });
+          });
+        }
+
+        // Ver/Editar tarea
+        window.viewTask = async function (taskId) {
+          // Solo admin y coordinador pueden editar
+          if (!canEditTasks) {
+            alert("No tienes permisos para editar tareas");
+            return;
+          }
+
+          try {
+            const response = await TaskService.getTaskById(taskId);
+
+            if (response.success) {
+              const task = response.data;
+
+              document.getElementById("taskModalTitle").textContent =
+                "Editar Tarea";
+              document.getElementById("saveTaskBtnText").textContent =
+                "Actualizar";
+              document.getElementById("deleteTaskBtn").style.display =
+                "inline-block";
+
+              document.getElementById("taskId").value = task.id;
+              document.getElementById("taskProjectId").value = task.project_id;
+              document.getElementById("taskTitle").value = task.title;
+              document.getElementById("taskDescription").value =
+                task.description || "";
+              document.getElementById("taskStatus").value = task.status;
+              document.getElementById("taskPriority").value = task.priority;
+              document.getElementById("taskDueDate").value =
+                task.due_date || "";
+              document.getElementById("taskHours").value =
+                task.estimated_hours || "";
+
+              const modal = new bootstrap.Modal(
+                document.getElementById("taskModal")
+              );
+              modal.show();
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("Error al cargar tarea");
+          }
+        };
+
+        // Botón agregar tarea
+        document.getElementById("addTaskBtn").addEventListener("click", () => {
+          document.getElementById("taskModalTitle").textContent = "Nueva Tarea";
+          document.getElementById("saveTaskBtnText").textContent = "Crear";
+          document.getElementById("deleteTaskBtn").style.display = "none";
+
+          document.getElementById("taskForm").reset();
+          document.getElementById("taskId").value = "";
+          document.getElementById("taskProjectId").value = projectId;
+
+          const modal = new bootstrap.Modal(
+            document.getElementById("taskModal")
+          );
+          modal.show();
+        });
+
+        // Guardar tarea
+        document
+          .getElementById("saveTaskBtn")
+          .addEventListener("click", async () => {
+            const form = document.getElementById("taskForm");
+
+            if (!form.checkValidity()) {
+              form.reportValidity();
+              return;
+            }
+
+            const taskId = document.getElementById("taskId").value;
+            const taskData = {
+              project_id: document.getElementById("taskProjectId").value,
+              title: document.getElementById("taskTitle").value,
+              description: document.getElementById("taskDescription").value,
+              status: document.getElementById("taskStatus").value,
+              priority: document.getElementById("taskPriority").value,
+              due_date: document.getElementById("taskDueDate").value,
+              estimated_hours: document.getElementById("taskHours").value,
+            };
+
+            try {
+              let response;
+              if (taskId) {
+                response = await TaskService.updateTask(taskId, taskData);
+              } else {
+                response = await TaskService.createTask(taskData);
+              }
+
+              if (response.success) {
+                alert(taskId ? "Tarea actualizada" : "Tarea creada");
+                bootstrap.Modal.getInstance(
+                  document.getElementById("taskModal")
+                ).hide();
+                await loadTasks();
+              } else {
+                alert(response.message || "Error al guardar tarea");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("Error al guardar tarea");
+            }
+          });
+
+        // Eliminar tarea
+        document
+          .getElementById("deleteTaskBtn")
+          .addEventListener("click", async () => {
+            if (!confirm("¿Estás seguro de que deseas eliminar esta tarea?")) {
+              return;
+            }
+
+            const taskId = document.getElementById("taskId").value;
+
+            try {
+              const response = await TaskService.deleteTask(taskId);
+
+              if (response.success) {
+                alert("Tarea eliminada");
+                bootstrap.Modal.getInstance(
+                  document.getElementById("taskModal")
+                ).hide();
+                await loadTasks();
+              } else {
+                alert(response.message || "Error al eliminar tarea");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("Error al eliminar tarea");
+            }
+          });
+
+        // Cargar cuando se cambia a la pestaña de tareas
+        document
+          .getElementById("tasks-tab")
+          .addEventListener("shown.bs.tab", () => {
+            if (currentTasks.length === 0) {
+              loadTasks();
+            }
+          });
+
+        // Inicializar
+        loadProjectDetails();
+
+        // Configurar logout
+        const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+        if (confirmLogoutBtn) {
+          confirmLogoutBtn.addEventListener("click", () => {
+            const logoutModal = bootstrap.Modal.getInstance(
+              document.getElementById("logoutModal")
+            );
+            if (logoutModal) logoutModal.hide();
+
+            confirmLogoutBtn.innerHTML =
+              '<i class="mdi mdi-loading mdi-spin"></i> Cerrando...';
+            confirmLogoutBtn.disabled = true;
+
+            setTimeout(() => {
+              AuthService.logout();
+            }, 300);
+          });
+        }
+      }
+    </script>
+  </body>
+</html>
