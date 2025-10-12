@@ -41,6 +41,36 @@
         transform: translateY(-5px);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
       }
+      .project-header {
+        position: relative;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+      .project-manage-icon {
+        position: absolute;
+        top: 3.5rem;
+        right: 1rem;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+      .project-manage-icon:hover {
+        background: white;
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      }
+      .project-manage-icon i {
+        font-size: 1.25rem;
+        color: #4e73df;
+      }
       .project-status-badge {
         position: absolute;
         top: 1rem;
@@ -49,6 +79,14 @@
         border-radius: 20px;
         font-size: 0.75rem;
         font-weight: 600;
+      }
+      .project-role-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.7rem;
+        background: rgba(255, 255, 255, 0.3);
+        margin-top: 0.5rem;
       }
       .project-body {
         padding: 1.5rem;
@@ -183,7 +221,7 @@
                 <label for="filterStatus" class="mb-0">Estado:</label>
                 <select id="filterStatus" class="form-select form-select-sm">
                   <option value="">Todos</option>
-                  <option value="Planificacion">Planificación</option>
+                  <option value="Planificación">Planificación</option>
                   <option value="En progreso">En Progreso</option>
                   <option value="Completado">Completado</option>
                   <option value="Cancelado">Cancelado</option>
@@ -275,7 +313,7 @@
                 <div class="col-md-4 mb-3">
                   <label for="projectStatus" class="form-label">Estado</label>
                   <select class="form-select" id="projectStatus">
-                    <option value="Planificacion">Planificación</option>
+                    <option value="Planificación">Planificación</option>
                     <option value="En progreso">En Progreso</option>
                     <option value="En espera">En Espera</option>
                   </select>
@@ -365,6 +403,66 @@
       </div>
     </div>
 
+    <!-- Modal: Gestionar Participantes -->
+    <div
+      class="modal fade"
+      id="manageMembersModal"
+      tabindex="-1"
+      role="dialog"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">
+              <i class="mdi mdi-account-multiple-plus mr-2"></i>
+              Gestionar Participantes
+            </h5>
+            <button
+              type="button"
+              class="btn-close text-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <h6 class="mb-3" id="manageMembersProjectName"></h6>
+            
+            <!-- Miembros actuales -->
+            <div class="mb-4">
+              <h6 class="text-primary">
+                <i class="mdi mdi-account-check mr-2"></i>
+                Miembros Asignados
+              </h6>
+              <div id="currentMembersList" class="list-group">
+                <!-- Se llenará con JavaScript -->
+              </div>
+            </div>
+
+            <!-- Usuarios disponibles -->
+            <div>
+              <h6 class="text-success">
+                <i class="mdi mdi-account-plus mr-2"></i>
+                Usuarios Disponibles
+              </h6>
+              <div id="availableUsersList" class="list-group">
+                <!-- Se llenará con JavaScript -->
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-light"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal: Editar Proyecto -->
     <div
       class="modal fade"
@@ -407,7 +505,7 @@
                     >Estado</label
                   >
                   <select class="form-select" id="editProjectStatus">
-                    <option value="Planificacion">Planificación</option>
+                    <option value="Planificación">Planificación</option>
                     <option value="En progreso">En Progreso</option>
                     <option value="Completado">Completado</option>
                     <option value="Cancelado">Cancelado</option>
@@ -663,6 +761,15 @@
                   <span class="project-status-badge bg-${statusClass}">
                     ${project.status}
                   </span>
+                  ${
+                     userData.role_id === 1 || userData.role_id === 2
+                       ? `
+                   <div class="project-manage-icon" onclick="manageMembers(${project.id}, '${project.name}')" title="Gestionar Participantes">
+                     <i class="mdi mdi-account-multiple-plus"></i>
+                   </div>
+                   `
+                       : ""
+                   }
                   <h5 class="mb-2">${project.name}</h5>
                   <small>Creado: ${ProjectService.formatDate(
                     project.created_at
@@ -962,7 +1069,225 @@
         function showError(message) {
           alert("Error: " + message);
         }
+        // ========== GESTIÓN DE MIEMBROS ==========
+        let currentProjectIdForMembers = null;
 
+        /**
+         * Abrir modal para gestionar miembros
+         */
+        window.manageMembers = async function (projectId, projectName) {
+          currentProjectIdForMembers = projectId;
+          document.getElementById(
+            "manageMembersProjectName"
+          ).textContent = `Proyecto: ${projectName}`;
+
+          $("#manageMembersModal").modal("show");
+          await loadProjectMembers(projectId);
+        };
+
+        /**
+         * Cargar miembros del proyecto
+         */
+        async function loadProjectMembers(projectId) {
+          try {
+            // Obtener detalles del proyecto con sus miembros
+            const projectResponse = await ProjectService.getProjectById(
+              projectId
+            );
+            const project = projectResponse.data;
+
+            // Obtener usuarios disponibles
+            const availableResponse = await ProjectService.getAvailableUsers(
+              projectId
+            );
+            
+            console.log("Available users response:", availableResponse);
+            const availableUsers = availableResponse.data || [];
+            console.log("Available users data:", availableUsers);
+
+            // Renderizar miembros actuales
+            console.log("Project data:", project);
+            console.log("Project members:", project.members);
+            renderCurrentMembers(project.members || []);
+
+            // Renderizar usuarios disponibles
+            renderAvailableUsers(availableUsers);
+          } catch (error) {
+            console.error("Error al cargar miembros:", error);
+            showError("Error al cargar la información de miembros");
+          }
+        }
+
+        /**
+         * Renderizar miembros actuales
+         */
+        function renderCurrentMembers(members) {
+          const container = document.getElementById("currentMembersList");
+          
+          console.log("renderCurrentMembers called with:", members);
+          console.log("Type of members:", typeof members);
+          console.log("Is array:", Array.isArray(members));
+          console.log("Length:", members ? members.length : 'undefined');
+
+          if (!members || members.length === 0) {
+            container.innerHTML = `
+               <div class="list-group-item text-center text-muted">
+                 No hay miembros asignados todavía
+               </div>
+             `;
+            return;
+          }
+
+          container.innerHTML = members
+            .map((member) => {
+              const roleClass =
+                member.role_id === 1
+                  ? "danger"
+                  : member.role_id === 2
+                  ? "warning"
+                  : "info";
+              return `
+               <div class="list-group-item d-flex justify-content-between align-items-center">
+                 <div class="d-flex align-items-center">
+                   <div class="mr-3">
+                     ${
+                       member.avatar
+                         ? `<img src="${member.avatar}" class="rounded-circle" width="40" height="40" alt="${member.name}">`
+                         : `<div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
+                         ${member.name.charAt(0).toUpperCase()}
+                       </div>`
+                     }
+                   </div>
+                   <div>
+                     <div class="font-weight-bold">${member.name}</div>
+                     <small class="text-muted">${member.email}</small>
+                     <span class="badge badge-${roleClass} ml-2">${
+                member.role_name
+              }</span>
+                   </div>
+                 </div>
+                 <button 
+                   class="btn btn-sm btn-outline-danger" 
+                   onclick="removeMember(${member.user_id})"
+                   title="Desasignar miembro"
+                 >
+                   <i class="mdi mdi-account-remove"></i>
+                 </button>
+               </div>
+             `;
+            })
+            .join("");
+        }
+
+        /**
+         * Renderizar usuarios disponibles
+         */
+        function renderAvailableUsers(users) {
+          const container = document.getElementById("availableUsersList");
+
+          // Verificar que users es un array
+          if (!Array.isArray(users) || users.length === 0) {
+            container.innerHTML = `
+               <div class="list-group-item text-center text-muted">
+                 No hay más usuarios disponibles para asignar
+               </div>
+             `;
+            return;
+          }
+
+          container.innerHTML = users
+            .map((user) => {
+              const roleClass =
+                user.role_id === 1
+                  ? "danger"
+                  : user.role_id === 2
+                  ? "warning"
+                  : "info";
+              return `
+               <div class="list-group-item d-flex justify-content-between align-items-center">
+                 <div class="d-flex align-items-center">
+                   <div class="mr-3">
+                     ${
+                       user.avatar
+                         ? `<img src="${user.avatar}" class="rounded-circle" width="40" height="40" alt="${user.name}">`
+                         : `<div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
+                         ${user.name.charAt(0).toUpperCase()}
+                       </div>`
+                     }
+                   </div>
+                   <div>
+                     <div class="font-weight-bold">${user.name}</div>
+                     <small class="text-muted">${user.email}</small>
+                     <span class="badge badge-${roleClass} ml-2">${
+                user.role_name
+              }</span>
+                   </div>
+                 </div>
+                 <button 
+                   class="btn btn-sm btn-outline-success" 
+                   onclick="addMember(${user.id})"
+                   title="Asignar al proyecto"
+                 >
+                   <i class="mdi mdi-account-plus"></i>
+                 </button>
+               </div>
+             `;
+            })
+            .join("");
+        }
+
+        /**
+         * Agregar miembro al proyecto
+         */
+        window.addMember = async function (userId) {
+          if (!currentProjectIdForMembers) return;
+
+          try {
+            const response = await ProjectService.assignUserToProject(
+              currentProjectIdForMembers,
+              userId
+            );
+
+            if (response.success) {
+              showSuccess("Usuario asignado exitosamente");
+              await loadProjectMembers(currentProjectIdForMembers);
+              loadProjects(); // Recargar la lista principal
+            }
+          } catch (error) {
+            console.error("Error al asignar usuario:", error);
+            showError("Error al asignar usuario");
+          }
+        };
+
+        /**
+         * Remover miembro del proyecto
+         */
+        window.removeMember = async function (userId) {
+          if (!currentProjectIdForMembers) return;
+
+          if (
+            !confirm("¿Estás seguro de desasignar a este usuario del proyecto?")
+          ) {
+            return;
+          }
+
+          try {
+            const response = await ProjectService.unassignUserFromProject(
+              currentProjectIdForMembers,
+              userId
+            );
+
+            if (response.success) {
+              showSuccess("Usuario desasignado exitosamente");
+              await loadProjectMembers(currentProjectIdForMembers);
+              loadProjects(); // Recargar la lista principal
+            }
+          } catch (error) {
+            console.error("Error al desasignar usuario:", error);
+            showError("Error al desasignar usuario");
+          }
+        };
+        
         // Cargar proyectos al iniciar
         loadProjects();
 

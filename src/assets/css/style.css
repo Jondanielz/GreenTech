@@ -8449,8 +8449,8 @@
   --bs-danger-bg-subtle: #f8d7da;
   --bs-light-bg-subtle: #fcfcfd;
   --bs-dark-bg-subtle: #ced4da;
-  --bs-primary-border-subtle: #9ec5fe;
-  --bs-secondary-border-subtle: #c4c8cb;
+  --bs-primary-border-subtle: #477f60;
+  --bs-secondary-border-subtle: #62a984;
   --bs-success-border-subtle: #a3cfbb;
   --bs-info-border-subtle: #9eeaf9;
   --bs-warning-border-subtle: #ffe69c;
@@ -8552,7 +8552,7 @@
   --bs-danger-bg-subtle: #33191e;
   --bs-light-bg-subtle: #343a40;
   --bs-dark-bg-subtle: #1a1d20;
-  --bs-primary-border-subtle: #6d4199;
+  --bs-primary-border-subtle: #62a984;
   --bs-secondary-border-subtle: #757171;
   --bs-success-border-subtle: #107c6c;
   --bs-info-border-subtle: #0f5388;
@@ -14549,7 +14549,7 @@ fieldset:disabled .ajax-upload-dragdrop .ajax-file-upload,
   --bs-modal-padding: 0.937rem;
   --bs-modal-margin: 10px;
   --bs-modal-color: ;
-  --bs-modal-bg: #f2edf3;
+  --bs-modal-bg: #edf3f0;
   --bs-modal-border-color: #ebedf2;
   --bs-modal-border-width: 1px;
   --bs-modal-border-radius: var(--bs-border-radius-lg);
@@ -22312,7 +22312,7 @@ code {
 }
 
 .bg-gradient-primary {
-  background: linear-gradient(to right, #57C785, #62A984) !important;
+  background: linear-gradient(to right, #57c785, #62a984) !important;
 }
 
 .bg-gradient-secondary {
@@ -23854,7 +23854,6 @@ code {
   padding: 1.5rem;
   background: linear-gradient(135deg, #58c786, #63ab85 100%);
   color: #ffffff;
-
 }
 .btn-gradient-primary:not([disabled]):not(.disabled):active,
 .btn-gradient-primary:not([disabled]):not(.disabled).active,

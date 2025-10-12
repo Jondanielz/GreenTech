@@ -202,6 +202,60 @@ class ProjectService {
     if (days === 1) return "1 día restante";
     return `${days} días restantes`;
   }
+
+  /**
+   * Obtener usuarios disponibles para asignar a un proyecto
+   */
+  static async getAvailableUsers(projectId) {
+    try {
+      const response = await APIClient.get(
+        `/projects/${projectId}/available-users`
+      );
+      return response;
+    } catch (error) {
+      console.error(
+        `Error al obtener usuarios disponibles para proyecto ${projectId}:`,
+        error
+      );
+      throw error;
+    }
+  }
+
+  /**
+   * Asignar usuario a proyecto
+   */
+  static async assignUserToProject(projectId, userId) {
+    try {
+      const response = await APIClient.post(`/projects/${projectId}/members`, {
+        user_id: userId,
+      });
+      return response;
+    } catch (error) {
+      console.error(
+        `Error al asignar usuario ${userId} al proyecto ${projectId}:`,
+        error
+      );
+      throw error;
+    }
+  }
+
+  /**
+   * Desasignar usuario del proyecto
+   */
+  static async unassignUserFromProject(projectId, userId) {
+    try {
+      const response = await APIClient.delete(
+        `/projects/${projectId}/members/${userId}`
+      );
+      return response;
+    } catch (error) {
+      console.error(
+        `Error al desasignar usuario ${userId} del proyecto ${projectId}:`,
+        error
+      );
+      throw error;
+    }
+  }
 }
 
 export default ProjectService;

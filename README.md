@@ -17,7 +17,7 @@ Un template de administración moderno y responsivo construido con Bootstrap 5 y
 
    ```bash
    git clone <url-del-repositorio>
-   cd purple-free
+   cd greentech
    ```
 
 2. **Instalar dependencias**
@@ -53,7 +53,7 @@ gulp serve
 ## 📁 Estructura del Proyecto
 
 ```
-purple-free/
+greentech/
 ├── src/                    # Código fuente
 │   ├── assets/            # Assets estáticos
 │   │   ├── css/          # Estilos CSS

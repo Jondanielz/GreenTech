@@ -86,7 +86,7 @@ sudo systemctl restart apache2
 Abre en el navegador:
 
 ```
-http://localhost/purple-free/api
+http://localhost/eco-app/greentech/api
 ```
 
 Deberías ver:
@@ -102,7 +102,7 @@ Deberías ver:
 ### 2. Probar Login
 
 ```bash
-curl -X POST http://localhost/purple-free/api/auth/login \
+curl -X POST http://localhost/eco-app/greentech/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"user":"admin","password":"12345678"}'
 ```
@@ -308,7 +308,7 @@ Si encuentras problemas:
 
 1. Revisar logs: `api/logs/php-errors.log`
 2. Verificar configuración: `config/database.php`
-3. Probar conexión: `http://localhost/purple-free/api`
+3. Probar conexión: `http://localhost/eco-app/greentech/api`
 4. Consultar documentación: `API_DOCUMENTACION.md`
 
 ---

@@ -110,16 +110,16 @@ class ProjectController {
         
         // Valores por defecto
         if (empty($data['status'])) {
-            $data['status'] = 'Planificacion';
+            $data['status'] = 'Planificación';
         }
         if (empty($data['budget'])) {
             $data['budget'] = 0;
         }
-        if (empty($data['location'])) {
-            $data['location'] = '';
+        if (empty($data['priority'])) {
+            $data['priority'] = 'Media';
         }
-        if (empty($data['objectives'])) {
-            $data['objectives'] = '';
+        if (empty($data['progress'])) {
+            $data['progress'] = 0;
         }
 
         $project_id = $this->project->create($data);
@@ -260,6 +260,111 @@ class ProjectController {
         return [
             'success' => false,
             'message' => 'Error al actualizar el estado'
+        ];
+    }
+
+    /**
+     * Obtener usuarios disponibles para asignar a un proyecto
+     */
+    public function getAvailableUsers($projectId, $userData) {
+        // Solo admin o coordinador pueden ver usuarios disponibles
+        if ($userData['role_id'] != 1 && $userData['role_id'] != 2) {
+            return [
+                'success' => false,
+                'message' => 'No tienes permisos para gestionar miembros'
+            ];
+        }
+
+        $users = $this->project->getAvailableUsers($projectId);
+        
+        return [
+            'success' => true,
+            'data' => $users
+        ];
+    }
+
+    /**
+     * Asignar usuario a proyecto
+     */
+    public function assignUserToProject($projectId, $userId, $userData) {
+        // Solo admin o coordinador pueden asignar usuarios
+        if ($userData['role_id'] != 1 && $userData['role_id'] != 2) {
+            return [
+                'success' => false,
+                'message' => 'No tienes permisos para asignar usuarios'
+            ];
+        }
+
+        // Verificar que el proyecto existe
+        $project = $this->project->getById($projectId);
+        if (!$project) {
+            return [
+                'success' => false,
+                'message' => 'Proyecto no encontrado'
+            ];
+        }
+
+        // Los coordinadores solo pueden asignar participantes (role_id = 3)
+        if ($userData['role_id'] == 2) {
+            // Verificar que el usuario a asignar es participante
+            $userToAssign = $this->project->getUserById($userId);
+            if (!$userToAssign || $userToAssign['role_id'] != 3) {
+                return [
+                    'success' => false,
+                    'message' => 'Los coordinadores solo pueden asignar participantes'
+                ];
+            }
+        }
+
+        if ($this->project->assignUserToProject($projectId, $userId)) {
+            return [
+                'success' => true,
+                'message' => 'Usuario asignado exitosamente'
+            ];
+        }
+
+        return [
+            'success' => false,
+            'message' => 'Error al asignar usuario al proyecto'
+        ];
+    }
+
+    /**
+     * Desasignar usuario del proyecto
+     */
+    public function unassignUserFromProject($projectId, $userId, $userData) {
+        // Solo admin o coordinador pueden desasignar usuarios
+        if ($userData['role_id'] != 1 && $userData['role_id'] != 2) {
+            return [
+                'success' => false,
+                'message' => 'No tienes permisos para desasignar usuarios'
+            ];
+        }
+
+        // Verificar que el proyecto existe
+        $project = $this->project->getById($projectId);
+        if (!$project) {
+            return [
+                'success' => false,
+                'message' => 'Proyecto no encontrado'
+            ];
+        }
+
+        // Log para debugging
+        error_log("ProjectController::unassignUserFromProject called: projectId=$projectId, userId=$userId");
+        
+        if ($this->project->unassignUserFromProject($projectId, $userId)) {
+            error_log("User $userId successfully unassigned from project $projectId");
+            return [
+                'success' => true,
+                'message' => 'Usuario desasignado exitosamente'
+            ];
+        }
+
+        error_log("Failed to unassign user $userId from project $projectId");
+        return [
+            'success' => false,
+            'message' => 'Error al desasignar usuario del proyecto'
         ];
     }
 }

@@ -107,7 +107,8 @@ class Project {
             u.name,
             u.email,
             u.avatar,
-            r.name as role_name
+            r.name as role_name,
+            r.id as role_id
         FROM " . $this->table_members . " pm
         LEFT JOIN " . $this->table_users . " u ON pm.user_id = u.id
         LEFT JOIN roles r ON u.role_id = r.id
@@ -118,7 +119,15 @@ class Project {
         $stmt->bindParam(':project_id', $project_id, PDO::PARAM_INT);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Log para debugging
+        error_log("getProjectMembers for project_id=$project_id: Found " . count($members) . " members");
+        foreach ($members as $member) {
+            error_log("Member: user_id=" . $member['user_id'] . ", name=" . $member['name']);
+        }
+
+        return $members;
     }
 
     /**
@@ -126,9 +135,9 @@ class Project {
      */
     public function create($data) {
         $query = "INSERT INTO " . $this->table_name . " 
-            (name, description, start_date, end_date, status, budget, creator_id, location, objectives, created_at)
+            (name, description, start_date, end_date, status, budget, creator_id, priority, progress, created_at)
         VALUES 
-            (:name, :description, :start_date, :end_date, :status, :budget, :creator_id, :location, :objectives, NOW())";
+            (:name, :description, :start_date, :end_date, :status, :budget, :creator_id, :priority, :progress, NOW())";
 
         $stmt = $this->conn->prepare($query);
 
@@ -139,8 +148,8 @@ class Project {
         $stmt->bindParam(':status', $data['status']);
         $stmt->bindParam(':budget', $data['budget']);
         $stmt->bindParam(':creator_id', $data['creator_id']);
-        $stmt->bindParam(':location', $data['location']);
-        $stmt->bindParam(':objectives', $data['objectives']);
+        $stmt->bindParam(':priority', $data['priority']);
+        $stmt->bindParam(':progress', $data['progress']);
 
         if ($stmt->execute()) {
             return $this->conn->lastInsertId();
@@ -161,8 +170,8 @@ class Project {
             end_date = :end_date,
             status = :status,
             budget = :budget,
-            location = :location,
-            objectives = :objectives,
+            priority = :priority,
+            progress = :progress,
             updated_at = NOW()
         WHERE id = :id";
 
@@ -175,8 +184,8 @@ class Project {
         $stmt->bindParam(':end_date', $data['end_date']);
         $stmt->bindParam(':status', $data['status']);
         $stmt->bindParam(':budget', $data['budget']);
-        $stmt->bindParam(':location', $data['location']);
-        $stmt->bindParam(':objectives', $data['objectives']);
+        $stmt->bindParam(':priority', $data['priority']);
+        $stmt->bindParam(':progress', $data['progress']);
 
         return $stmt->execute();
     }
@@ -237,6 +246,89 @@ class Project {
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row['count'] > 0;
+    }
+
+    /**
+     * Obtener usuarios disponibles para asignar a un proyecto
+     */
+    public function getAvailableUsers($projectId) {
+        $query = "SELECT u.id, u.name, u.email, u.avatar, r.name as role_name, r.id as role_id
+                  FROM " . $this->table_users . " u
+                  LEFT JOIN " . $this->table_roles . " r ON u.role_id = r.id
+                  WHERE u.id NOT IN (
+                      SELECT user_id FROM " . $this->table_members . " WHERE project_id = :project_id
+                  )
+                  ORDER BY r.id, u.name";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':project_id', $projectId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Asignar usuario a proyecto
+     */
+    public function assignUserToProject($projectId, $userId) {
+        $query = "INSERT INTO " . $this->table_members . " (project_id, user_id, assigned_at) 
+                  VALUES (:project_id, :user_id, NOW())";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':project_id', $projectId, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Desasignar usuario del proyecto
+     */
+    public function unassignUserFromProject($projectId, $userId) {
+        // Primero verificar si existe la relación
+        $checkQuery = "SELECT COUNT(*) as count FROM " . $this->table_members . " 
+                       WHERE project_id = :project_id AND user_id = :user_id";
+        $checkStmt = $this->conn->prepare($checkQuery);
+        $checkStmt->bindParam(':project_id', $projectId, PDO::PARAM_INT);
+        $checkStmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $checkStmt->execute();
+        $checkResult = $checkStmt->fetch(PDO::FETCH_ASSOC);
+        
+        error_log("Before DELETE: Found " . $checkResult['count'] . " records for project_id=$projectId, user_id=$userId");
+        
+        $query = "DELETE FROM " . $this->table_members . " 
+                  WHERE project_id = :project_id AND user_id = :user_id";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':project_id', $projectId, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+
+        $result = $stmt->execute();
+        $affectedRows = $stmt->rowCount();
+        
+        // Log para debugging
+        error_log("DELETE project_users: project_id=$projectId, user_id=$userId, result=" . ($result ? 'success' : 'failed') . ", affected_rows=$affectedRows");
+        
+        // Verificar después del DELETE
+        $checkStmt->execute();
+        $checkResultAfter = $checkStmt->fetch(PDO::FETCH_ASSOC);
+        error_log("After DELETE: Found " . $checkResultAfter['count'] . " records for project_id=$projectId, user_id=$userId");
+        
+        return $result && $affectedRows > 0;
+    }
+
+    /**
+     * Obtener usuario por ID
+     */
+    public function getUserById($userId) {
+        $query = "SELECT u.id, u.name, u.email, u.role_id, r.name as role_name
+                  FROM " . $this->table_users . " u
+                  LEFT JOIN " . $this->table_roles . " r ON u.role_id = r.id
+                  WHERE u.id = :user_id";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
 ?>

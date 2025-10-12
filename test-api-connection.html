@@ -84,16 +84,19 @@
         try {
           // Test 1: Probar endpoint raíz
           console.log(
-            "📡 Intentando conectar a: http://localhost/purple-free/api"
+            "📡 Intentando conectar a: http://localhost/eco-app/greentech/api"
           );
 
-          const response = await fetch("http://localhost/purple-free/api", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-          });
+          const response = await fetch(
+            "http://localhost/eco-app/greentech/api",
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+            }
+          );
 
           console.log("✅ Respuesta recibida:", response.status);
 
@@ -146,13 +149,13 @@
                             </li>
                             <li><strong>Verifica la URL</strong>
                                 <ul>
-                                    <li>Abre en el navegador: <a href="http://localhost/purple-free/api" target="_blank">http://localhost/purple-free/api</a></li>
+                                    <li>Abre en el navegador: <a href="http://localhost/eco-app/greentech/api" target="_blank">http://localhost/eco-app/greentech/api</a></li>
                                     <li>Debería mostrar información de la API</li>
                                 </ul>
                             </li>
                             <li><strong>Verifica que el proyecto esté en:</strong>
                                 <ul>
-                                    <li>C:\\xampp\\htdocs\\purple-free</li>
+                                    <li>C:\\xampp\\htdocs\\eco-app\\greentech</li>
                                 </ul>
                             </li>
                         </ol>
@@ -162,7 +165,7 @@
             suggestion = `
                         <h4>Soluciones:</h4>
                         <ul>
-                            <li>Verifica que la carpeta del proyecto esté en: <code>C:\\xampp\\htdocs\\purple-free</code></li>
+                            <li>Verifica que la carpeta del proyecto esté en: <code>C:\\xampp\\htdocs\\eco-app\\greentech</code></li>
                             <li>Verifica que existe el archivo: <code>api/index.php</code></li>
                             <li>Verifica que existe el archivo: <code>.htaccess</code></li>
                         </ul>
