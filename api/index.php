@@ -79,7 +79,7 @@ try {
     $request_uri = parse_url($request_uri, PHP_URL_PATH);
     
     // Remover el prefijo de la ruta base (ajustar según tu estructura)
-    $base_path = '/purple-free/api';
+    $base_path = '/eco-app/GreenTech/api';
     if (strpos($request_uri, $base_path) === 0) {
         $request_uri = substr($request_uri, strlen($base_path));
     }

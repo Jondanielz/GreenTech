@@ -3,7 +3,7 @@
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /purple-free/
+  RewriteBase /eco-app/GreenTech/
 
   # ========== CORS Headers ==========
   # NOTA: Los headers CORS se manejan en api/config/cors.php
