@@ -79,7 +79,7 @@ try {
     $request_uri = parse_url($request_uri, PHP_URL_PATH);
     
     // Remover el prefijo de la ruta base (ajustar según tu estructura)
-    $base_path = '/eco-app/GreenTech/api';
+    $base_path = '/eco-app/greentech/api';
     if (strpos($request_uri, $base_path) === 0) {
         $request_uri = substr($request_uri, strlen($base_path));
     }
@@ -230,16 +230,53 @@ try {
             // GET /api/projects/{id} - Obtener proyecto por ID
             case (is_numeric($action) ? $action : ''):
                 if ($method === 'GET') {
-                    $response = $projectController->getProjectById($action, $userData);
-                    sendResponse($response, 200);
+                    // Verificar si es para obtener usuarios disponibles
+                    if (isset($uri_parts[2]) && $uri_parts[2] === 'available-users') {
+                        // GET /api/projects/{id}/available-users
+                        $response = $projectController->getAvailableUsers($action, $userData);
+                        sendResponse($response, 200);
+                    } else {
+                        // GET /api/projects/{id}
+                        $response = $projectController->getProjectById($action, $userData);
+                        sendResponse($response, 200);
+                    }
                 } 
+                else if ($method === 'POST') {
+                    // Verificar si es para asignar usuario
+                    if (isset($uri_parts[2]) && $uri_parts[2] === 'members') {
+                        // POST /api/projects/{id}/members
+                        $user_id = $input['user_id'] ?? null;
+                        if (!$user_id) {
+                            sendResponse(['error' => 'ID de usuario requerido'], 400);
+                        }
+                        $response = $projectController->assignUserToProject($action, $user_id, $userData);
+                        sendResponse($response, 200);
+                    } else {
+                        sendResponse(['error' => 'Ruta no encontrada'], 404);
+                    }
+                }
                 else if ($method === 'PUT' || $method === 'PATCH') {
                     $response = $projectController->updateProject($action, $input, $userData);
                     sendResponse($response, 200);
                 } 
                 else if ($method === 'DELETE') {
-                    $response = $projectController->cancelProject($action, $userData);
-                    sendResponse($response, 200);
+                    // Log para debugging
+                    error_log("DELETE request - uri_parts: " . json_encode($uri_parts));
+                    error_log("DELETE request - action: $action");
+                    
+                    // Verificar si es para desasignar usuario o cancelar proyecto
+                    if (isset($uri_parts[2]) && $uri_parts[2] === 'members' && isset($uri_parts[3])) {
+                        // DELETE /api/projects/{id}/members/{user_id}
+                        $user_id = $uri_parts[3];
+                        error_log("DELETE members - project_id: $action, user_id: $user_id");
+                        $response = $projectController->unassignUserFromProject($action, $user_id, $userData);
+                        sendResponse($response, 200);
+                    } else {
+                        // DELETE /api/projects/{id} - Cancelar proyecto
+                        error_log("DELETE project - project_id: $action");
+                        $response = $projectController->cancelProject($action, $userData);
+                        sendResponse($response, 200);
+                    }
                 } 
                 else {
                     sendResponse(['error' => 'Método no permitido'], 405);

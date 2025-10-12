@@ -76,7 +76,7 @@ TypeError: Failed to fetch
 **Abre en tu navegador:**
 
 ```
-http://localhost/eco-app/GreenTech/api
+http://localhost/eco-app/greentech/api
 ```
 
 **Si Apache está corriendo correctamente, verás:**
@@ -137,7 +137,7 @@ http://localhost/eco-app/GreenTech/api
      - Busca "Listen 80"
      - Cambia a "Listen 8080"
      - Reinicia Apache
-     - Actualiza la URL de la API a: `http://localhost:8080/eco-app/GreenTech/api`
+     - Actualiza la URL de la API a: `http://localhost:8080/eco-app/greentech/api`
 
 ### **Error: "MySQL shutdown unexpectedly"**
 
@@ -173,7 +173,7 @@ Marca cada paso cuando lo completes:
 - [ ] XAMPP Control Panel abierto
 - [ ] Apache iniciado (botón dice "STOP", status "Running")
 - [ ] MySQL iniciado (botón dice "STOP", status "Running")
-- [ ] API responde en: http://localhost/eco-app/GreenTech/api
+- [ ] API responde en: http://localhost/eco-app/greentech/api
 - [ ] Test de conexión exitoso
 - [ ] Dashboard carga en: http://localhost:3000
 - [ ] Datos del dashboard se muestran correctamente
@@ -196,7 +196,7 @@ ANTES (Error):
               │ NO HAY CONEXIÓN
               │
 ┌──────────────────────────────────────────────────────┐
-│ API (http://localhost/eco-app/GreenTech/api)              │
+│ API (http://localhost/eco-app/greentech/api)        │
 │                                                      │
 │ ❌ No responde (Apache detenido)                    │
 └──────────────────────────────────────────────────────┘
@@ -217,7 +217,7 @@ DESPUÉS (Funcionando):
               │ CONEXIÓN EXITOSA ✅
               │
 ┌──────────────────────────────────────────────────────┐
-│ API (http://localhost/eco-app/GreenTech/api)              │
+│ API (http://localhost/eco-app/greentech/api)        │
 │                                                      │
 │ ✅ {                                                 │
 │   "success": true,                                  │

@@ -121,6 +121,9 @@ class TaskController {
             ];
         }
 
+        // Agregar created_by (usuario que crea la tarea)
+        $data['created_by'] = $userData['user_id'];
+        
         // Valores por defecto
         if (empty($data['description'])) {
             $data['description'] = '';
@@ -131,8 +134,14 @@ class TaskController {
         if (empty($data['priority'])) {
             $data['priority'] = 'Media';
         }
+        if (empty($data['progress'])) {
+            $data['progress'] = 0;
+        }
         if (empty($data['estimated_hours'])) {
             $data['estimated_hours'] = 0;
+        }
+        if (empty($data['actual_hours'])) {
+            $data['actual_hours'] = 0;
         }
 
         $task_id = $this->task->create($data);
@@ -189,6 +198,14 @@ class TaskController {
                 'success' => false,
                 'message' => 'No tienes permisos para editar esta tarea'
             ];
+        }
+
+        // Valores por defecto para campos opcionales
+        if (!isset($data['progress'])) {
+            $data['progress'] = $task['progress'];
+        }
+        if (!isset($data['actual_hours'])) {
+            $data['actual_hours'] = $task['actual_hours'];
         }
 
         if ($this->task->update($id, $data)) {

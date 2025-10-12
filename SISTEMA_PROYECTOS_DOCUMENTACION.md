@@ -280,7 +280,7 @@ npm run dev
 ## 📁 Estructura de Archivos
 
 ```
-eco-app/GreenTech/
+greentech/
 ├── api/
 │   ├── models/
 │   │   ├── Project.php          ✅ NUEVO

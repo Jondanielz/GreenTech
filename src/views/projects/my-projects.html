@@ -47,6 +47,30 @@
         background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
         color: white;
       }
+      .project-manage-icon {
+        position: absolute;
+        top: 3.5rem;
+        right: 1rem;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+      .project-manage-icon:hover {
+        background: white;
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      }
+      .project-manage-icon i {
+        font-size: 1.25rem;
+        color: #4e73df;
+      }
       .project-status-badge {
         position: absolute;
         top: 1rem;
@@ -106,6 +130,14 @@
         background: #4e73df;
         color: white;
       }
+      .btn-edit {
+        background: #f6c23e;
+        color: white;
+      }
+      .btn-cancel {
+        background: #e74a3b;
+        color: white;
+      }
       .empty-state {
         text-align: center;
         padding: 3rem;
@@ -133,6 +165,13 @@
       #loadingSpinner {
         text-align: center;
         padding: 3rem;
+      }
+      .modal-lg {
+        max-width: 800px;
+      }
+      .form-group label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
       }
     </style>
   </head>
@@ -168,6 +207,14 @@
                     <span id="projectCount" class="badge bg-success"
                       >0 proyectos</span
                     >
+
+                    <button
+                      class="btn btn-gradient-primary btn-sm ms-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#createProjectModal"
+                    >
+                      <i class="mdi mdi-plus"></i> Nuevo Proyecto
+                    </button>
                   </li>
                 </ul>
               </nav>
@@ -179,7 +226,7 @@
                 <label for="filterStatus" class="mb-0">Estado:</label>
                 <select id="filterStatus" class="form-select form-select-sm">
                   <option value="">Todos</option>
-                  <option value="Planificacion">Planificación</option>
+                  <option value="Planificación">Planificación</option>
                   <option value="En progreso">En Progreso</option>
                   <option value="Completado">Completado</option>
                   <option value="En espera">En Espera</option>
@@ -222,6 +269,336 @@
 
           <!-- Footer Container -->
           <div id="footer-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Crear Proyecto -->
+    <div
+      class="modal fade"
+      id="createProjectModal"
+      tabindex="-1"
+      aria-labelledby="createProjectModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="createProjectModalLabel">
+              <i class="mdi mdi-folder-plus"></i> Crear Nuevo Proyecto
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="createProjectForm">
+              <div class="row">
+                <div class="col-md-8 mb-3">
+                  <label for="projectName" class="form-label"
+                    >Nombre del Proyecto
+                    <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="projectName"
+                    required
+                  />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="projectStatus" class="form-label">Estado</label>
+                  <select class="form-select" id="projectStatus">
+                    <option value="Planificacion">Planificación</option>
+                    <option value="En progreso">En Progreso</option>
+                    <option value="En espera">En Espera</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="projectDescription" class="form-label"
+                  >Descripción <span class="text-danger">*</span></label
+                >
+                <textarea
+                  class="form-control"
+                  id="projectDescription"
+                  rows="3"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="projectStartDate" class="form-label"
+                    >Fecha de Inicio</label
+                  >
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="projectStartDate"
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="projectEndDate" class="form-label"
+                    >Fecha de Finalización</label
+                  >
+                  <input type="date" class="form-control" id="projectEndDate" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="projectBudget" class="form-label"
+                    >Presupuesto</label
+                  >
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="projectBudget"
+                      min="0"
+                      step="0.01"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="projectLocation" class="form-label"
+                    >Ubicación</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="projectLocation"
+                  />
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="projectObjectives" class="form-label"
+                  >Objetivos</label
+                >
+                <textarea
+                  class="form-control"
+                  id="projectObjectives"
+                  rows="2"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="saveProjectBtn">
+              <i class="mdi mdi-content-save"></i> Guardar Proyecto
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Gestionar Participantes -->
+    <div
+      class="modal fade"
+      id="manageMembersModal"
+      tabindex="-1"
+      role="dialog"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">
+              <i class="mdi mdi-account-multiple-plus mr-2"></i>
+              Gestionar Participantes
+            </h5>
+            <button
+              type="button"
+              class="btn-close text-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <h6 class="mb-3" id="manageMembersProjectName"></h6>
+
+            <!-- Miembros actuales -->
+            <div class="mb-4">
+              <h6 class="text-primary">
+                <i class="mdi mdi-account-check mr-2"></i>
+                Miembros Asignados
+              </h6>
+              <div id="currentMembersList" class="list-group">
+                <!-- Se llenará con JavaScript -->
+              </div>
+            </div>
+
+            <!-- Usuarios disponibles -->
+            <div>
+              <h6 class="text-success">
+                <i class="mdi mdi-account-plus mr-2"></i>
+                Usuarios Disponibles
+              </h6>
+              <div id="availableUsersList" class="list-group">
+                <!-- Se llenará con JavaScript -->
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Editar Proyecto -->
+    <div
+      class="modal fade"
+      id="editProjectModal"
+      tabindex="-1"
+      aria-labelledby="editProjectModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editProjectModalLabel">
+              <i class="mdi mdi-pencil"></i> Editar Proyecto
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editProjectForm">
+              <input type="hidden" id="editProjectId" />
+              <div class="row">
+                <div class="col-md-8 mb-3">
+                  <label for="editProjectName" class="form-label"
+                    >Nombre del Proyecto
+                    <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="editProjectName"
+                    required
+                  />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="editProjectStatus" class="form-label"
+                    >Estado</label
+                  >
+                  <select class="form-select" id="editProjectStatus">
+                    <option value="Planificación">Planificación</option>
+                    <option value="En progreso">En Progreso</option>
+                    <option value="Completado">Completado</option>
+                    <option value="Cancelado">Cancelado</option>
+                    <option value="En espera">En Espera</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="editProjectDescription" class="form-label"
+                  >Descripción <span class="text-danger">*</span></label
+                >
+                <textarea
+                  class="form-control"
+                  id="editProjectDescription"
+                  rows="3"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label for="editProjectStartDate" class="form-label"
+                    >Fecha de Inicio</label
+                  >
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="editProjectStartDate"
+                  />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="editProjectEndDate" class="form-label"
+                    >Fecha de Fin</label
+                  >
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="editProjectEndDate"
+                  />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="editProjectBudget" class="form-label"
+                    >Presupuesto</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="editProjectBudget"
+                    step="0.01"
+                    min="0"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="editProjectPriority" class="form-label"
+                    >Prioridad</label
+                  >
+                  <select class="form-select" id="editProjectPriority">
+                    <option value="Baja">Baja</option>
+                    <option value="Media">Media</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Crítica">Crítica</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="editProjectProgress" class="form-label"
+                    >Progreso (%)</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="editProjectProgress"
+                    min="0"
+                    max="100"
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="saveEditProjectBtn"
+            >
+              <i class="mdi mdi-content-save"></i> Guardar Cambios
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -379,20 +756,29 @@
           return `
             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
               <div class="card project-card">
-                <div class="project-header">
-                  <span class="project-status-badge bg-${statusClass}">
-                    ${project.status}
-                  </span>
-                  <h5 class="mb-2">${project.name}</h5>
-                  <small>Creado: ${ProjectService.formatDate(
-                    project.created_at
-                  )}</small>
-                  ${
-                    userRole
-                      ? `<div class="project-role-badge">${userRole}</div>`
-                      : ""
-                  }
-                </div>
+                 <div class="project-header">
+                   <span class="project-status-badge bg-${statusClass}">
+                     ${project.status}
+                   </span>
+                   ${
+                     userData.role_id === 1 || userData.role_id === 2
+                       ? `
+                   <div class="project-manage-icon" onclick="manageMembers(${project.id}, '${project.name}')" title="Gestionar Participantes">
+                     <i class="mdi mdi-account-multiple-plus"></i>
+                   </div>
+                   `
+                       : ""
+                   }
+                   <h5 class="mb-2">${project.name}</h5>
+                   <small>Creado: ${ProjectService.formatDate(
+                     project.created_at
+                   )}</small>
+                   ${
+                     userRole
+                       ? `<div class="project-role-badge">${userRole}</div>`
+                       : ""
+                   }
+                 </div>
                 <div class="project-body">
                   <p class="text-muted mb-3" style="font-size: 0.875rem;">
                     ${project.description.substring(0, 100)}${
@@ -470,8 +856,26 @@
                     <button class="project-action-btn btn-view" onclick="viewProject(${
                       project.id
                     })">
-                      <i class="mdi mdi-eye"></i> Ver Detalles
+                      <i class="mdi mdi-eye"></i> Ver
                     </button>
+                    ${
+                      userData.role_id === 2 || userData.role_id === 1
+                        ? `
+                    <button class="project-action-btn btn-edit" onclick="editProject(${project.id})">
+                      <i class="mdi mdi-pencil"></i> Editar
+                    </button>
+                    `
+                        : ""
+                    }
+                    ${
+                      userData.role_id === 1
+                        ? `
+                    <button class="project-action-btn btn-cancel" onclick="cancelProject(${project.id}, '${project.name}')">
+                      <i class="mdi mdi-close"></i> Cancelar
+                    </button>
+                    `
+                        : ""
+                    }
                   </div>
                 </div>
               </div>
@@ -483,6 +887,116 @@
         window.viewProject = function (id) {
           window.location.href = `/src/views/projects/project-details.html?id=${id}`;
         };
+
+        // Editar proyecto
+        window.editProject = async function (id) {
+          try {
+            const response = await ProjectService.getProjectById(id);
+
+            if (response.success) {
+              const project = response.data;
+
+              // Llenar el formulario
+              document.getElementById("editProjectId").value = project.id;
+              document.getElementById("editProjectName").value = project.name;
+              document.getElementById("editProjectDescription").value =
+                project.description || "";
+              document.getElementById("editProjectStatus").value =
+                project.status;
+              document.getElementById("editProjectStartDate").value =
+                project.start_date || "";
+              document.getElementById("editProjectEndDate").value =
+                project.end_date || "";
+              document.getElementById("editProjectBudget").value =
+                project.budget || 0;
+              document.getElementById("editProjectPriority").value =
+                project.priority || "Media";
+              document.getElementById("editProjectProgress").value =
+                project.progress || 0;
+
+              // Mostrar modal
+              const modal = new bootstrap.Modal(
+                document.getElementById("editProjectModal")
+              );
+              modal.show();
+            } else {
+              showError(response.message || "Error al cargar proyecto");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            showError("Error al cargar proyecto");
+          }
+        };
+
+        // Cancelar proyecto (solo admin)
+        window.cancelProject = async function (id, name) {
+          if (
+            !confirm(
+              `¿Estás seguro de que deseas cancelar el proyecto "${name}"?\n\nEsta acción cambiará el estado del proyecto a "Cancelado".`
+            )
+          ) {
+            return;
+          }
+
+          try {
+            const response = await ProjectService.cancelProject(id);
+
+            if (response.success) {
+              showSuccess("Proyecto cancelado exitosamente");
+              loadMyProjects();
+            } else {
+              showError(response.message || "Error al cancelar proyecto");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            showError("Error al cancelar proyecto");
+          }
+        };
+
+        // Guardar cambios del proyecto editado
+        document
+          .getElementById("saveEditProjectBtn")
+          .addEventListener("click", async () => {
+            const form = document.getElementById("editProjectForm");
+
+            if (!form.checkValidity()) {
+              form.reportValidity();
+              return;
+            }
+
+            const projectId = document.getElementById("editProjectId").value;
+            const projectData = {
+              name: document.getElementById("editProjectName").value,
+              description: document.getElementById("editProjectDescription")
+                .value,
+              status: document.getElementById("editProjectStatus").value,
+              start_date: document.getElementById("editProjectStartDate").value,
+              end_date: document.getElementById("editProjectEndDate").value,
+              budget: document.getElementById("editProjectBudget").value,
+              priority: document.getElementById("editProjectPriority").value,
+              progress: document.getElementById("editProjectProgress").value,
+            };
+
+            try {
+              const response = await ProjectService.updateProject(
+                projectId,
+                projectData
+              );
+
+              if (response.success) {
+                showSuccess("Proyecto actualizado exitosamente");
+                bootstrap.Modal.getInstance(
+                  document.getElementById("editProjectModal")
+                ).hide();
+                loadMyProjects();
+              } else {
+                showError(response.message || "Error al actualizar proyecto");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              showError("Error al actualizar proyecto");
+            }
+          });
 
         // Filtros
         document
@@ -522,6 +1036,260 @@
         function showError(message) {
           alert("Error: " + message);
         }
+
+        function showSuccess(message) {
+          alert(message);
+        }
+
+        // ========== CREAR PROYECTO ==========
+        // Guardar nuevo proyecto
+        document
+          .getElementById("saveProjectBtn")
+          .addEventListener("click", async () => {
+            const form = document.getElementById("createProjectForm");
+
+            if (!form.checkValidity()) {
+              form.reportValidity();
+              return;
+            }
+
+            const projectData = {
+              name: document.getElementById("projectName").value,
+              description: document.getElementById("projectDescription").value,
+              status: document.getElementById("projectStatus").value,
+              start_date: document.getElementById("projectStartDate").value,
+              end_date: document.getElementById("projectEndDate").value,
+              budget: document.getElementById("projectBudget").value,
+              location: document.getElementById("projectLocation").value,
+              objectives: document.getElementById("projectObjectives").value,
+            };
+
+            try {
+              const response = await ProjectService.createProject(projectData);
+
+              if (response.success) {
+                showSuccess("Proyecto creado exitosamente");
+                bootstrap.Modal.getInstance(
+                  document.getElementById("createProjectModal")
+                ).hide();
+                form.reset();
+                loadMyProjects();
+              } else {
+                showError(response.message || "Error al crear proyecto");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              showError("Error al crear proyecto");
+            }
+          });
+
+        // ========== GESTIÓN DE MIEMBROS ==========
+        let currentProjectIdForMembers = null;
+
+        /**
+         * Abrir modal para gestionar miembros
+         */
+        window.manageMembers = async function (projectId, projectName) {
+          currentProjectIdForMembers = projectId;
+          document.getElementById(
+            "manageMembersProjectName"
+          ).textContent = `Proyecto: ${projectName}`;
+
+          $("#manageMembersModal").modal("show");
+          await loadProjectMembers(projectId);
+        };
+
+        /**
+         * Cargar miembros del proyecto
+         */
+        async function loadProjectMembers(projectId) {
+          try {
+            // Obtener detalles del proyecto con sus miembros
+            const projectResponse = await ProjectService.getProjectById(
+              projectId
+            );
+            const project = projectResponse.data;
+
+            // Obtener usuarios disponibles
+            const availableResponse = await ProjectService.getAvailableUsers(
+              projectId
+            );
+            const availableUsers = availableResponse.data || [];
+
+            // Renderizar miembros actuales
+            renderCurrentMembers(project.members || []);
+
+            // Renderizar usuarios disponibles
+            renderAvailableUsers(availableUsers);
+          } catch (error) {
+            console.error("Error al cargar miembros:", error);
+            showError("Error al cargar la información de miembros");
+          }
+        }
+
+        /**
+         * Renderizar miembros actuales
+         */
+        function renderCurrentMembers(members) {
+          const container = document.getElementById("currentMembersList");
+
+          if (!members || members.length === 0) {
+            container.innerHTML = `
+               <div class="list-group-item text-center text-muted">
+                 No hay miembros asignados todavía
+               </div>
+             `;
+            return;
+          }
+
+          container.innerHTML = members
+            .map((member) => {
+              const roleClass =
+                member.role_id === 1
+                  ? "danger"
+                  : member.role_id === 2
+                  ? "warning"
+                  : "info";
+              return `
+               <div class="list-group-item d-flex justify-content-between align-items-center">
+                 <div class="d-flex align-items-center">
+                   <div class="mr-3">
+                     ${
+                       member.avatar
+                         ? `<img src="${member.avatar}" class="rounded-circle" width="40" height="40" alt="${member.name}">`
+                         : `<div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
+                         ${member.name.charAt(0).toUpperCase()}
+                       </div>`
+                     }
+                   </div>
+                   <div>
+                     <div class="font-weight-bold">${member.name}</div>
+                     <small class="text-muted">${member.email}</small>
+                     <span class="badge badge-${roleClass} ml-2">${
+                member.role_name
+              }</span>
+                   </div>
+                 </div>
+                 <button 
+                   class="btn btn-sm btn-outline-danger" 
+                   onclick="removeMember(${member.user_id})"
+                   title="Desasignar miembro"
+                 >
+                   <i class="mdi mdi-account-remove"></i>
+                 </button>
+               </div>
+             `;
+            })
+            .join("");
+        }
+
+        /**
+         * Renderizar usuarios disponibles
+         */
+        function renderAvailableUsers(users) {
+          const container = document.getElementById("availableUsersList");
+
+          if (!users || users.length === 0) {
+            container.innerHTML = `
+               <div class="list-group-item text-center text-muted">
+                 No hay más usuarios disponibles para asignar
+               </div>
+             `;
+            return;
+          }
+
+          container.innerHTML = users
+            .map((user) => {
+              const roleClass =
+                user.role_id === 1
+                  ? "danger"
+                  : user.role_id === 2
+                  ? "warning"
+                  : "info";
+              return `
+               <div class="list-group-item d-flex justify-content-between align-items-center">
+                 <div class="d-flex align-items-center">
+                   <div class="mr-3">
+                     ${
+                       user.avatar
+                         ? `<img src="${user.avatar}" class="rounded-circle" width="40" height="40" alt="${user.name}">`
+                         : `<div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
+                         ${user.name.charAt(0).toUpperCase()}
+                       </div>`
+                     }
+                   </div>
+                   <div>
+                     <div class="font-weight-bold">${user.name}</div>
+                     <small class="text-muted">${user.email}</small>
+                     <span class="badge badge-${roleClass} ml-2">${
+                user.role_name
+              }</span>
+                   </div>
+                 </div>
+                 <button 
+                   class="btn btn-sm btn-outline-success" 
+                   onclick="addMember(${user.id})"
+                   title="Asignar al proyecto"
+                 >
+                   <i class="mdi mdi-account-plus"></i>
+                 </button>
+               </div>
+             `;
+            })
+            .join("");
+        }
+
+        /**
+         * Agregar miembro al proyecto
+         */
+        window.addMember = async function (userId) {
+          if (!currentProjectIdForMembers) return;
+
+          try {
+            const response = await ProjectService.assignUserToProject(
+              currentProjectIdForMembers,
+              userId
+            );
+
+            if (response.success) {
+              showSuccess("Usuario asignado exitosamente");
+              await loadProjectMembers(currentProjectIdForMembers);
+              loadMyProjects(); // Recargar la lista principal
+            }
+          } catch (error) {
+            console.error("Error al asignar usuario:", error);
+            showError("Error al asignar usuario");
+          }
+        };
+
+        /**
+         * Remover miembro del proyecto
+         */
+        window.removeMember = async function (userId) {
+          if (!currentProjectIdForMembers) return;
+
+          if (
+            !confirm("¿Estás seguro de desasignar a este usuario del proyecto?")
+          ) {
+            return;
+          }
+
+          try {
+            const response = await ProjectService.unassignUserFromProject(
+              currentProjectIdForMembers,
+              userId
+            );
+
+            if (response.success) {
+              showSuccess("Usuario desasignado exitosamente");
+              await loadProjectMembers(currentProjectIdForMembers);
+              loadMyProjects(); // Recargar la lista principal
+            }
+          } catch (error) {
+            console.error("Error al desasignar usuario:", error);
+            showError("Error al desasignar usuario");
+          }
+        };
 
         // Cargar proyectos al iniciar
         loadMyProjects();

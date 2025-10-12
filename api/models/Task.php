@@ -73,9 +73,9 @@ class Task {
      */
     public function create($data) {
         $query = "INSERT INTO " . $this->table_name . " 
-            (project_id, title, description, status, priority, due_date, estimated_hours, created_at)
+            (project_id, title, description, status, priority, due_date, created_by, progress, estimated_hours, actual_hours, created_at)
         VALUES 
-            (:project_id, :title, :description, :status, :priority, :due_date, :estimated_hours, NOW())";
+            (:project_id, :title, :description, :status, :priority, :due_date, :created_by, :progress, :estimated_hours, :actual_hours, NOW())";
 
         $stmt = $this->conn->prepare($query);
 
@@ -85,7 +85,10 @@ class Task {
         $stmt->bindParam(':status', $data['status']);
         $stmt->bindParam(':priority', $data['priority']);
         $stmt->bindParam(':due_date', $data['due_date']);
+        $stmt->bindParam(':created_by', $data['created_by']);
+        $stmt->bindParam(':progress', $data['progress']);
         $stmt->bindParam(':estimated_hours', $data['estimated_hours']);
+        $stmt->bindParam(':actual_hours', $data['actual_hours']);
 
         if ($stmt->execute()) {
             return $this->conn->lastInsertId();
@@ -105,7 +108,9 @@ class Task {
             status = :status,
             priority = :priority,
             due_date = :due_date,
+            progress = :progress,
             estimated_hours = :estimated_hours,
+            actual_hours = :actual_hours,
             updated_at = NOW()
         WHERE id = :id";
 
@@ -117,7 +122,9 @@ class Task {
         $stmt->bindParam(':status', $data['status']);
         $stmt->bindParam(':priority', $data['priority']);
         $stmt->bindParam(':due_date', $data['due_date']);
+        $stmt->bindParam(':progress', $data['progress']);
         $stmt->bindParam(':estimated_hours', $data['estimated_hours']);
+        $stmt->bindParam(':actual_hours', $data['actual_hours']);
 
         return $stmt->execute();
     }
