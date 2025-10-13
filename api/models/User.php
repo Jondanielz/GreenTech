@@ -317,6 +317,34 @@ class User {
             return false;
         }
     }
+
+    /**
+     * Obtener todos los usuarios
+     * @return array|false
+     */
+    public function getAllUsers() {
+        $query = "SELECT 
+                    u.id, u.name, u.email, u.user, 
+                    u.role_id, u.position_id, u.avatar, u.active, u.last_login,
+                    r.name as role_name, 
+                    p.name as position_name, 
+                    p.department,
+                    u.created_at, u.updated_at
+                  FROM " . $this->table_name . " u
+                  LEFT JOIN roles r ON u.role_id = r.id
+                  LEFT JOIN positions p ON u.position_id = p.id
+                  ORDER BY u.name ASC";
+
+        $stmt = $this->conn->prepare($query);
+        
+        try {
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            error_log("Error al obtener usuarios: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>
 

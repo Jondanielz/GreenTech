@@ -258,6 +258,88 @@ class TaskService {
       completionRate,
     };
   }
+
+  /**
+   * Obtener todas las tareas (para administradores)
+   */
+  static async getTasks() {
+    try {
+      const response = await APIClient.get("/tasks");
+      return response;
+    } catch (error) {
+      console.error("Error al obtener tareas:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Obtener tareas del usuario actual
+   */
+  static async getMyTasks() {
+    try {
+      const response = await APIClient.get("/tasks/my");
+      return response;
+    } catch (error) {
+      console.error("Error al obtener mis tareas:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Obtener todos los usuarios
+   */
+  static async getUsers() {
+    try {
+      const response = await APIClient.get("/users");
+      return response;
+    } catch (error) {
+      console.error("Error al obtener usuarios:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Obtener asignaciones de una tarea
+   */
+  static async getTaskAssignments(taskId) {
+    try {
+      const response = await APIClient.get(`/tasks/${taskId}/assignments`);
+      return response;
+    } catch (error) {
+      console.error("Error al obtener asignaciones:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Asignar usuario a tarea
+   */
+  static async assignUserToTask(taskId, userId) {
+    try {
+      const response = await APIClient.post(`/tasks/${taskId}/assign`, {
+        user_id: userId,
+      });
+      return response;
+    } catch (error) {
+      console.error("Error al asignar usuario:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Desasignar usuario de tarea
+   */
+  static async unassignUserFromTask(taskId, userId) {
+    try {
+      const response = await APIClient.delete(
+        `/tasks/${taskId}/unassign/${userId}`
+      );
+      return response;
+    } catch (error) {
+      console.error("Error al desasignar usuario:", error);
+      throw error;
+    }
+  }
 }
 
 export default TaskService;

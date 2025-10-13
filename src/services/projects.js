@@ -113,9 +113,9 @@ class ProjectService {
    */
   static getStatusClass(status) {
     const statusClasses = {
-      Planificacion: "warning",
+      Planificación: "info",
       "En progreso": "info",
-      Completado: "success",
+      Completado: "info",
       Cancelado: "danger",
       "En espera": "secondary",
     };

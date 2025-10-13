@@ -34,7 +34,7 @@
     <!-- Estilos personalizados -->
     <style>
       .project-header-banner {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #477f60 0%, #62a984 100%);
         color: white;
         padding: 2rem;
         border-radius: 8px;
@@ -66,9 +66,9 @@
         font-weight: 500;
       }
       .nav-tabs .nav-link.active {
-        color: #667eea;
+        color: #477f60;
         background: white;
-        border-bottom: 3px solid #667eea;
+        border-bottom: 3px solid #477f60;
       }
       .tab-content {
         background: white;
@@ -175,7 +175,7 @@
         width: 28px;
         height: 28px;
         border-radius: 50%;
-        background: #667eea;
+        background: #477f60;
         color: white;
         display: flex;
         align-items: center;
@@ -206,8 +206,8 @@
         font-weight: 500;
       }
       .kanban-add-task:hover {
-        border-color: #667eea;
-        color: #667eea;
+        border-color: #477f60;
+        color: #62a984;
         background: #f8f9ff;
       }
       .info-card {
@@ -262,7 +262,7 @@
         width: 48px;
         height: 48px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #62a984 0%, #477f60 100%);
         color: white;
         display: flex;
         align-items: center;
@@ -293,7 +293,10 @@
   <body>
     <div class="container-scroller">
       <!-- Navbar Container -->
-      <nav id="navbar-container" class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <nav
+        id="navbar-container"
+        class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row"
+      >
         <!-- Cargando navbar... -->
       </nav>
 
@@ -309,7 +312,7 @@
             <!-- Back Button -->
             <div class="back-button">
               <button
-                class="btn btn-outline-secondary btn-sm"
+                class="btn btn-outline-danger btn-sm"
                 onclick="history.back()"
               >
                 <i class="mdi mdi-arrow-left"></i> Volver
@@ -442,7 +445,7 @@
                   >
                     <h4>Tablero de Tareas</h4>
                     <button
-                      class="btn btn-primary btn-sm"
+                      class="btn btn-outline-info btn-sm"
                       id="addTaskBtn"
                       style="display: none"
                     >
@@ -523,7 +526,8 @@
       </div>
     </div>
 
-    <!-- Modal de Logout -->
+    <!-- Logout Confirmation Modal -->
+
     <div
       class="modal fade"
       id="logoutModal"
@@ -531,12 +535,9 @@
       aria-labelledby="logoutModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="logoutModalLabel">
-              <i class="mdi mdi-logout"></i> Cerrar Sesión
-            </h5>
+          <div class="modal-header border-0 pb-0">
             <button
               type="button"
               class="btn-close"
@@ -544,19 +545,24 @@
               aria-label="Close"
             ></button>
           </div>
-          <div class="modal-body">
-            <p>¿Estás seguro de que deseas cerrar sesión?</p>
+          <div class="modal-body text-center pt-0 px-4">
+            <div class="logout-icon-wrapper">
+              <i class="mdi mdi-logout"></i>
+            </div>
+            <h5 class="modal-title mb-2">Cerrar Sesión</h5>
+            <p class="text-muted mb-0">¿Estás seguro de que deseas salir?</p>
           </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
+          <div class="modal-footer border-0 justify-content-center pb-4 px-4">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
               Cancelar
             </button>
-            <button type="button" class="btn btn-primary" id="confirmLogoutBtn">
-              Sí, cerrar sesión
+            <button
+              type="button"
+              class="btn btn-gradient-primary"
+              id="confirmLogoutBtn"
+            >
+              <i class="mdi mdi-check-circle me-1"></i>
+              Sí, salir
             </button>
           </div>
         </div>

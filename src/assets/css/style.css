@@ -14842,6 +14842,54 @@ fieldset:disabled .ajax-upload-dragdrop .ajax-file-upload,
     overflow-y: auto;
   }
 }
+#logoutModal .modal-content {
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+#logoutModal .logout-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, #477f60 0%, #62a984 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: scaleIn 0.3s ease-out;
+}
+
+#logoutModal .logout-icon-wrapper i {
+  color: white !important;
+  font-size: 40px;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+#logoutModal .modal-title {
+  font-weight: 600;
+  color: #2c2c2c;
+}
+
+#logoutModal .modal-footer {
+  gap: 10px;
+}
+
+#logoutModal .btn {
+  min-width: 120px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: 500;
+}
 .tooltip {
   --bs-tooltip-zindex: 1080;
   --bs-tooltip-max-width: 200px;

@@ -328,6 +328,51 @@ class AuthController {
     }
 
     /**
+     * Obtener todos los usuarios (solo administradores)
+     * @param array $userData - Datos del usuario autenticado
+     * @return array - Respuesta JSON
+     */
+    public function getAllUsers($userData) {
+        // Verificar que el usuario esté autenticado
+        if (!$userData) {
+            return [
+                'success' => false,
+                'message' => 'No autorizado'
+            ];
+        }
+
+        // Verificar que sea administrador
+        if ($userData['role_id'] != 1) {
+            return [
+                'success' => false,
+                'message' => 'No tienes permisos para acceder a esta información'
+            ];
+        }
+
+        try {
+            $users = $this->user->getAllUsers();
+            
+            if ($users !== false) {
+                return [
+                    'success' => true,
+                    'data' => $users
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Error al obtener usuarios'
+                ];
+            }
+        } catch (Exception $e) {
+            error_log("Error en getAllUsers: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error interno del servidor'
+            ];
+        }
+    }
+
+    /**
      * Cerrar conexión a la base de datos
      */
     public function __destruct() {

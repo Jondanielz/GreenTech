@@ -43,6 +43,24 @@ class Task {
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getMyTasks($user_id) {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE created_by = :user_id";
+        $query = "SELECT 
+            t.*,
+            p.name as project_name,
+            GROUP_CONCAT(DISTINCT u.name SEPARATOR ', ') as assignees,
+            GROUP_CONCAT(DISTINCT u.id SEPARATOR ',') as assignee_ids
+        FROM " . $this->table_name . " t
+        LEFT JOIN " . $this->table_projects . " p ON t.project_id = p.id
+        LEFT JOIN " . $this->table_assignments . " ta ON t.id = ta.task_id
+        LEFT JOIN " . $this->table_users . " u ON ta.user_id = u.id
+        WHERE t.created_by = :user_id
+        GROUP BY t.id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     /**
      * Obtener una tarea por ID
@@ -226,6 +244,143 @@ class Task {
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Obtener todas las tareas
+     * @return array|false
+     */
+    public function getAllTasks() {
+        $query = "SELECT 
+                    t.id, t.title, t.description, t.status, t.priority,
+                    t.due_date, t.estimated_hours, t.actual_hours,
+                    t.progress, t.created_at, t.updated_at,
+                    t.project_id, p.name as project_name,
+                    t.created_by, uc.name as created_by_name
+                  FROM " . $this->table_name . " t
+                  LEFT JOIN projects p ON t.project_id = p.id
+                  LEFT JOIN " . $this->table_users . " uc ON t.created_by = uc.id
+                  ORDER BY t.created_at DESC";
+
+        $stmt = $this->conn->prepare($query);
+        
+        try {
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            error_log("Error al obtener todas las tareas: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Obtener tareas de un usuario específico
+     * @param int $user_id - ID del usuario
+     * @return array|false
+     */
+    public function getTasksByUser($user_id) {
+        $query = "SELECT 
+                    t.id, t.title, t.description, t.status, t.priority,
+                    t.due_date, t.estimated_hours, t.actual_hours,
+                    t.progress, t.created_at, t.updated_at,
+                    t.project_id, p.name as project_name,
+                    t.created_by, uc.name as created_by_name
+                  FROM " . $this->table_name . " t
+                  LEFT JOIN projects p ON t.project_id = p.id
+                  LEFT JOIN " . $this->table_users . " uc ON t.created_by = uc.id
+                  WHERE t.created_by = :user_id
+                  ORDER BY t.created_at DESC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        
+        try {
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            error_log("Error al obtener tareas del usuario: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Obtener asignaciones de una tarea
+     */
+    public function getTaskAssignments($task_id) {
+        $query = "SELECT 
+            ta.id,
+            ta.task_id,
+            ta.user_id,
+            ta.assigned_at,
+            ta.assigned_by,
+            u.name as user_name,
+            u.email as user_email,
+            r.name as role_name
+        FROM " . $this->table_assignments . " ta
+        LEFT JOIN " . $this->table_users . " u ON ta.user_id = u.id
+        LEFT JOIN " . $this->table_roles . " r ON u.role_id = r.id
+        WHERE ta.task_id = :task_id
+        ORDER BY ta.assigned_at DESC";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':task_id', $task_id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            error_log("Error al obtener asignaciones de tarea: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Asignar usuario a tarea
+     */
+    public function assignUserToTask($task_id, $user_id, $assigned_by) {
+        $query = "INSERT INTO " . $this->table_assignments . " 
+                  (task_id, user_id, assigned_by) 
+                  VALUES (:task_id, :user_id, :assigned_by)";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':task_id', $task_id, PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->bindParam(':assigned_by', $assigned_by, PDO::PARAM_INT);
+            
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                error_log("Error al asignar usuario a tarea: " . implode(", ", $stmt->errorInfo()));
+                return false;
+            }
+        } catch(PDOException $e) {
+            error_log("Error al asignar usuario a tarea: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Desasignar usuario de tarea
+     */
+    public function unassignUserFromTask($task_id, $user_id) {
+        $query = "DELETE FROM " . $this->table_assignments . " 
+                  WHERE task_id = :task_id AND user_id = :user_id";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':task_id', $task_id, PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            
+            if ($stmt->execute()) {
+                return $stmt->rowCount() > 0;
+            } else {
+                error_log("Error al desasignar usuario de tarea: " . implode(", ", $stmt->errorInfo()));
+                return false;
+            }
+        } catch(PDOException $e) {
+            error_log("Error al desasignar usuario de tarea: " . $e->getMessage());
+            return false;
+        }
     }
 }
 ?>

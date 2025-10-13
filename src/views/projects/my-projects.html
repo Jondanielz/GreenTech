@@ -130,6 +130,24 @@
         background: #4e73df;
         color: white;
       }
+      .btn-outline-info {
+        background-color: #198ae3;
+        color: #ffffff;
+        --bs-btn-color: #198ae3;
+        --bs-btn-border-color: #198ae3;
+        --bs-btn-hover-color: #000;
+        --bs-btn-hover-bg: #198ae3;
+        --bs-btn-hover-border-color: #198ae3;
+        --bs-btn-focus-shadow-rgb: 25, 138, 227;
+        --bs-btn-active-color: #000;
+        --bs-btn-active-bg: #198ae3;
+        --bs-btn-active-border-color: #198ae3;
+        --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+        --bs-btn-disabled-color: #198ae3;
+        --bs-btn-disabled-bg: transparent;
+        --bs-btn-disabled-border-color: #198ae3;
+        --bs-gradient: none;
+      }
       .btn-edit {
         background: #f6c23e;
         color: white;
@@ -178,7 +196,10 @@
   <body>
     <div class="container-scroller">
       <!-- Navbar Container -->
-      <nav id="navbar-container" class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <nav
+        id="navbar-container"
+        class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row"
+      >
         <!-- Cargando navbar... -->
       </nav>
 
@@ -189,7 +210,7 @@
         </div>
 
         <!-- Main Content -->
-        <div class="main-panel mt-5">
+        <div class="main-panel">
           <div class="content-wrapper">
             <!-- Page Header -->
             <div class="page-header">
@@ -611,12 +632,9 @@
       aria-labelledby="logoutModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="logoutModalLabel">
-              <i class="mdi mdi-logout"></i> Cerrar Sesión
-            </h5>
+          <div class="modal-header border-0 pb-0">
             <button
               type="button"
               class="btn-close"
@@ -624,19 +642,24 @@
               aria-label="Close"
             ></button>
           </div>
-          <div class="modal-body">
-            <p>¿Estás seguro de que deseas cerrar sesión?</p>
+          <div class="modal-body text-center pt-0 px-4">
+            <div class="logout-icon-wrapper">
+              <i class="mdi mdi-logout"></i>
+            </div>
+            <h5 class="modal-title mb-2">Cerrar Sesión</h5>
+            <p class="text-muted mb-0">¿Estás seguro de que deseas salir?</p>
           </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
+          <div class="modal-footer border-0 justify-content-center pb-4 px-4">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
               Cancelar
             </button>
-            <button type="button" class="btn btn-primary" id="confirmLogoutBtn">
-              Sí, cerrar sesión
+            <button
+              type="button"
+              class="btn btn-gradient-primary"
+              id="confirmLogoutBtn"
+            >
+              <i class="mdi mdi-check-circle me-1"></i>
+              Sí, salir
             </button>
           </div>
         </div>
@@ -853,7 +876,7 @@
                   }
                   
                   <div class="project-actions">
-                    <button class="project-action-btn btn-view" onclick="viewProject(${
+                    <button class="project-action-btn btn-outline-info" onclick="viewProject(${
                       project.id
                     })">
                       <i class="mdi mdi-eye"></i> Ver

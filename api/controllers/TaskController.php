@@ -35,7 +35,7 @@ class TaskController {
         }
 
         $tasks = $this->task->getByProject($project_id);
-
+        
         // Organizar tareas por estado para el Kanban
         $kanbanData = [
             'Pendiente' => [],
@@ -57,6 +57,40 @@ class TaskController {
         ];
     }
 
+    /**
+     * Obtener tareas de un usuario
+     */
+    public function getMyTasks($userData) {
+        // Verificar que el usuario esté autenticado
+        if (!$userData) {
+            return [
+                'success' => false,
+                'message' => 'No autorizado'
+            ];
+        }
+
+        try {
+            $tasks = $this->task->getTasksByUser($userData['user_id']);
+            
+            if ($tasks !== false) {
+                return [
+                    'success' => true,
+                    'data' => $tasks
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Error al obtener tareas'
+                ];
+            }
+        } catch (Exception $e) {
+            error_log("Error en getMyTasks: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error interno del servidor'
+            ];
+        }
+    }
     /**
      * Obtener una tarea por ID
      */
@@ -320,35 +354,145 @@ class TaskController {
      * Asignar usuario a tarea
      */
     public function assignUserToTask($task_id, $user_id, $userData) {
-        // Solo admin y coordinador pueden asignar usuarios
-        if ($userData['role_id'] != 1 && $userData['role_id'] != 2) {
+        // Verificar autenticación
+        if (!$userData) {
             return [
                 'success' => false,
-                'message' => 'No tienes permisos para asignar usuarios'
+                'message' => 'No autenticado'
             ];
         }
 
-        $task = $this->task->getById($task_id);
+        $assigned_by = $userData['id'];
 
-        if (!$task) {
+        try {
+            $result = $this->task->assignUserToTask($task_id, $user_id, $assigned_by);
+            
+            if ($result) {
+                return [
+                    'success' => true,
+                    'message' => 'Usuario asignado exitosamente'
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Error al asignar usuario'
+                ];
+            }
+        } catch (Exception $e) {
+            error_log("Error en assignUserToTask: " . $e->getMessage());
             return [
                 'success' => false,
-                'message' => 'Tarea no encontrada'
+                'message' => 'Error interno del servidor'
             ];
         }
-
-        if ($this->task->assignUser($task_id, $user_id)) {
-            return [
-                'success' => true,
-                'message' => 'Usuario asignado exitosamente'
-            ];
-        }
-
-        return [
-            'success' => false,
-            'message' => 'Error al asignar usuario'
-        ];
     }
+
+    /**
+     * Obtener todas las tareas (solo administradores)
+     */
+    public function getAllTasks($userData) {
+        // Verificar que el usuario esté autenticado
+        if (!$userData) {
+            return [
+                'success' => false,
+                'message' => 'No autorizado'
+            ];
+        }
+
+        // Verificar que sea administrador
+        if ($userData['role_id'] != 1) {
+            return [
+                'success' => false,
+                'message' => 'No tienes permisos para acceder a esta información'
+            ];
+        }
+
+        try {
+            $tasks = $this->task->getAllTasks();
+            
+            if ($tasks !== false) {
+                return [
+                    'success' => true,
+                    'data' => $tasks
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Error al obtener tareas'
+                ];
+            }
+        } catch (Exception $e) {
+            error_log("Error en getAllTasks: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error interno del servidor'
+            ];
+        }
+    }
+
+    /**
+     * Obtener asignaciones de una tarea
+     */
+    public function getTaskAssignments($task_id) {
+        try {
+            $assignments = $this->task->getTaskAssignments($task_id);
+            
+            if ($assignments !== false) {
+                return [
+                    'success' => true,
+                    'data' => $assignments
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Error al obtener asignaciones'
+                ];
+            }
+        } catch (Exception $e) {
+            error_log("Error en getTaskAssignments: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error interno del servidor'
+            ];
+        }
+    }
+
+
+    /**
+     * Desasignar usuario de tarea
+     */
+    public function unassignUserFromTask($task_id, $user_id, $userData) {
+        // Verificar autenticación
+        if (!$userData) {
+            return [
+                'success' => false,
+                'message' => 'No autenticado'
+            ];
+        }
+
+        try {
+            $result = $this->task->unassignUserFromTask($task_id, $user_id);
+            
+            if ($result) {
+                return [
+                    'success' => true,
+                    'message' => 'Usuario desasignado exitosamente'
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Error al desasignar usuario'
+                ];
+            }
+        } catch (Exception $e) {
+            error_log("Error en unassignUserFromTask: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error interno del servidor'
+            ];
+        }
+    }
+
 }
 ?>
 

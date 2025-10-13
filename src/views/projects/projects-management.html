@@ -126,6 +126,61 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
+      .btn-outline-success {
+        background-color: #62a984;
+        color: #ffffff;
+        --bs-btn-color: #62a984;
+        --bs-btn-border-color: #62a984;
+        --bs-btn-hover-color: #000;
+        --bs-btn-hover-bg: #62a984;
+        --bs-btn-hover-border-color: #62a984;
+        --bs-btn-focus-shadow-rgb: 27, 207, 180;
+        --bs-btn-active-color: #000;
+        --bs-btn-active-bg: #62a984;
+        --bs-btn-active-border-color: #62a984;
+        --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+        --bs-btn-disabled-color: #62a984;
+        --bs-btn-disabled-bg: transparent;
+        --bs-btn-disabled-border-color: #62a984;
+        --bs-gradient: none;
+      }
+
+      .btn-outline-info {
+        background-color: #198ae3;
+        color: #ffffff;
+        --bs-btn-color: #198ae3;
+        --bs-btn-border-color: #198ae3;
+        --bs-btn-hover-color: #000;
+        --bs-btn-hover-bg: #198ae3;
+        --bs-btn-hover-border-color: #198ae3;
+        --bs-btn-focus-shadow-rgb: 25, 138, 227;
+        --bs-btn-active-color: #000;
+        --bs-btn-active-bg: #198ae3;
+        --bs-btn-active-border-color: #198ae3;
+        --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+        --bs-btn-disabled-color: #198ae3;
+        --bs-btn-disabled-bg: transparent;
+        --bs-btn-disabled-border-color: #198ae3;
+        --bs-gradient: none;
+      }
+      .btn-outline-danger {
+        background-color: #e74a3b;
+        color: #ffffff;
+        --bs-btn-color: #e74a3b;
+        --bs-btn-border-color: #e74a3b;
+        --bs-btn-hover-color: #000;
+        --bs-btn-hover-bg: #e74a3b;
+        --bs-btn-hover-border-color: #e74a3b;
+        --bs-btn-focus-shadow-rgb: 216, 70, 96;
+        --bs-btn-active-color: #000;
+        --bs-btn-active-bg: #e74a3b;
+        --bs-btn-active-border-color: #e74a3b;
+        --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+        --bs-btn-disabled-color: #e74a3b;
+        --bs-btn-disabled-bg: transparent;
+        --bs-btn-disabled-border-color: #e74a3b;
+        --bs-gradient: none;
+      }
       .btn-view {
         background: #4e73df;
         color: white;
@@ -178,7 +233,10 @@
   <body>
     <div class="container-scroller">
       <!-- Navbar Container -->
-      <nav id="navbar-container" class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <nav
+        id="navbar-container"
+        class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row"
+      >
         <!-- Cargando navbar... -->
       </nav>
 
@@ -239,15 +297,13 @@
                 />
               </div>
               <div class="filter-group ms-auto">
-                <span id="projectCount" class="badge bg-primary"
-                  >0 proyectos</span
-                >
+                <span id="projectCount" class="badge bg-info">0 proyectos</span>
               </div>
             </div>
 
             <!-- Loading Spinner -->
             <div id="loadingSpinner" style="display: none">
-              <div class="spinner-border text-primary" role="status">
+              <div class="spinner-border text-info" role="status">
                 <span class="visually-hidden">Cargando...</span>
               </div>
               <p class="mt-2">Cargando proyectos...</p>
@@ -285,7 +341,7 @@
     >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header bg-success text-white">
             <h5 class="modal-title" id="createProjectModalLabel">
               <i class="mdi mdi-folder-plus"></i> Crear Nuevo Proyecto
             </h5>
@@ -396,7 +452,7 @@
             <button type="button" class="btn btn-light" data-bs-dismiss="modal">
               Cancelar
             </button>
-            <button type="button" class="btn btn-primary" id="saveProjectBtn">
+            <button type="button" class="btn btn-success" id="saveProjectBtn">
               <i class="mdi mdi-content-save"></i> Guardar Proyecto
             </button>
           </div>
@@ -414,7 +470,7 @@
     >
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-          <div class="modal-header bg-primary text-white">
+          <div class="modal-header bg-success text-white">
             <h5 class="modal-title">
               <i class="mdi mdi-account-multiple-plus mr-2"></i>
               Gestionar Participantes
@@ -428,7 +484,7 @@
           </div>
           <div class="modal-body">
             <h6 class="mb-3" id="manageMembersProjectName"></h6>
-            
+
             <!-- Miembros actuales -->
             <div class="mb-4">
               <h6 class="text-primary">
@@ -452,11 +508,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-light"
-              data-bs-dismiss="modal"
-            >
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
               Cerrar
             </button>
           </div>
@@ -474,7 +526,7 @@
     >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header bg-success text-white">
             <h5 class="modal-title" id="editProjectModalLabel">
               <i class="mdi mdi-pencil"></i> Editar Proyecto
             </h5>
@@ -594,7 +646,7 @@
             <button type="button" class="btn btn-light" data-bs-dismiss="modal">
               Cancelar
             </button>
-            <button type="button" class="btn btn-primary" id="updateProjectBtn">
+            <button type="button" class="btn btn-success" id="updateProjectBtn">
               <i class="mdi mdi-content-save"></i> Actualizar Proyecto
             </button>
           </div>
@@ -610,12 +662,9 @@
       aria-labelledby="logoutModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="logoutModalLabel">
-              <i class="mdi mdi-logout"></i> Cerrar Sesión
-            </h5>
+          <div class="modal-header border-0 pb-0">
             <button
               type="button"
               class="btn-close"
@@ -623,19 +672,24 @@
               aria-label="Close"
             ></button>
           </div>
-          <div class="modal-body">
-            <p>¿Estás seguro de que deseas cerrar sesión?</p>
+          <div class="modal-body text-center pt-0 px-4">
+            <div class="logout-icon-wrapper">
+              <i class="mdi mdi-logout"></i>
+            </div>
+            <h5 class="modal-title mb-2">Cerrar Sesión</h5>
+            <p class="text-muted mb-0">¿Estás seguro de que deseas salir?</p>
           </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
+          <div class="modal-footer border-0 justify-content-center pb-4 px-4">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
               Cancelar
             </button>
-            <button type="button" class="btn btn-primary" id="confirmLogoutBtn">
-              Sí, cerrar sesión
+            <button
+              type="button"
+              class="btn btn-gradient-primary"
+              id="confirmLogoutBtn"
+            >
+              <i class="mdi mdi-check-circle me-1"></i>
+              Sí, salir
             </button>
           </div>
         </div>
@@ -763,14 +817,14 @@
                     ${project.status}
                   </span>
                   ${
-                     userData.role_id === 1 || userData.role_id === 2
-                       ? `
+                    userData.role_id === 1 || userData.role_id === 2
+                      ? `
                    <div class="project-manage-icon" onclick="manageMembers(${project.id}, '${project.name}')" title="Gestionar Participantes">
                      <i class="mdi mdi-account-multiple-plus"></i>
                    </div>
                    `
-                       : ""
-                   }
+                      : ""
+                  }
                   <h5 class="mb-2">${project.name}</h5>
                   <small>Creado: ${ProjectService.formatDate(
                     project.created_at
@@ -850,17 +904,17 @@
                   }
                   
                   <div class="project-actions">
-                    <button class="project-action-btn btn-view" onclick="viewProject(${
+                    <button class="project-action-btn btn-outline-info" onclick="viewProject(${
                       project.id
                     })">
                       <i class="mdi mdi-eye"></i> Ver
                     </button>
-                    <button class="project-action-btn btn-edit" onclick="editProject(${
+                    <button class="project-action-btn btn-outline-success" onclick="editProject(${
                       project.id
                     })">
                       <i class="mdi mdi-pencil"></i> Editar
                     </button>
-                    <button class="project-action-btn btn-cancel" onclick="cancelProject(${
+                    <button class="project-action-btn btn-outline-danger" onclick="cancelProject(${
                       project.id
                     }, '${project.name}')">
                       <i class="mdi mdi-close"></i> Cancelar
@@ -1101,7 +1155,7 @@
             const availableResponse = await ProjectService.getAvailableUsers(
               projectId
             );
-            
+
             console.log("Available users response:", availableResponse);
             const availableUsers = availableResponse.data || [];
             console.log("Available users data:", availableUsers);
@@ -1124,11 +1178,11 @@
          */
         function renderCurrentMembers(members) {
           const container = document.getElementById("currentMembersList");
-          
+
           console.log("renderCurrentMembers called with:", members);
           console.log("Type of members:", typeof members);
           console.log("Is array:", Array.isArray(members));
-          console.log("Length:", members ? members.length : 'undefined');
+          console.log("Length:", members ? members.length : "undefined");
 
           if (!members || members.length === 0) {
             container.innerHTML = `
@@ -1288,7 +1342,7 @@
             showError("Error al desasignar usuario");
           }
         };
-        
+
         // Cargar proyectos al iniciar
         loadProjects();
 

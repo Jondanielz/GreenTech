@@ -320,9 +320,23 @@ try {
                 sendResponse($response, 200);
                 break;
             
+            // GET /api/tasks/my - Obtener tareas del usuario actual
+            case 'my':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $response = $taskController->getMyTasks($userData);
+                sendResponse($response, 200);
+                break;
+            
+            // GET /api/tasks - Obtener todas las tareas (solo administradores)
             // POST /api/tasks - Crear tarea
             case '':
-                if ($method === 'POST') {
+                if ($method === 'GET') {
+                    $response = $taskController->getAllTasks($userData);
+                    sendResponse($response, 200);
+                } else if ($method === 'POST') {
                     $response = $taskController->createTask($input, $userData);
                     $statusCode = $response['success'] ? 201 : 400;
                     sendResponse($response, $statusCode);
@@ -334,9 +348,31 @@ try {
             // GET/PUT/DELETE /api/tasks/{id}
             case (is_numeric($action) ? $action : ''):
                 if ($method === 'GET') {
-                    $response = $taskController->getTaskById($action, $userData);
-                    sendResponse($response, 200);
+                    // Verificar si es para obtener asignaciones
+                    if (isset($uri_parts[2]) && $uri_parts[2] === 'assignments') {
+                        // GET /api/tasks/{id}/assignments
+                        $response = $taskController->getTaskAssignments($action);
+                        sendResponse($response, 200);
+                    } else {
+                        // GET /api/tasks/{id}
+                        $response = $taskController->getTaskById($action, $userData);
+                        sendResponse($response, 200);
+                    }
                 } 
+                else if ($method === 'POST') {
+                    // Verificar si es para asignar usuario
+                    if (isset($uri_parts[2]) && $uri_parts[2] === 'assign') {
+                        // POST /api/tasks/{id}/assign
+                        $user_id = $input['user_id'] ?? null;
+                        if (!$user_id) {
+                            sendResponse(['error' => 'ID de usuario requerido'], 400);
+                        }
+                        $response = $taskController->assignUserToTask($action, $user_id, $userData);
+                        sendResponse($response, 200);
+                    } else {
+                        sendResponse(['error' => 'Ruta no encontrada'], 404);
+                    }
+                }
                 else if ($method === 'PUT' || $method === 'PATCH') {
                     // Si solo se envía status, actualizar solo el status (para Kanban)
                     if (isset($input['status']) && count($input) === 1) {
@@ -347,8 +383,20 @@ try {
                     sendResponse($response, 200);
                 } 
                 else if ($method === 'DELETE') {
-                    $response = $taskController->deleteTask($action, $userData);
-                    sendResponse($response, 200);
+                    // Verificar si es para desasignar usuario
+                    if (isset($uri_parts[2]) && $uri_parts[2] === 'unassign') {
+                        // DELETE /api/tasks/{id}/unassign/{user_id}
+                        $user_id = $uri_parts[3] ?? null;
+                        if (!$user_id) {
+                            sendResponse(['error' => 'ID de usuario requerido'], 400);
+                        }
+                        $response = $taskController->unassignUserFromTask($action, $user_id, $userData);
+                        sendResponse($response, 200);
+                    } else {
+                        // DELETE /api/tasks/{id}
+                        $response = $taskController->deleteTask($action, $userData);
+                        sendResponse($response, 200);
+                    }
                 } 
                 else {
                     sendResponse(['error' => 'Método no permitido'], 405);
@@ -359,6 +407,36 @@ try {
                 sendResponse([
                     'error' => 'Ruta no encontrada',
                     'path' => '/tasks/' . $action
+                ], 404);
+                break;
+        }
+    }
+    
+    // ========== RUTA USUARIOS ==========
+    else if (isset($uri_parts[0]) && $uri_parts[0] === 'users') {
+        require_once 'config/database.php';
+        $database = new Database();
+        $db = $database->getConnection();
+        $authController = new AuthController($db);
+        
+        $userData = getUserFromToken();
+        $action = $uri_parts[1] ?? '';
+        
+        switch ($action) {
+            // GET /api/users - Obtener todos los usuarios (solo administradores)
+            case '':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $response = $authController->getAllUsers($userData);
+                sendResponse($response, 200);
+                break;
+            
+            default:
+                sendResponse([
+                    'error' => 'Ruta no encontrada',
+                    'path' => '/users/' . $action
                 ], 404);
                 break;
         }
