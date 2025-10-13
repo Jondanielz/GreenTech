@@ -12054,6 +12054,7 @@ fieldset:disabled .ajax-upload-dragdrop .ajax-file-upload,
 }
 
 .btn-info {
+  
   --bs-btn-color: #000;
   --bs-btn-bg: #198ae3;
   --bs-btn-border-color: #198ae3;
@@ -12088,6 +12089,7 @@ fieldset:disabled .ajax-upload-dragdrop .ajax-file-upload,
 }
 
 .btn-danger {
+   
   --bs-btn-color: #000;
   --bs-btn-bg: #fe7c96;
   --bs-btn-border-color: #fe7c96;
@@ -12173,6 +12175,8 @@ fieldset:disabled .ajax-upload-dragdrop .ajax-file-upload,
 }
 
 .btn-outline-success {
+  background-color: #62a984;
+        color: #ffffff;
   --bs-btn-color: #62a984;
   --bs-btn-border-color: #62a984;
   --bs-btn-hover-color: #000;
@@ -12190,6 +12194,8 @@ fieldset:disabled .ajax-upload-dragdrop .ajax-file-upload,
 }
 
 .btn-outline-info {
+  background-color: #198ae3;
+        color: #ffffff;
   --bs-btn-color: #198ae3;
   --bs-btn-border-color: #198ae3;
   --bs-btn-hover-color: #000;
@@ -12224,6 +12230,8 @@ fieldset:disabled .ajax-upload-dragdrop .ajax-file-upload,
 }
 
 .btn-outline-danger {
+  background-color: #fe7c96;
+        color: #ffffff;
   --bs-btn-color: #fe7c96;
   --bs-btn-border-color: #fe7c96;
   --bs-btn-hover-color: #000;

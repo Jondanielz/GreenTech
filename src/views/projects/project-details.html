@@ -161,6 +161,21 @@
         transform: rotate(3deg);
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
       }
+      .kanban-task[data-can-drag="false"] {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+      .kanban-task[data-can-drag="false"]:hover {
+        transform: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .kanban-task-restriction {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 0.25rem 0.5rem;
+        text-align: center;
+      }
       .kanban-task-title {
         font-weight: 600;
         margin-bottom: 0.5rem;
@@ -651,7 +666,7 @@
     >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header bg-success text-white">
             <h5 class="modal-title" id="taskModalLabel">
               <i class="mdi mdi-clipboard-plus"></i>
               <span id="taskModalTitle">Nueva Tarea</span>
@@ -743,7 +758,7 @@
             >
               <i class="mdi mdi-delete"></i> Eliminar
             </button>
-            <button type="button" class="btn btn-primary" id="saveTaskBtn">
+            <button type="button" class="btn btn-success" id="saveTaskBtn">
               <i class="mdi mdi-content-save"></i>
               <span id="saveTaskBtnText">Guardar</span>
             </button>
@@ -1102,10 +1117,18 @@
                 .map((name) => name.charAt(0).toUpperCase())
             : [];
 
+          // Verificar si el usuario actual está asignado a esta tarea
+          const isUserAssigned =
+            task.assignee_ids &&
+            task.assignee_ids.split(",").includes(userData.id.toString());
+
+          // Para participantes, solo permitir drag & drop si están asignados
+          const canDrag = canEditTasks || isUserAssigned;
+
           return `
             <div class="kanban-task" data-task-id="${
               task.id
-            }" onclick="viewTask(${task.id})">
+            }" data-can-drag="${canDrag}" onclick="viewTask(${task.id})">
               <div class="kanban-task-title">${task.title}</div>
               ${
                 task.description
@@ -1144,6 +1167,17 @@
               `
                   : ""
               }
+              ${
+                !canDrag && userData.role_id === 3
+                  ? `
+              <div class="kanban-task-restriction mt-2">
+                <small class="text-muted">
+                  <i class="mdi mdi-lock"></i> Solo lectura - No asignado
+                </small>
+              </div>
+              `
+                  : ""
+              }
             </div>
           `;
         }
@@ -1164,9 +1198,47 @@
               animation: 150,
               ghostClass: "sortable-ghost",
               dragClass: "sortable-drag",
+              filter: function (evt, target) {
+                // Para participantes, solo permitir arrastrar tareas asignadas
+                if (userData.role_id === 3) {
+                  const canDrag = target.dataset.canDrag === "true";
+                  if (!canDrag) {
+                    showErrorMessage(
+                      "Solo puedes cambiar el estado de las tareas asignadas a ti"
+                    );
+                    return true; // Bloquear el drag
+                  }
+                }
+                return false; // Permitir el drag
+              },
+              onStart: function (evt) {
+                // Verificar permisos antes de iniciar el drag
+                if (userData.role_id === 3) {
+                  const canDrag = evt.item.dataset.canDrag === "true";
+                  if (!canDrag) {
+                    evt.preventDefault();
+                    showErrorMessage(
+                      "Solo puedes cambiar el estado de las tareas asignadas a ti"
+                    );
+                    return false;
+                  }
+                }
+              },
               onEnd: async function (evt) {
                 const taskId = evt.item.dataset.taskId;
                 const newStatus = evt.to.dataset.status;
+
+                // Verificar permisos antes de actualizar
+                if (userData.role_id === 3) {
+                  const canDrag = evt.item.dataset.canDrag === "true";
+                  if (!canDrag) {
+                    showErrorMessage(
+                      "Solo puedes cambiar el estado de las tareas asignadas a ti"
+                    );
+                    await loadTasks(); // Revertir cambios
+                    return;
+                  }
+                }
 
                 // Actualizar estado de la tarea en el backend
                 try {

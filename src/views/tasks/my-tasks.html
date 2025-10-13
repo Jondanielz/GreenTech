@@ -1090,11 +1090,15 @@
                 }
                 
                 <div class="task-actions">
-                  <button class="task-action-btn btn-edit" onclick="editTask(${
-                    task.id
-                  })" title="Editar tarea">
+                  ${
+                    userData.role_id !== 3
+                      ? `
+                  <button class="task-action-btn btn-edit" onclick="editTask(${task.id})" title="Editar tarea">
                     <i class="mdi mdi-pencil"></i> Editar
                   </button>
+                  `
+                      : ""
+                  }
                   <select class="status-select" onchange="changeTaskStatus(${
                     task.id
                   }, this.value)" title="Cambiar estado">
@@ -1228,6 +1232,14 @@
 
         // Ver/Editar tarea
         window.viewTask = async function (taskId) {
+          // Los participantes no pueden editar tareas
+          if (userData.role_id === 3) {
+            showErrorMessage(
+              "Los participantes no pueden editar tareas. Solo pueden cambiar el estado."
+            );
+            return;
+          }
+
           try {
             const response = await TaskService.getTaskById(taskId);
 
@@ -1335,6 +1347,14 @@
 
         // Editar tarea
         window.editTask = async function (id) {
+          // Los participantes no pueden editar tareas
+          if (userData.role_id === 3) {
+            showErrorMessage(
+              "Los participantes no pueden editar tareas. Solo pueden cambiar el estado."
+            );
+            return;
+          }
+
           try {
             const response = await TaskService.getTaskById(id);
 
