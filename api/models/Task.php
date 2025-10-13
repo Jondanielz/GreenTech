@@ -90,12 +90,15 @@ class Task {
      * Crear nueva tarea
      */
     public function create($data) {
+        error_log("Task::create - Datos recibidos: " . json_encode($data));
+        
         $query = "INSERT INTO " . $this->table_name . " 
             (project_id, title, description, status, priority, due_date, created_by, progress, estimated_hours, actual_hours, created_at)
         VALUES 
             (:project_id, :title, :description, :status, :priority, :due_date, :created_by, :progress, :estimated_hours, :actual_hours, NOW())";
 
         $stmt = $this->conn->prepare($query);
+        error_log("Task::create - Query preparada: " . $query);
 
         $stmt->bindParam(':project_id', $data['project_id']);
         $stmt->bindParam(':title', $data['title']);
@@ -108,8 +111,15 @@ class Task {
         $stmt->bindParam(':estimated_hours', $data['estimated_hours']);
         $stmt->bindParam(':actual_hours', $data['actual_hours']);
 
+        error_log("Task::create - Parámetros vinculados, ejecutando query...");
+        
         if ($stmt->execute()) {
-            return $this->conn->lastInsertId();
+            $task_id = $this->conn->lastInsertId();
+            error_log("Task::create - Tarea creada exitosamente con ID: " . $task_id);
+            return $task_id;
+        } else {
+            $errorInfo = $stmt->errorInfo();
+            error_log("Task::create - Error al ejecutar query: " . json_encode($errorInfo));
         }
 
         return false;
@@ -279,6 +289,8 @@ class Task {
      * @return array|false
      */
     public function getTasksByUser($user_id) {
+        error_log("Task::getTasksByUser - Buscando tareas para user_id: " . $user_id);
+        
         $query = "SELECT 
                     t.id, t.title, t.description, t.status, t.priority,
                     t.due_date, t.estimated_hours, t.actual_hours,
@@ -289,14 +301,36 @@ class Task {
                   LEFT JOIN projects p ON t.project_id = p.id
                   LEFT JOIN " . $this->table_users . " uc ON t.created_by = uc.id
                   WHERE t.created_by = :user_id
-                  ORDER BY t.created_at DESC";
+                  AND t.id > 0
+                  
+                  UNION
+                  
+                  SELECT 
+                    t.id, t.title, t.description, t.status, t.priority,
+                    t.due_date, t.estimated_hours, t.actual_hours,
+                    t.progress, t.created_at, t.updated_at,
+                    t.project_id, p.name as project_name,
+                    t.created_by, uc.name as created_by_name
+                  FROM " . $this->table_name . " t
+                  LEFT JOIN projects p ON t.project_id = p.id
+                  LEFT JOIN " . $this->table_users . " uc ON t.created_by = uc.id
+                  INNER JOIN task_assignments ta ON t.id = ta.task_id
+                  WHERE ta.user_id = :user_id2
+                  AND t.id > 0
+                  
+                  ORDER BY created_at DESC";
 
+        error_log("Task::getTasksByUser - Query: " . $query);
+        
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id2', $user_id, PDO::PARAM_INT);
         
         try {
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            error_log("Task::getTasksByUser - Resultado: " . count($result) . " tareas encontradas");
+            return $result;
         } catch(PDOException $e) {
             error_log("Error al obtener tareas del usuario: " . $e->getMessage());
             return false;

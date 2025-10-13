@@ -127,8 +127,13 @@ class TaskController {
      * Crear nueva tarea
      */
     public function createTask($data, $userData) {
+        // Log para debugging
+        error_log("TaskController::createTask - Datos recibidos: " . json_encode($data));
+        error_log("TaskController::createTask - UserData: " . json_encode($userData));
+        
         // Solo admin y coordinador pueden crear tareas
         if ($userData['role_id'] != 1 && $userData['role_id'] != 2) {
+            error_log("TaskController::createTask - Usuario sin permisos: role_id=" . $userData['role_id']);
             return [
                 'success' => false,
                 'message' => 'No tienes permisos para crear tareas'
@@ -137,6 +142,7 @@ class TaskController {
 
         // Validar datos requeridos
         if (empty($data['project_id']) || empty($data['title'])) {
+            error_log("TaskController::createTask - Datos requeridos faltantes: project_id=" . (isset($data['project_id']) ? $data['project_id'] : 'NULL') . ", title=" . (isset($data['title']) ? $data['title'] : 'NULL'));
             return [
                 'success' => false,
                 'message' => 'ID de proyecto y título son requeridos'
@@ -178,7 +184,10 @@ class TaskController {
             $data['actual_hours'] = 0;
         }
 
+        error_log("TaskController::createTask - Datos finales para crear: " . json_encode($data));
+        
         $task_id = $this->task->create($data);
+        error_log("TaskController::createTask - Task ID resultante: " . ($task_id ? $task_id : 'FALSE'));
 
         if ($task_id) {
             // Si hay usuarios asignados, agregarlos
@@ -188,6 +197,7 @@ class TaskController {
                 }
             }
 
+            error_log("TaskController::createTask - Tarea creada exitosamente con ID: " . $task_id);
             return [
                 'success' => true,
                 'message' => 'Tarea creada exitosamente',
@@ -195,6 +205,7 @@ class TaskController {
             ];
         }
 
+        error_log("TaskController::createTask - Error al crear tarea en el modelo");
         return [
             'success' => false,
             'message' => 'Error al crear la tarea'
