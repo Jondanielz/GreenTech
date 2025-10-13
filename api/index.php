@@ -657,6 +657,39 @@ try {
         }
     }
     
+    // ========== RUTAS DE INDICADORES/UNIDADES ==========
+    else if (isset($uri_parts[0]) && in_array($uri_parts[0], ['units','indicators'])) {
+        require_once 'controllers/IndicatorController.php';
+        $controller = new IndicatorController();
+        $resource = $uri_parts[0];
+        $id = $uri_parts[1] ?? null;
+
+        if ($resource === 'units') {
+            if ($id === null) {
+                if ($method === 'GET') { sendResponse($controller->listUnits(), 200); }
+                else if ($method === 'POST') { sendResponse($controller->createUnit($input), 201); }
+                else { sendResponse(['error' => 'Método no permitido'], 405); }
+            } else {
+                if ($method === 'GET') { sendResponse($controller->getUnit($id), 200); }
+                else if ($method === 'PUT') { sendResponse($controller->updateUnit($id, $input), 200); }
+                else if ($method === 'DELETE') { sendResponse($controller->deleteUnit($id), 200); }
+                else { sendResponse(['error' => 'Método no permitido'], 405); }
+            }
+        }
+        else if ($resource === 'indicators') {
+            if ($id === null) {
+                if ($method === 'GET') { sendResponse($controller->listIndicators(), 200); }
+                else if ($method === 'POST') { sendResponse($controller->createIndicator($input), 201); }
+                else { sendResponse(['error' => 'Método no permitido'], 405); }
+            } else {
+                if ($method === 'GET') { sendResponse($controller->getIndicator($id), 200); }
+                else if ($method === 'PUT') { sendResponse($controller->updateIndicator($id, $input), 200); }
+                else if ($method === 'DELETE') { sendResponse($controller->deleteIndicator($id), 200); }
+                else { sendResponse(['error' => 'Método no permitido'], 405); }
+            }
+        }
+    }
+
     // ========== RUTA RAÍZ ==========
     else if (empty($uri_parts[0])) {
         sendResponse([
