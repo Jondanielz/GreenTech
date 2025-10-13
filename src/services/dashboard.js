@@ -193,7 +193,19 @@ export class DashboardService {
    * @returns {string} - Fecha formateada
    */
   static formatDate(dateString, format = "medium") {
+    // Validar que la fecha no sea null, undefined o vacía
+    if (!dateString) {
+      return "Fecha no disponible";
+    }
+
     const date = new Date(dateString);
+
+    // Validar que la fecha sea válida
+    if (isNaN(date.getTime())) {
+      console.warn("Fecha inválida:", dateString);
+      return "Fecha inválida";
+    }
+
     const options = {
       short: { year: "numeric", month: "2-digit", day: "2-digit" },
       medium: { year: "numeric", month: "short", day: "numeric" },
@@ -206,7 +218,12 @@ export class DashboardService {
       },
     };
 
-    return new Intl.DateTimeFormat("es-MX", options[format]).format(date);
+    try {
+      return new Intl.DateTimeFormat("es-MX", options[format]).format(date);
+    } catch (error) {
+      console.error("Error al formatear fecha:", error, "Fecha:", dateString);
+      return "Error al formatear fecha";
+    }
   }
 
   /**

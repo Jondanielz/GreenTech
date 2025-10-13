@@ -33,6 +33,31 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <!-- Estilos personalizados -->
     <style>
+      /* Estilos para modales de confirmación */
+      .delete-icon-wrapper {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+      }
+
+      .delete-icon-wrapper i {
+        font-size: 24px;
+        color: white;
+      }
+
+      /* Z-index alto para modal de eliminación */
+      #deleteTaskModal {
+        z-index: 9999 !important;
+      }
+
+      #deleteTaskModal .modal-dialog {
+        z-index: 10000 !important;
+      }
       .project-header-banner {
         background: linear-gradient(135deg, #477f60 0%, #62a984 100%);
         color: white;
@@ -528,6 +553,53 @@
 
     <!-- Logout Confirmation Modal -->
 
+    <!-- Modal de Confirmación de Eliminación de Tarea -->
+    <div
+      class="modal fade"
+      id="deleteTaskModal"
+      tabindex="-1"
+      aria-labelledby="deleteTaskModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body text-center pt-0 px-4">
+            <div class="delete-icon-wrapper">
+              <i class="mdi mdi-delete-alert text-danger"></i>
+            </div>
+            <h5 class="modal-title mb-2">Eliminar Tarea</h5>
+            <p class="text-muted mb-0" id="deleteTaskMessage">
+              ¿Estás seguro de que deseas eliminar esta tarea?
+            </p>
+            <p class="text-danger small mt-2 mb-0">
+              <strong>Esta acción no se puede deshacer.</strong>
+            </p>
+          </div>
+          <div class="modal-footer border-0 justify-content-center pb-4 px-4">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="confirmDeleteTaskBtn"
+            >
+              <i class="mdi mdi-delete me-1"></i>
+              Sí, eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div
       class="modal fade"
       id="logoutModal"
@@ -732,7 +804,7 @@
         const projectId = urlParams.get("id");
 
         if (!projectId) {
-          alert("ID de proyecto no especificado");
+          showError("ID de proyecto no especificado");
           window.location.href = "/";
         }
 
@@ -754,12 +826,12 @@
               document.getElementById("loadingSpinner").style.display = "none";
               document.getElementById("projectContent").style.display = "block";
             } else {
-              alert(response.message || "Error al cargar proyecto");
+              showError(response.message || "Error al cargar proyecto");
               window.location.href = "/";
             }
           } catch (error) {
             console.error("Error:", error);
-            alert("Error al cargar proyecto");
+            showError("Error al cargar proyecto");
             window.location.href = "/";
           }
         }
@@ -1109,7 +1181,7 @@
                     await loadTasks();
                   } else {
                     console.error("Error al mover tarea:", response.message);
-                    alert("Error al mover la tarea");
+                    showError("Error al mover la tarea");
                     // Revertir el movimiento
                     await loadTasks();
                   }
@@ -1127,7 +1199,7 @@
         window.viewTask = async function (taskId) {
           // Solo admin y coordinador pueden editar
           if (!canEditTasks) {
-            alert("No tienes permisos para editar tareas");
+            showError("No tienes permisos para editar tareas");
             return;
           }
 
@@ -1163,7 +1235,7 @@
             }
           } catch (error) {
             console.error("Error:", error);
-            alert("Error al cargar tarea");
+            showError("Error al cargar tarea");
           }
         };
 
@@ -1194,6 +1266,17 @@
               return;
             }
 
+            // Validar fecha de vencimiento
+            const dueDate = document.getElementById("taskDueDate").value;
+            const today = new Date().toISOString().split("T")[0];
+
+            if (dueDate && dueDate < today) {
+              showError(
+                "La fecha de vencimiento no puede ser anterior a la fecha actual"
+              );
+              return;
+            }
+
             const taskId = document.getElementById("taskId").value;
             const taskData = {
               project_id: document.getElementById("taskProjectId").value,
@@ -1201,7 +1284,7 @@
               description: document.getElementById("taskDescription").value,
               status: document.getElementById("taskStatus").value,
               priority: document.getElementById("taskPriority").value,
-              due_date: document.getElementById("taskDueDate").value,
+              due_date: dueDate,
               estimated_hours: document.getElementById("taskHours").value,
             };
 
@@ -1214,47 +1297,79 @@
               }
 
               if (response.success) {
-                alert(taskId ? "Tarea actualizada" : "Tarea creada");
+                showSuccess(taskId ? "Tarea actualizada" : "Tarea creada");
                 bootstrap.Modal.getInstance(
                   document.getElementById("taskModal")
                 ).hide();
                 await loadTasks();
               } else {
-                alert(response.message || "Error al guardar tarea");
+                showError(response.message || "Error al guardar tarea");
               }
             } catch (error) {
               console.error("Error:", error);
-              alert("Error al guardar tarea");
+              showError("Error al guardar tarea");
             }
           });
+
+        // Variables para el modal de eliminación
+        let taskToDelete = null;
 
         // Eliminar tarea
         document
           .getElementById("deleteTaskBtn")
-          .addEventListener("click", async () => {
-            if (!confirm("¿Estás seguro de que deseas eliminar esta tarea?")) {
-              return;
-            }
-
+          .addEventListener("click", () => {
             const taskId = document.getElementById("taskId").value;
+            const taskTitle = document.getElementById("taskTitle").value;
+
+            taskToDelete = { id: taskId, title: taskTitle };
+            document.getElementById(
+              "deleteTaskMessage"
+            ).textContent = `¿Estás seguro de que deseas eliminar la tarea "${taskTitle}"?`;
+
+            const modal = new bootstrap.Modal(
+              document.getElementById("deleteTaskModal")
+            );
+            modal.show();
+          });
+
+        // Confirmar eliminación de tarea
+        document
+          .getElementById("confirmDeleteTaskBtn")
+          .addEventListener("click", async () => {
+            if (!taskToDelete) return;
+
+            const { id } = taskToDelete;
 
             try {
-              const response = await TaskService.deleteTask(taskId);
+              const response = await TaskService.deleteTask(id);
 
               if (response.success) {
-                alert("Tarea eliminada");
+                showSuccess("Tarea eliminada");
+                bootstrap.Modal.getInstance(
+                  document.getElementById("deleteTaskModal")
+                ).hide();
                 bootstrap.Modal.getInstance(
                   document.getElementById("taskModal")
                 ).hide();
                 await loadTasks();
               } else {
-                alert(response.message || "Error al eliminar tarea");
+                showError(response.message || "Error al eliminar tarea");
               }
             } catch (error) {
               console.error("Error:", error);
-              alert("Error al eliminar tarea");
+              showError("Error al eliminar tarea");
+            } finally {
+              taskToDelete = null;
             }
           });
+
+        // Cargar sistema de notificaciones después de que todo esté listo
+        const notificationScript = document.createElement("script");
+        notificationScript.src = "../../utils/notifications.js";
+        notificationScript.onload = function () {
+          console.log("📦 Script de notificaciones cargado en project-details");
+        };
+        document.head.appendChild(notificationScript);
 
         // Cargar cuando se cambia a la pestaña de tareas
         document
@@ -1285,6 +1400,32 @@
               AuthService.logout();
             }, 300);
           });
+        }
+
+        // Validación de fecha de vencimiento en tiempo real
+        document
+          .getElementById("taskDueDate")
+          .addEventListener("change", validateTaskDueDate);
+
+        function validateTaskDueDate() {
+          const dueDate = document.getElementById("taskDueDate").value;
+          const dueDateField = document.getElementById("taskDueDate");
+          const today = new Date().toISOString().split("T")[0];
+
+          if (dueDate) {
+            if (dueDate < today) {
+              dueDateField.setCustomValidity(
+                "La fecha de vencimiento no puede ser anterior a la fecha actual"
+              );
+              dueDateField.classList.add("is-invalid");
+            } else {
+              dueDateField.setCustomValidity("");
+              dueDateField.classList.remove("is-invalid");
+            }
+          } else {
+            dueDateField.setCustomValidity("");
+            dueDateField.classList.remove("is-invalid");
+          }
         }
       }
     </script>

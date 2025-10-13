@@ -31,6 +31,31 @@
     <link rel="shortcut icon" href="../../assets/images/favicon.png" />
     <!-- Estilos personalizados -->
     <style>
+      /* Estilos para modales de confirmación */
+      .unassign-icon-wrapper {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+      }
+
+      .unassign-icon-wrapper i {
+        font-size: 24px;
+        color: white;
+      }
+
+      /* Z-index alto para modal de desasignación */
+      #unassignMemberModal {
+        z-index: 9999 !important;
+      }
+
+      #unassignMemberModal .modal-dialog {
+        z-index: 10000 !important;
+      }
       .project-card {
         transition: transform 0.2s, box-shadow 0.2s;
         height: 100%;
@@ -624,6 +649,54 @@
       </div>
     </div>
 
+    <!-- Modal de Confirmación de Desasignación de Participante -->
+    <div
+      class="modal fade"
+      id="unassignMemberModal"
+      tabindex="-1"
+      aria-labelledby="unassignMemberModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body text-center pt-0 px-4">
+            <div class="unassign-icon-wrapper">
+              <i class="mdi mdi-account-remove text-warning"></i>
+            </div>
+            <h5 class="modal-title mb-2">Desasignar Participante</h5>
+            <p class="text-muted mb-0" id="unassignMemberMessage">
+              ¿Estás seguro de que deseas desasignar a este participante del
+              proyecto?
+            </p>
+            <p class="text-warning small mt-2 mb-0">
+              <strong>El usuario perderá acceso al proyecto.</strong>
+            </p>
+          </div>
+          <div class="modal-footer border-0 justify-content-center pb-4 px-4">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-warning"
+              id="confirmUnassignMemberBtn"
+            >
+              <i class="mdi mdi-account-remove me-1"></i>
+              Sí, desasignar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal de Logout -->
     <div
       class="modal fade"
@@ -675,6 +748,9 @@
     <script src="../../assets/js/settings.js"></script>
     <script src="../../assets/js/todolist.js"></script>
     <!-- endinject -->
+
+    <!-- Sistema de notificaciones -->
+    <script src="../../utils/notifications.js"></script>
 
     <!-- Script para el banner -->
     <script>
@@ -733,11 +809,11 @@
               renderProjects(filteredProjects);
               updateProjectCount(filteredProjects.length);
             } else {
-              showError(response.message || "Error al cargar proyectos");
+              showErrorMessage(response.message || "Error al cargar proyectos");
             }
           } catch (error) {
             console.error("Error:", error);
-            showError("Error de conexión con el servidor");
+            showErrorMessage("Error de conexión con el servidor");
           } finally {
             spinner.style.display = "none";
           }
@@ -779,10 +855,10 @@
           return `
             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
               <div class="card project-card">
-                 <div class="project-header">
-                   <span class="project-status-badge bg-${statusClass}">
-                     ${project.status}
-                   </span>
+                <div class="project-header">
+                  <span class="project-status-badge bg-${statusClass}">
+                    ${project.status}
+                  </span>
                    ${
                      userData.role_id === 1 || userData.role_id === 2
                        ? `
@@ -792,16 +868,16 @@
                    `
                        : ""
                    }
-                   <h5 class="mb-2">${project.name}</h5>
-                   <small>Creado: ${ProjectService.formatDate(
-                     project.created_at
-                   )}</small>
-                   ${
-                     userRole
-                       ? `<div class="project-role-badge">${userRole}</div>`
-                       : ""
-                   }
-                 </div>
+                  <h5 class="mb-2">${project.name}</h5>
+                  <small>Creado: ${ProjectService.formatDate(
+                    project.created_at
+                  )}</small>
+                  ${
+                    userRole
+                      ? `<div class="project-role-badge">${userRole}</div>`
+                      : ""
+                  }
+                </div>
                 <div class="project-body">
                   <p class="text-muted mb-3" style="font-size: 0.875rem;">
                     ${project.description.substring(0, 100)}${
@@ -943,11 +1019,11 @@
               );
               modal.show();
             } else {
-              showError(response.message || "Error al cargar proyecto");
+              showErrorMessage(response.message || "Error al cargar proyecto");
             }
           } catch (error) {
             console.error("Error:", error);
-            showError("Error al cargar proyecto");
+            showErrorMessage("Error al cargar proyecto");
           }
         };
 
@@ -965,14 +1041,16 @@
             const response = await ProjectService.cancelProject(id);
 
             if (response.success) {
-              showSuccess("Proyecto cancelado exitosamente");
+              showSuccessMessage("Proyecto cancelado exitosamente");
               loadMyProjects();
             } else {
-              showError(response.message || "Error al cancelar proyecto");
+              showErrorMessage(
+                response.message || "Error al cancelar proyecto"
+              );
             }
           } catch (error) {
             console.error("Error:", error);
-            showError("Error al cancelar proyecto");
+            showErrorMessage("Error al cancelar proyecto");
           }
         };
 
@@ -1007,17 +1085,19 @@
               );
 
               if (response.success) {
-                showSuccess("Proyecto actualizado exitosamente");
+                showSuccessMessage("Proyecto actualizado exitosamente");
                 bootstrap.Modal.getInstance(
                   document.getElementById("editProjectModal")
                 ).hide();
                 loadMyProjects();
               } else {
-                showError(response.message || "Error al actualizar proyecto");
+                showErrorMessage(
+                  response.message || "Error al actualizar proyecto"
+                );
               }
             } catch (error) {
               console.error("Error:", error);
-              showError("Error al actualizar proyecto");
+              showErrorMessage("Error al actualizar proyecto");
             }
           });
 
@@ -1056,12 +1136,12 @@
         }
 
         // Mostrar mensajes
-        function showError(message) {
-          alert("Error: " + message);
+        function showErrorMessage(message) {
+          showError(message);
         }
 
-        function showSuccess(message) {
-          alert(message);
+        function showSuccessMessage(message) {
+          showSuccess(message);
         }
 
         // ========== CREAR PROYECTO ==========
@@ -1076,12 +1156,27 @@
               return;
             }
 
+            // Validar fechas
+            const startDate = document.getElementById("projectStartDate").value;
+            const endDate = document.getElementById("projectEndDate").value;
+
+            if (
+              startDate &&
+              endDate &&
+              new Date(endDate) < new Date(startDate)
+            ) {
+              showErrorMessage(
+                "La fecha de finalización no puede ser anterior a la fecha de inicio"
+              );
+              return;
+            }
+
             const projectData = {
               name: document.getElementById("projectName").value,
               description: document.getElementById("projectDescription").value,
               status: document.getElementById("projectStatus").value,
-              start_date: document.getElementById("projectStartDate").value,
-              end_date: document.getElementById("projectEndDate").value,
+              start_date: startDate,
+              end_date: endDate,
               budget: document.getElementById("projectBudget").value,
               location: document.getElementById("projectLocation").value,
               objectives: document.getElementById("projectObjectives").value,
@@ -1091,18 +1186,18 @@
               const response = await ProjectService.createProject(projectData);
 
               if (response.success) {
-                showSuccess("Proyecto creado exitosamente");
+                showSuccessMessage("Proyecto creado exitosamente");
                 bootstrap.Modal.getInstance(
                   document.getElementById("createProjectModal")
                 ).hide();
                 form.reset();
                 loadMyProjects();
               } else {
-                showError(response.message || "Error al crear proyecto");
+                showErrorMessage(response.message || "Error al crear proyecto");
               }
             } catch (error) {
               console.error("Error:", error);
-              showError("Error al crear proyecto");
+              showErrorMessage("Error al crear proyecto");
             }
           });
 
@@ -1118,7 +1213,10 @@
             "manageMembersProjectName"
           ).textContent = `Proyecto: ${projectName}`;
 
-          $("#manageMembersModal").modal("show");
+          const modal = new bootstrap.Modal(
+            document.getElementById("manageMembersModal")
+          );
+          modal.show();
           await loadProjectMembers(projectId);
         };
 
@@ -1146,7 +1244,7 @@
             renderAvailableUsers(availableUsers);
           } catch (error) {
             console.error("Error al cargar miembros:", error);
-            showError("Error al cargar la información de miembros");
+            showErrorMessage("Error al cargar la información de miembros");
           }
         }
 
@@ -1275,44 +1373,95 @@
             );
 
             if (response.success) {
-              showSuccess("Usuario asignado exitosamente");
+              showSuccessMessage("Usuario asignado exitosamente");
               await loadProjectMembers(currentProjectIdForMembers);
               loadMyProjects(); // Recargar la lista principal
             }
           } catch (error) {
             console.error("Error al asignar usuario:", error);
-            showError("Error al asignar usuario");
+            showErrorMessage("Error al asignar usuario");
           }
         };
+
+        // Variables para el modal de desasignación
+        let memberToUnassign = null;
 
         /**
          * Remover miembro del proyecto
          */
-        window.removeMember = async function (userId) {
-          if (!currentProjectIdForMembers) return;
+        window.removeMember = function (userId) {
+          console.log("🔍 removeMember llamada con userId:", userId);
+          console.log(
+            "🔍 currentProjectIdForMembers:",
+            currentProjectIdForMembers
+          );
 
-          if (
-            !confirm("¿Estás seguro de desasignar a este usuario del proyecto?")
-          ) {
+          if (!currentProjectIdForMembers) {
+            console.error("❌ currentProjectIdForMembers no está definido");
             return;
           }
 
-          try {
-            const response = await ProjectService.unassignUserFromProject(
-              currentProjectIdForMembers,
-              userId
-            );
+          // Buscar información del usuario
+          const member = allUsers.find((user) => user.id === userId);
+          const memberName = member ? member.name : "este usuario";
+          console.log("🔍 Usuario encontrado:", memberName);
 
-            if (response.success) {
-              showSuccess("Usuario desasignado exitosamente");
-              await loadProjectMembers(currentProjectIdForMembers);
-              loadMyProjects(); // Recargar la lista principal
-            }
-          } catch (error) {
-            console.error("Error al desasignar usuario:", error);
-            showError("Error al desasignar usuario");
+          memberToUnassign = { userId, memberName };
+
+          const messageElement = document.getElementById(
+            "unassignMemberMessage"
+          );
+          if (!messageElement) {
+            console.error("❌ Elemento unassignMemberMessage no encontrado");
+            return;
           }
+
+          messageElement.textContent = `¿Estás seguro de que deseas desasignar a ${memberName} del proyecto?`;
+
+          const modalElement = document.getElementById("unassignMemberModal");
+          if (!modalElement) {
+            console.error("❌ Modal unassignMemberModal no encontrado");
+            return;
+          }
+
+          console.log("🔍 Mostrando modal de desasignación");
+          const modal = new bootstrap.Modal(modalElement);
+          modal.show();
         };
+
+        // Confirmar desasignación de miembro
+        document
+          .getElementById("confirmUnassignMemberBtn")
+          .addEventListener("click", async () => {
+            if (!memberToUnassign || !currentProjectIdForMembers) return;
+
+            const { userId } = memberToUnassign;
+
+            try {
+              const response = await ProjectService.unassignUserFromProject(
+                currentProjectIdForMembers,
+                userId
+              );
+
+              if (response.success) {
+                showSuccessMessage("Usuario desasignado exitosamente");
+                bootstrap.Modal.getInstance(
+                  document.getElementById("unassignMemberModal")
+                ).hide();
+                await loadProjectMembers(currentProjectIdForMembers);
+                loadMyProjects(); // Recargar la lista principal
+              } else {
+                showErrorMessage(
+                  response.message || "Error al desasignar usuario"
+                );
+              }
+            } catch (error) {
+              console.error("Error al desasignar usuario:", error);
+              showErrorMessage("Error al desasignar usuario");
+            } finally {
+              memberToUnassign = null;
+            }
+          });
 
         // Cargar proyectos al iniciar
         loadMyProjects();
@@ -1334,6 +1483,35 @@
               AuthService.logout();
             }, 300);
           });
+        }
+
+        // Validación de fechas en tiempo real
+        document
+          .getElementById("projectStartDate")
+          .addEventListener("change", validateProjectDates);
+        document
+          .getElementById("projectEndDate")
+          .addEventListener("change", validateProjectDates);
+
+        function validateProjectDates() {
+          const startDate = document.getElementById("projectStartDate").value;
+          const endDate = document.getElementById("projectEndDate").value;
+          const endDateField = document.getElementById("projectEndDate");
+
+          if (startDate && endDate) {
+            if (new Date(endDate) < new Date(startDate)) {
+              endDateField.setCustomValidity(
+                "La fecha de finalización no puede ser anterior a la fecha de inicio"
+              );
+              endDateField.classList.add("is-invalid");
+            } else {
+              endDateField.setCustomValidity("");
+              endDateField.classList.remove("is-invalid");
+            }
+          } else {
+            endDateField.setCustomValidity("");
+            endDateField.classList.remove("is-invalid");
+          }
         }
       }
     </script>

@@ -33,6 +33,56 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <!-- Estilos personalizados para tablero Kanban -->
     <style>
+      /* Estilos para modales de confirmación */
+      .delete-icon-wrapper {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+      }
+
+      .delete-icon-wrapper i {
+        font-size: 24px;
+        color: white;
+      }
+
+      /* Z-index alto para modal de eliminación */
+      #deleteTaskModal {
+        z-index: 9999 !important;
+      }
+
+      #deleteTaskModal .modal-dialog {
+        z-index: 10000 !important;
+      }
+
+      /* Z-index alto para modal de desasignación de tarea */
+      #unassignTaskUserModal {
+        z-index: 9999 !important;
+      }
+
+      #unassignTaskUserModal .modal-dialog {
+        z-index: 10000 !important;
+      }
+
+      .logout-icon-wrapper {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+      }
+
+      .logout-icon-wrapper i {
+        font-size: 24px;
+        color: white;
+      }
       /* Estilos del Kanban Board */
       .kanban-board {
         display: grid;
@@ -549,6 +599,7 @@
                       class="btn btn-gradient-primary btn-sm"
                       data-bs-toggle="modal"
                       data-bs-target="#createTaskModal"
+                      onclick="console.log('🔘 Botón Nueva Tarea clickeado')"
                     >
                       <i class="mdi mdi-plus"></i> Nueva Tarea
                     </button>
@@ -741,6 +792,15 @@
                   </label>
                   <select class="form-select" id="taskProject" required>
                     <option value="">Seleccionar proyecto...</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="taskCreatedBy" class="form-label">
+                    Creado por
+                    <span class="text-danger">*</span>
+                  </label>
+                  <select class="form-select" id="taskCreatedBy" required>
+                    <option value="">Seleccionar usuario...</option>
                   </select>
                 </div>
               </div>
@@ -1002,6 +1062,101 @@
       </div>
     </div>
 
+    <!-- Modal de Confirmación de Desasignación de Participante de Tarea -->
+    <div
+      class="modal fade"
+      id="unassignTaskUserModal"
+      tabindex="-1"
+      aria-labelledby="unassignTaskUserModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body text-center pt-0 px-4">
+            <div class="unassign-icon-wrapper">
+              <i class="mdi mdi-account-remove text-warning"></i>
+            </div>
+            <h5 class="modal-title mb-2">Desasignar Participante</h5>
+            <p class="text-muted mb-0" id="unassignTaskUserMessage">
+              ¿Estás seguro de que deseas desasignar a este participante de la
+              tarea?
+            </p>
+            <p class="text-warning small mt-2 mb-0">
+              <strong>El usuario perderá acceso a esta tarea.</strong>
+            </p>
+          </div>
+          <div class="modal-footer border-0 justify-content-center pb-4 px-4">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-warning"
+              id="confirmUnassignTaskUserBtn"
+            >
+              <i class="mdi mdi-account-remove me-1"></i>
+              Sí, desasignar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Confirmación de Eliminación de Tarea -->
+    <div
+      class="modal fade"
+      id="deleteTaskModal"
+      tabindex="-1"
+      aria-labelledby="deleteTaskModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body text-center pt-0 px-4">
+            <div class="delete-icon-wrapper">
+              <i class="mdi mdi-delete-alert text-danger"></i>
+            </div>
+            <h5 class="modal-title mb-2">Eliminar Tarea</h5>
+            <p class="text-muted mb-0" id="deleteTaskMessage">
+              ¿Estás seguro de que deseas eliminar esta tarea?
+            </p>
+            <p class="text-danger small mt-2 mb-0">
+              <strong>Esta acción no se puede deshacer.</strong>
+            </p>
+          </div>
+          <div class="modal-footer border-0 justify-content-center pb-4 px-4">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="confirmDeleteTaskBtn"
+            >
+              <i class="mdi mdi-delete me-1"></i>
+              Sí, eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal de Logout -->
     <div
       class="modal fade"
@@ -1107,7 +1262,7 @@
             await loadTasks();
           } catch (error) {
             console.error("Error al cargar datos iniciales:", error);
-            showError("Error al cargar los datos");
+            showErrorMessage("Error al cargar los datos");
           }
         }
 
@@ -1128,11 +1283,11 @@
               renderKanbanBoard();
               updateTaskCount();
             } else {
-              showError(response.message || "Error al cargar tareas");
+              showErrorMessage(response.message || "Error al cargar tareas");
             }
           } catch (error) {
             console.error("Error:", error);
-            showError("Error de conexión con el servidor");
+            showErrorMessage("Error de conexión con el servidor");
           } finally {
             spinner.style.display = "none";
             kanbanBoard.style.display = "grid";
@@ -1515,11 +1670,11 @@
               );
               modal.show();
             } else {
-              showError(response.message || "Error al cargar tarea");
+              showErrorMessage(response.message || "Error al cargar tarea");
             }
           } catch (error) {
             console.error("Error:", error);
-            showError("Error al cargar tarea");
+            showErrorMessage("Error al cargar tarea");
           }
         };
 
@@ -1646,47 +1801,79 @@
               );
               modal.show();
             } else {
-              showError(response.message || "Error al cargar tarea");
+              showErrorMessage(response.message || "Error al cargar tarea");
             }
           } catch (error) {
             console.error("Error:", error);
-            showError("Error al cargar tarea");
+            showErrorMessage("Error al cargar tarea");
           }
         };
+
+        // Variables para el modal de eliminación
+        let taskToDelete = null;
 
         // Eliminar tarea
-        window.deleteTask = async function (id, title) {
-          if (
-            !confirm(
-              `¿Estás seguro de que deseas eliminar la tarea "${title}"?`
-            )
-          ) {
-            return;
-          }
+        window.deleteTask = function (id, title) {
+          taskToDelete = { id, title };
+          document.getElementById(
+            "deleteTaskMessage"
+          ).textContent = `¿Estás seguro de que deseas eliminar la tarea "${title}"?`;
 
-          try {
-            const response = await TaskService.deleteTask(id);
-
-            if (response.success) {
-              showSuccess("Tarea eliminada exitosamente");
-              loadTasks();
-            } else {
-              showError(response.message || "Error al eliminar tarea");
-            }
-          } catch (error) {
-            console.error("Error:", error);
-            showError("Error al eliminar tarea");
-          }
+          const modal = new bootstrap.Modal(
+            document.getElementById("deleteTaskModal")
+          );
+          modal.show();
         };
+
+        // Confirmar eliminación de tarea
+        document
+          .getElementById("confirmDeleteTaskBtn")
+          .addEventListener("click", async () => {
+            if (!taskToDelete) return;
+
+            const { id, title } = taskToDelete;
+
+            try {
+              const response = await TaskService.deleteTask(id);
+
+              if (response.success) {
+                showSuccessMessage("Tarea eliminada exitosamente");
+                bootstrap.Modal.getInstance(
+                  document.getElementById("deleteTaskModal")
+                ).hide();
+                loadTasks();
+              } else {
+                showErrorMessage(response.message || "Error al eliminar tarea");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              showErrorMessage("Error al eliminar tarea");
+            } finally {
+              taskToDelete = null;
+            }
+          });
 
         // Guardar nueva tarea
         document
           .getElementById("saveTaskBtn")
           .addEventListener("click", async () => {
+            console.log("🔘 Botón de guardar tarea clickeado");
             const form = document.getElementById("createTaskForm");
 
             if (!form.checkValidity()) {
+              console.log("❌ Formulario no válido");
               form.reportValidity();
+              return;
+            }
+
+            // Validar fecha de vencimiento
+            const dueDate = document.getElementById("taskDueDate").value;
+            const today = new Date().toISOString().split("T")[0];
+
+            if (dueDate && dueDate < today) {
+              showErrorMessage(
+                "La fecha de vencimiento no puede ser anterior a la fecha actual"
+              );
               return;
             }
 
@@ -1696,28 +1883,30 @@
               priority: document.getElementById("taskPriority").value,
               project_id: document.getElementById("taskProject").value,
               created_by: document.getElementById("taskCreatedBy").value,
-              due_date: document.getElementById("taskDueDate").value,
+              due_date: dueDate,
               estimated_hours:
                 document.getElementById("taskEstimatedHours").value,
               progress: document.getElementById("taskProgress").value,
             };
 
+            console.log("📝 Datos de la tarea:", taskData);
+
             try {
               const response = await TaskService.createTask(taskData);
 
               if (response.success) {
-                showSuccess("Tarea creada exitosamente");
+                showSuccessMessage("Tarea creada exitosamente");
                 bootstrap.Modal.getInstance(
                   document.getElementById("createTaskModal")
                 ).hide();
                 form.reset();
                 loadTasks();
               } else {
-                showError(response.message || "Error al crear tarea");
+                showErrorMessage(response.message || "Error al crear tarea");
               }
             } catch (error) {
               console.error("Error:", error);
-              showError("Error al crear tarea");
+              showErrorMessage("Error al crear tarea");
             }
           });
 
@@ -1751,17 +1940,19 @@
               const response = await TaskService.updateTask(id, taskData);
 
               if (response.success) {
-                showSuccess("Tarea actualizada exitosamente");
+                showSuccessMessage("Tarea actualizada exitosamente");
                 bootstrap.Modal.getInstance(
                   document.getElementById("editTaskModal")
                 ).hide();
                 loadTasks();
               } else {
-                showError(response.message || "Error al actualizar tarea");
+                showErrorMessage(
+                  response.message || "Error al actualizar tarea"
+                );
               }
             } catch (error) {
               console.error("Error:", error);
-              showError("Error al actualizar tarea");
+              showErrorMessage("Error al actualizar tarea");
             }
           });
 
@@ -1815,12 +2006,14 @@
         }
 
         // Mostrar mensajes
-        function showSuccess(message) {
-          alert(message);
+        function showSuccessMessage(message) {
+          console.log("✅ Mostrando mensaje de éxito:", message);
+          showSuccess(message);
         }
 
-        function showError(message) {
-          alert("Error: " + message);
+        function showErrorMessage(message) {
+          console.log("❌ Mostrando mensaje de error:", message);
+          showError(message);
         }
 
         // Gestionar asignaciones de tarea
@@ -1838,7 +2031,7 @@
             modal.show();
           } catch (error) {
             console.error("Error al cargar asignaciones:", error);
-            showError("Error al cargar asignaciones");
+            showErrorMessage("Error al cargar asignaciones");
           }
         };
 
@@ -1851,11 +2044,13 @@
               renderAssignedUsers(response.data);
               updateAvailableUsers(response.data);
             } else {
-              showError(response.message || "Error al cargar asignaciones");
+              showErrorMessage(
+                response.message || "Error al cargar asignaciones"
+              );
             }
           } catch (error) {
             console.error("Error:", error);
-            showError("Error al cargar asignaciones");
+            showErrorMessage("Error al cargar asignaciones");
           }
         }
 
@@ -1936,7 +2131,7 @@
             const userId = document.getElementById("assignUserSelect").value;
 
             if (!userId) {
-              showError("Selecciona un usuario para asignar");
+              showErrorMessage("Selecciona un usuario para asignar");
               return;
             }
 
@@ -1947,46 +2142,94 @@
               );
 
               if (response.success) {
-                showSuccess("Usuario asignado exitosamente");
+                showSuccessMessage("Usuario asignado exitosamente");
                 document.getElementById("assignUserSelect").value = "";
                 await loadTaskAssignments(taskId);
               } else {
-                showError(response.message || "Error al asignar usuario");
+                showErrorMessage(
+                  response.message || "Error al asignar usuario"
+                );
               }
             } catch (error) {
               console.error("Error:", error);
-              showError("Error al asignar usuario");
+              showErrorMessage("Error al asignar usuario");
             }
           });
 
+        // Variables para el modal de desasignación de tarea
+        let taskUserToUnassign = null;
+
         // Desasignar usuario de tarea
-        window.unassignUser = async function (taskId, userId, userName) {
-          if (
-            !confirm(`¿Estás seguro de que deseas desasignar a ${userName}?`)
-          ) {
-            return;
-          }
+        window.unassignUser = function (taskId, userId, userName) {
+          taskUserToUnassign = { taskId, userId, userName };
+          document.getElementById(
+            "unassignTaskUserMessage"
+          ).textContent = `¿Estás seguro de que deseas desasignar a ${userName} de esta tarea?`;
 
-          try {
-            const response = await TaskService.unassignUserFromTask(
-              taskId,
-              userId
-            );
-
-            if (response.success) {
-              showSuccess("Usuario desasignado exitosamente");
-              await loadTaskAssignments(taskId);
-            } else {
-              showError(response.message || "Error al desasignar usuario");
-            }
-          } catch (error) {
-            console.error("Error:", error);
-            showError("Error al desasignar usuario");
-          }
+          const modal = new bootstrap.Modal(
+            document.getElementById("unassignTaskUserModal")
+          );
+          modal.show();
         };
+
+        // Confirmar desasignación de usuario de tarea
+        document
+          .getElementById("confirmUnassignTaskUserBtn")
+          .addEventListener("click", async () => {
+            if (!taskUserToUnassign) return;
+
+            const { taskId, userId } = taskUserToUnassign;
+
+            try {
+              const response = await TaskService.unassignUserFromTask(
+                taskId,
+                userId
+              );
+
+              if (response.success) {
+                showSuccessMessage("Usuario desasignado exitosamente");
+                bootstrap.Modal.getInstance(
+                  document.getElementById("unassignTaskUserModal")
+                ).hide();
+                await loadTaskAssignments(taskId);
+              } else {
+                showErrorMessage(
+                  response.message || "Error al desasignar usuario"
+                );
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              showErrorMessage("Error al desasignar usuario");
+            } finally {
+              taskUserToUnassign = null;
+            }
+          });
+
+        // Verificar que las funciones de notificación están disponibles
+        console.log("🔍 Verificando funciones de notificación:");
+        console.log("showSuccess:", typeof showSuccess);
+        console.log("showError:", typeof showError);
 
         // Cargar datos al iniciar
         loadInitialData();
+
+        // Cargar sistema de notificaciones después de que todo esté listo
+        const notificationScript = document.createElement("script");
+        notificationScript.src = "../../utils/notifications.js";
+        notificationScript.onload = function () {
+          console.log("📦 Script de notificaciones cargado");
+          // Probar el sistema de notificaciones
+        };
+        document.head.appendChild(notificationScript);
+
+        // Evento para cuando se abre el modal de crear tarea
+        document
+          .getElementById("createTaskModal")
+          .addEventListener("shown.bs.modal", function () {
+            console.log("📋 Modal de crear tarea abierto");
+            console.log("👥 Usuarios disponibles:", allUsers.length);
+            console.log("📁 Proyectos disponibles:", allProjects.length);
+          });
 
         // Configurar logout
         const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
@@ -2005,6 +2248,32 @@
               AuthService.logout();
             }, 300);
           });
+        }
+
+        // Validación de fecha de vencimiento en tiempo real
+        document
+          .getElementById("taskDueDate")
+          .addEventListener("change", validateTaskDueDate);
+
+        function validateTaskDueDate() {
+          const dueDate = document.getElementById("taskDueDate").value;
+          const dueDateField = document.getElementById("taskDueDate");
+          const today = new Date().toISOString().split("T")[0];
+
+          if (dueDate) {
+            if (dueDate < today) {
+              dueDateField.setCustomValidity(
+                "La fecha de vencimiento no puede ser anterior a la fecha actual"
+              );
+              dueDateField.classList.add("is-invalid");
+            } else {
+              dueDateField.setCustomValidity("");
+              dueDateField.classList.remove("is-invalid");
+            }
+          } else {
+            dueDateField.setCustomValidity("");
+            dueDateField.classList.remove("is-invalid");
+          }
         }
       }
     </script>

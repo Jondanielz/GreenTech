@@ -864,7 +864,7 @@
             await loadMyTasks();
           } catch (error) {
             console.error("Error al cargar datos iniciales:", error);
-            showError("Error al cargar los datos");
+            showErrorMessage("Error al cargar los datos");
           }
         }
 
@@ -885,11 +885,11 @@
               renderKanbanBoard();
               updateTaskCount();
             } else {
-              showError(response.message || "Error al cargar tareas");
+              showErrorMessage(response.message || "Error al cargar tareas");
             }
           } catch (error) {
             console.error("Error:", error);
-            showError("Error de conexión con el servidor");
+            showErrorMessage("Error de conexión con el servidor");
           } finally {
             spinner.style.display = "none";
             kanbanBoard.style.display = "grid";
@@ -1256,11 +1256,11 @@
               );
               modal.show();
             } else {
-              showError(response.message || "Error al cargar tarea");
+              showErrorMessage(response.message || "Error al cargar tarea");
             }
           } catch (error) {
             console.error("Error:", error);
-            showError("Error al cargar tarea");
+            showErrorMessage("Error al cargar tarea");
           }
         };
 
@@ -1363,11 +1363,11 @@
               );
               modal.show();
             } else {
-              showError(response.message || "Error al cargar tarea");
+              showErrorMessage(response.message || "Error al cargar tarea");
             }
           } catch (error) {
             console.error("Error:", error);
-            showError("Error al cargar tarea");
+            showErrorMessage("Error al cargar tarea");
           }
         };
 
@@ -1380,14 +1380,16 @@
             );
 
             if (response.success) {
-              showSuccess("Estado de tarea actualizado exitosamente");
+              showSuccessMessage("Estado de tarea actualizado exitosamente");
               loadMyTasks();
             } else {
-              showError(response.message || "Error al actualizar estado");
+              showErrorMessage(
+                response.message || "Error al actualizar estado"
+              );
             }
           } catch (error) {
             console.error("Error:", error);
-            showError("Error al actualizar estado");
+            showErrorMessage("Error al actualizar estado");
           }
         };
 
@@ -1421,17 +1423,19 @@
               const response = await TaskService.updateTask(id, taskData);
 
               if (response.success) {
-                showSuccess("Tarea actualizada exitosamente");
+                showSuccessMessage("Tarea actualizada exitosamente");
                 bootstrap.Modal.getInstance(
                   document.getElementById("editTaskModal")
                 ).hide();
                 loadMyTasks();
               } else {
-                showError(response.message || "Error al actualizar tarea");
+                showErrorMessage(
+                  response.message || "Error al actualizar tarea"
+                );
               }
             } catch (error) {
               console.error("Error:", error);
-              showError("Error al actualizar tarea");
+              showErrorMessage("Error al actualizar tarea");
             }
           });
 
@@ -1473,16 +1477,24 @@
         }
 
         // Mostrar mensajes
-        function showSuccess(message) {
-          alert(message);
+        function showSuccessMessage(message) {
+          showSuccess(message);
         }
 
-        function showError(message) {
-          alert("Error: " + message);
+        function showErrorMessage(message) {
+          showError(message);
         }
 
         // Cargar datos al iniciar
         loadInitialData();
+
+        // Cargar sistema de notificaciones después de que todo esté listo
+        const notificationScript = document.createElement("script");
+        notificationScript.src = "../../utils/notifications.js";
+        notificationScript.onload = function () {
+          console.log("📦 Script de notificaciones cargado en my-tasks");
+        };
+        document.head.appendChild(notificationScript);
 
         // Configurar logout
         const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");

@@ -69,7 +69,10 @@
       </div>
       <!-- partial:partials/_navbar.html -->
       <!-- El navbar se cargará dinámicamente aquí -->
-      <nav id="navbar-container" class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <nav
+        id="navbar-container"
+        class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row"
+      >
         <!-- Cargando navbar... -->
       </nav>
       <div class="container-fluid page-body-wrapper">
@@ -440,44 +443,51 @@
               console.log("📂 Cargando navbar dinámicamente...");
               const response = await fetch("/src/components/_navbar.html");
               let navbarHTML = await response.text();
-              
+
               // Remover la etiqueta <nav> y sus clases para evitar duplicación
               navbarHTML = navbarHTML.replace(
                 /<nav[^>]*class="navbar default-layout-navbar[^"]*"[^>]*>/,
-                ''
+                ""
               );
-              navbarHTML = navbarHTML.replace('</nav>', '');
-              
+              navbarHTML = navbarHTML.replace("</nav>", "");
+
               // Asegurar que el contenedor tenga las clases correctas
-              const navbarContainer = document.getElementById("navbar-container");
+              const navbarContainer =
+                document.getElementById("navbar-container");
               navbarContainer.innerHTML = navbarHTML;
               console.log("✅ Navbar cargado correctamente");
-              
+
               // Ajustar rutas de imágenes para el index.html raíz
               const navbarLogo = document.querySelector(".navbar-logo");
-              const navbarLogoMini = document.querySelector(".navbar-logo-mini");
-              const navbarProfileImg = document.querySelector(".navbar-profile-img");
-              
+              const navbarLogoMini =
+                document.querySelector(".navbar-logo-mini");
+              const navbarProfileImg = document.querySelector(
+                ".navbar-profile-img"
+              );
+
               if (navbarLogo) navbarLogo.src = "src/assets/images/logo.svg";
-              if (navbarLogoMini) navbarLogoMini.src = "src/assets/images/logo-mini.svg";
-              if (navbarProfileImg) navbarProfileImg.src = "src/assets/images/faces/face1.jpg";
-              
+              if (navbarLogoMini)
+                navbarLogoMini.src = "src/assets/images/logo-mini.svg";
+              if (navbarProfileImg)
+                navbarProfileImg.src = "src/assets/images/faces/face1.jpg";
+
               // Ajustar enlaces del logo para que apunten a la raíz
               const brandLinks = document.querySelectorAll(".navbar-brand");
-              brandLinks.forEach(link => {
+              brandLinks.forEach((link) => {
                 if (link.getAttribute("href") === "index.html") {
                   link.setAttribute("href", "/");
                 }
               });
-              
+
               // Actualizar nombre de usuario en el navbar
               const navbarUserName = document.getElementById("navbarUserName");
               if (navbarUserName && userData) {
                 navbarUserName.textContent = userData.name || userData.username;
               }
-              
+
               // Configurar evento de logout en navbar
-              const navbarLogoutBtn = document.getElementById("navbarLogoutBtn");
+              const navbarLogoutBtn =
+                document.getElementById("navbarLogoutBtn");
               if (navbarLogoutBtn) {
                 navbarLogoutBtn.addEventListener("click", (e) => {
                   e.preventDefault();
@@ -495,11 +505,12 @@
               console.log("📂 Cargando footer dinámicamente...");
               const response = await fetch("/src/components/_footer.html");
               let footerHTML = await response.text();
-              
+
               // Ajustar rutas de imágenes para el index.html raíz
-              footerHTML = footerHTML.replace('../assets/', 'src/assets/');
-              
-              document.getElementById("footer-container").innerHTML = footerHTML;
+              footerHTML = footerHTML.replace("../assets/", "src/assets/");
+
+              document.getElementById("footer-container").innerHTML =
+                footerHTML;
               console.log("✅ Footer cargado correctamente");
             } catch (error) {
               console.error("💥 Error crítico al cargar footer:", error);
