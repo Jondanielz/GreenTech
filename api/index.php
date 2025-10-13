@@ -413,35 +413,6 @@ try {
         }
     }
     
-    // ========== RUTA USUARIOS ==========
-    else if (isset($uri_parts[0]) && $uri_parts[0] === 'users') {
-        require_once 'config/database.php';
-        $database = new Database();
-        $db = $database->getConnection();
-        $authController = new AuthController($db);
-        
-        $userData = getUserFromToken();
-        $action = $uri_parts[1] ?? '';
-        
-        switch ($action) {
-            // GET /api/users - Obtener todos los usuarios (solo administradores)
-            case '':
-                if ($method !== 'GET') {
-                    sendResponse(['error' => 'Método no permitido'], 405);
-                }
-                
-                $response = $authController->getAllUsers($userData);
-                sendResponse($response, 200);
-                break;
-            
-            default:
-                sendResponse([
-                    'error' => 'Ruta no encontrada',
-                    'path' => '/users/' . $action
-                ], 404);
-                break;
-        }
-    }
     
     // ========== RUTAS DEL DASHBOARD ==========
     else if (isset($uri_parts[0]) && $uri_parts[0] === 'dashboard') {
@@ -600,7 +571,7 @@ try {
                 sendResponse($response, 200);
                 break;
             
-            // POST /api/users - Crear nuevo usuario (solo admin)
+            // POST /api/users/create - Crear nuevo usuario (solo admin)
             case 'create':
                 if ($method !== 'POST') {
                     sendResponse(['error' => 'Método no permitido'], 405);
