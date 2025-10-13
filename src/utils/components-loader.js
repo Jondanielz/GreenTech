@@ -7,6 +7,22 @@ import AuthService from "../services/auth.js";
 
 export class ComponentsLoader {
   /**
+   * Obtener iniciales del nombre
+   * @param {string} name - Nombre completo
+   * @returns {string} Iniciales
+   */
+  static getInitials(name) {
+    if (!name) return 'U';
+    
+    const words = name.trim().split(' ');
+    if (words.length === 1) {
+      return words[0].charAt(0).toUpperCase();
+    }
+    
+    return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
+  }
+
+  /**
    * Inicializar componentes y configurar eventos
    */
   static async init() {
@@ -45,6 +61,13 @@ export class ComponentsLoader {
       navbarUserName.textContent = userData.name || userData.username;
     }
 
+    // Actualizar avatar en navbar
+    const navbarUserAvatar = document.getElementById("navbarUserAvatar");
+    if (navbarUserAvatar) {
+      const initials = this.getInitials(userData.name || userData.username);
+      navbarUserAvatar.textContent = initials;
+    }
+
     // Actualizar nombre en dropdown del navbar (index.html)
     const navProfileTexts = document.querySelectorAll(".nav-profile-text p");
     navProfileTexts.forEach((el) => {
@@ -65,6 +88,13 @@ export class ComponentsLoader {
     const sidebarUserName = document.getElementById("sidebarUserName");
     if (sidebarUserName) {
       sidebarUserName.textContent = userData.name || userData.username;
+    }
+
+    // Actualizar avatar en sidebar
+    const sidebarUserAvatar = document.getElementById("sidebarUserAvatar");
+    if (sidebarUserAvatar) {
+      const initials = this.getInitials(userData.name || userData.username);
+      sidebarUserAvatar.textContent = initials;
     }
 
     // Actualizar rol en sidebar

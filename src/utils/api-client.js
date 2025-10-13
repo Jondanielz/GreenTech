@@ -6,7 +6,7 @@
 // Configuración base de la API
 const API_CONFIG = {
   // Ajustar según tu entorno
-  baseURL: "http://localhost/eco-app/greentech/api",
+  baseURL: "http://localhost/eco-app/GreenTech/api",
   timeout: 10000, // 10 segundos
   headers: {
     "Content-Type": "application/json",
