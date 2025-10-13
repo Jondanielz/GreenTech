@@ -12,6 +12,7 @@ require_once 'controllers/AuthController.php';
 require_once 'controllers/DashboardController.php';
 require_once 'controllers/ProjectController.php';
 require_once 'controllers/TaskController.php';
+require_once 'controllers/UserController.php';
 
 // Manejo de errores
 error_reporting(E_ALL);
@@ -79,7 +80,7 @@ try {
     $request_uri = parse_url($request_uri, PHP_URL_PATH);
     
     // Remover el prefijo de la ruta base (ajustar según tu estructura)
-    $base_path = '/eco-app/greentech/api';
+    $base_path = '/eco-app/GreenTech/api';
     if (strpos($request_uri, $base_path) === 0) {
         $request_uri = substr($request_uri, strlen($base_path));
     }
@@ -460,6 +461,153 @@ try {
         }
     }
     
+    // ========== RUTAS DE USUARIOS ==========
+    else if (isset($uri_parts[0]) && $uri_parts[0] === 'users') {
+        $userController = new UserController();
+        $userData = getUserFromToken();
+        $action = $uri_parts[1] ?? '';
+        
+        switch ($action) {
+            // GET /api/users - Obtener todos los usuarios (solo admin)
+            case '':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                // Verificar permisos de administrador
+                if ($userData['role_id'] != 1) {
+                    sendResponse([
+                        'success' => false,
+                        'message' => 'No tienes permisos para acceder a esta sección'
+                    ], 403);
+                }
+                
+                $response = $userController->getUsers();
+                sendResponse($response, 200);
+                break;
+            
+            // GET /api/users/participants - Obtener solo participantes
+            case 'participants':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                // Verificar permisos (admin o coordinador)
+                if (!in_array($userData['role_id'], [1, 2])) {
+                    sendResponse([
+                        'success' => false,
+                        'message' => 'No tienes permisos para acceder a esta sección'
+                    ], 403);
+                }
+                
+                $response = $userController->getParticipants();
+                sendResponse($response, 200);
+                break;
+            
+            // GET /api/users/stats - Obtener estadísticas de usuarios
+            case 'stats':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                // Verificar permisos de administrador
+                if ($userData['role_id'] != 1) {
+                    sendResponse([
+                        'success' => false,
+                        'message' => 'No tienes permisos para acceder a esta sección'
+                    ], 403);
+                }
+                
+                $response = $userController->getUserStats();
+                sendResponse($response, 200);
+                break;
+            
+            // POST /api/users - Crear nuevo usuario (solo admin)
+            case 'create':
+                if ($method !== 'POST') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                // Verificar permisos de administrador
+                if ($userData['role_id'] != 1) {
+                    sendResponse([
+                        'success' => false,
+                        'message' => 'No tienes permisos para crear usuarios'
+                    ], 403);
+                }
+                
+                $response = $userController->createUser($input);
+                $statusCode = $response['success'] ? 201 : 400;
+                sendResponse($response, $statusCode);
+                break;
+            
+            // PUT /api/users/{id} - Actualizar usuario (solo admin)
+            case (is_numeric($action) ? $action : ''):
+                if ($method === 'PUT') {
+                    // Verificar permisos de administrador
+                    if ($userData['role_id'] != 1) {
+                        sendResponse([
+                            'success' => false,
+                            'message' => 'No tienes permisos para actualizar usuarios'
+                        ], 403);
+                    }
+                    
+                    $response = $userController->updateUser($action, $input);
+                    sendResponse($response, 200);
+                } else if ($method === 'DELETE') {
+                    // Verificar permisos de administrador
+                    if ($userData['role_id'] != 1) {
+                        sendResponse([
+                            'success' => false,
+                            'message' => 'No tienes permisos para eliminar usuarios'
+                        ], 403);
+                    }
+                    
+                    $response = $userController->deleteUser($action);
+                    sendResponse($response, 200);
+                } else if ($method === 'GET') {
+                    // Verificar si es para obtener proyectos o tareas del usuario
+                    if (isset($uri_parts[2])) {
+                        $subAction = $uri_parts[2];
+                        
+                        if ($subAction === 'projects') {
+                            // GET /api/users/{id}/projects
+                            $response = $userController->getUserProjects($action);
+                            sendResponse($response, 200);
+                        } else if ($subAction === 'tasks') {
+                            // GET /api/users/{id}/tasks
+                            $response = $userController->getUserTasks($action);
+                            sendResponse($response, 200);
+                        } else {
+                            sendResponse(['error' => 'Subruta no encontrada'], 404);
+                        }
+                    } else {
+                        // GET /api/users/{id} - Obtener usuario por ID
+                        // Verificar permisos (admin, coordinador o el propio usuario)
+                        if ($userData['role_id'] != 1 && $userData['role_id'] != 2 && $userData['id'] != $action) {
+                            sendResponse([
+                                'success' => false,
+                                'message' => 'No tienes permisos para acceder a esta información'
+                            ], 403);
+                        }
+                        
+                        $response = $userController->getUserById($action);
+                        sendResponse($response, 200);
+                    }
+                } else {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                break;
+            
+            default:
+                sendResponse([
+                    'error' => 'Ruta no encontrada',
+                    'path' => '/users/' . $action
+                ], 404);
+                break;
+        }
+    }
+    
     // ========== RUTA RAÍZ ==========
     else if (empty($uri_parts[0])) {
         sendResponse([
@@ -499,6 +647,17 @@ try {
                     'GET /dashboard/charts' => 'Obtener datos para gráficos',
                     'GET /dashboard/activity' => 'Obtener actividad reciente',
                     'GET /dashboard/top-users' => 'Obtener usuarios más activos'
+                ],
+                'users' => [
+                    'GET /users' => 'Obtener todos los usuarios (solo admin)',
+                    'GET /users/participants' => 'Obtener solo participantes (admin/coord)',
+                    'GET /users/stats' => 'Obtener estadísticas de usuarios (solo admin)',
+                    'GET /users/{id}' => 'Obtener usuario por ID',
+                    'GET /users/{id}/projects' => 'Obtener proyectos asignados a un usuario',
+                    'GET /users/{id}/tasks' => 'Obtener tareas asignadas a un usuario',
+                    'POST /users/create' => 'Crear nuevo usuario (solo admin)',
+                    'PUT /users/{id}' => 'Actualizar usuario (solo admin)',
+                    'DELETE /users/{id}' => 'Eliminar usuario (solo admin)'
                 ]
             ]
         ], 200);

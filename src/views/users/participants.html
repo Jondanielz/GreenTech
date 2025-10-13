@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Participantes - GreenTech</title>
+    <!-- plugins:css -->
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/mdi/css/materialdesignicons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/ti-icons/css/themify-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/css/vendor.bundle.base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/font-awesome/css/font-awesome.min.css"
+    />
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../../assets/images/favicon.png" />
+    <!-- Estilos personalizados para participantes -->
+    <style>
+      .participant-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e9ecef;
+        background: white;
+      }
+      .participant-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      .participant-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      .participant-avatar-placeholder {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #57c785 0%, #62a984 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.5rem;
+      }
+      .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+      }
+      .status-active {
+        background: #28a745;
+        color: white;
+      }
+      .status-inactive {
+        background: #6c757d;
+        color: white;
+      }
+      .filters-bar {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-right: 1.5rem;
+      }
+      .filter-group:last-child {
+        margin-right: 0;
+      }
+      .filter-group label {
+        white-space: nowrap;
+        font-weight: 500;
+        color: #495057;
+      }
+      .filter-group select,
+      .filter-group input {
+        min-width: 120px;
+      }
+      .filter-group #filterStatus {
+        min-width: 140px;
+      }
+      .participants-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+      .participant-header {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        padding: 1.5rem;
+        position: relative;
+      }
+      .participant-body {
+        padding: 1.5rem;
+      }
+      .participant-info {
+        margin-bottom: 1rem;
+      }
+      .participant-info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+      }
+      .participant-info-item i {
+        width: 20px;
+        margin-right: 0.5rem;
+        color: #6c757d;
+      }
+      .participant-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e9ecef;
+      }
+      .btn-view-details {
+        flex: 1;
+        padding: 0.5rem;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+      }
+      .btn-view-details:hover {
+        background: #0056b3;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .empty-state i {
+        font-size: 4rem;
+        color: #ccc;
+        margin-bottom: 1rem;
+      }
+      #loadingSpinner {
+        text-align: center;
+        padding: 3rem;
+      }
+      .participant-stats {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .stat-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        text-align: center;
+      }
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #11998e;
+      }
+      .stat-label {
+        color: #6c757d;
+        font-size: 0.875rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- Navbar Container -->
+      <nav id="navbar-container" class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <!-- Cargando navbar... -->
+      </nav>
+
+      <div class="container-fluid page-body-wrapper">
+        <!-- Sidebar Container -->
+        <div id="sidebar-container">
+          <!-- Cargando sidebar... -->
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <!-- Page Header -->
+            <div class="page-header">
+              <h3 class="page-title">
+                <span
+                  class="page-title-icon bg-gradient-primary text-white me-2"
+                >
+                  <i class="mdi mdi-account-group"></i>
+                </span>
+                Participantes
+              </h3>
+              <nav aria-label="breadcrumb">
+                <ul class="breadcrumb">
+                  <li class="breadcrumb-item active" aria-current="page">
+                    <span class="text-muted">Gestiona los participantes de tus proyectos</span>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="participant-stats">
+              <div class="stat-card">
+                <div class="stat-number" id="totalParticipants">0</div>
+                <div class="stat-label">Total Participantes</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number" id="activeParticipants">0</div>
+                <div class="stat-label">Activos</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number" id="newThisMonth">0</div>
+                <div class="stat-label">Nuevos este mes</div>
+              </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filters-bar">
+              <div class="filter-group">
+                <label for="filterStatus" class="mb-0">Estado:</label>
+                <select id="filterStatus" class="form-select form-select-sm">
+                  <option value="">Todos</option>
+                  <option value="1">Activo</option>
+                  <option value="0">Inactivo</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="filterSearch" class="mb-0">Buscar:</label>
+                <input
+                  type="text"
+                  id="filterSearch"
+                  class="form-control form-control-sm"
+                  placeholder="Nombre, email o usuario..."
+                />
+              </div>
+              <div class="filter-group ms-auto">
+                <span id="participantCount" class="badge bg-success"
+                  >0 participantes</span
+                >
+              </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loadingSpinner" style="display: none">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+              <p class="mt-2">Cargando participantes...</p>
+            </div>
+
+            <!-- Participants Grid -->
+            <div id="participantsGrid" class="participants-grid">
+              <!-- Los participantes se cargarán aquí dinámicamente -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display: none">
+              <i class="mdi mdi-account-group-outline"></i>
+              <h4>No hay participantes</h4>
+              <p class="text-muted">
+                Aún no hay participantes registrados en el sistema.
+              </p>
+            </div>
+          </div>
+
+          <!-- Footer Container -->
+          <div id="footer-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Ver Detalles de Participante -->
+    <div
+      class="modal fade"
+      id="viewParticipantModal"
+      tabindex="-1"
+      aria-labelledby="viewParticipantModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="viewParticipantModalLabel">
+              <i class="mdi mdi-account-eye"></i> Detalles del Participante
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="participantDetailsContent">
+              <!-- Los detalles se cargarán aquí dinámicamente -->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Logout -->
+    <div
+      class="modal fade"
+      id="logoutModal"
+      tabindex="-1"
+      aria-labelledby="logoutModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="logoutModalLabel">
+              <i class="mdi mdi-logout"></i> Cerrar Sesión
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>¿Estás seguro de que deseas cerrar sesión?</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="confirmLogoutBtn">
+              Sí, cerrar sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- plugins:js -->
+    <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- inject:js -->
+    <script src="../../assets/js/off-canvas.js"></script>
+    <script src="../../assets/js/misc.js"></script>
+    <script src="../../assets/js/settings.js"></script>
+    <script src="../../assets/js/todolist.js"></script>
+    <!-- endinject -->
+
+    <!-- Script Principal -->
+    <script type="module">
+      import AuthService from "../../services/auth.js";
+      import UserService from "../../services/users.js";
+      import ComponentsLoader from "../../utils/components-loader.js";
+
+      // Verificar autenticación
+      if (!AuthService.isAuthenticated()) {
+        window.location.href = "/src/views/auth/login.html";
+      } else {
+        const userData = AuthService.getCurrentUser();
+
+        // Solo coordinadores pueden acceder a esta vista
+        if (userData.role_id !== 2) {
+          alert("No tienes permisos para acceder a esta sección");
+          window.location.href = "/";
+        }
+
+        // Cargar componentes
+        ComponentsLoader.loadCommonComponents({
+          navbar: true,
+          sidebar: true,
+          footer: true,
+          basePath: "../../components/",
+        });
+
+        let allParticipants = [];
+        let filteredParticipants = [];
+
+        // Cargar participantes (solo usuarios con rol de participante)
+        async function loadParticipants() {
+          const spinner = document.getElementById("loadingSpinner");
+          const grid = document.getElementById("participantsGrid");
+          const emptyState = document.getElementById("emptyState");
+
+          try {
+            spinner.style.display = "block";
+            grid.innerHTML = "";
+            emptyState.style.display = "none";
+
+            const response = await UserService.getParticipants();
+
+            if (response.success) {
+              allParticipants = response.data || [];
+              filteredParticipants = [...allParticipants];
+              renderParticipants(filteredParticipants);
+              updateParticipantCount(filteredParticipants.length);
+              updateStats(allParticipants);
+            } else {
+              showError(response.message || "Error al cargar participantes");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            showError("Error de conexión con el servidor");
+          } finally {
+            spinner.style.display = "none";
+          }
+        }
+
+        // Renderizar participantes
+        function renderParticipants(participants) {
+          const grid = document.getElementById("participantsGrid");
+          const emptyState = document.getElementById("emptyState");
+
+          if (!participants || participants.length === 0) {
+            grid.innerHTML = "";
+            emptyState.style.display = "block";
+            return;
+          }
+
+          emptyState.style.display = "none";
+          grid.innerHTML = participants
+            .map((participant) => createParticipantCard(participant))
+            .join("");
+        }
+
+        // Función para obtener iniciales del nombre
+        function getInitials(name) {
+          const words = name.trim().split(' ');
+          if (words.length >= 2) {
+            return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
+          } else {
+            return words[0].charAt(0).toUpperCase();
+          }
+        }
+
+        // Crear tarjeta de participante
+        function createParticipantCard(participant) {
+          const statusClass = participant.active == 1 ? "status-active" : "status-inactive";
+          const statusText = participant.active == 1 ? "Activo" : "Inactivo";
+          const registrationDate = new Date(participant.created_at).toLocaleDateString('es-ES');
+          const initials = getInitials(participant.name);
+
+          return `
+            <div class="participant-card">
+              <div class="participant-header">
+                <div class="d-flex align-items-center">
+                  <div class="participant-avatar-placeholder me-3">${initials}</div>
+                  <div>
+                    <h5 class="mb-1">${participant.name}</h5>
+                    <small>@${participant.user}</small>
+                  </div>
+                </div>
+                <span class="status-badge ${statusClass} position-absolute" style="top: 1rem; right: 1rem;">${statusText}</span>
+              </div>
+              <div class="participant-body">
+                <div class="participant-info">
+                  <div class="participant-info-item">
+                    <i class="mdi mdi-email"></i>
+                    <span>${participant.email}</span>
+                  </div>
+                  <div class="participant-info-item">
+                    <i class="mdi mdi-briefcase"></i>
+                    <span>${participant.position_name || "Sin cargo"}</span>
+                  </div>
+                  <div class="participant-info-item">
+                    <i class="mdi mdi-calendar"></i>
+                    <span>Registrado: ${registrationDate}</span>
+                  </div>
+                  ${participant.last_login ? `
+                  <div class="participant-info-item">
+                    <i class="mdi mdi-clock"></i>
+                    <span>Último login: ${new Date(participant.last_login).toLocaleDateString('es-ES')}</span>
+                  </div>
+                  ` : ''}
+                </div>
+                <div class="participant-actions">
+                  <button class="btn-view-details" onclick="viewParticipant(${participant.id})">
+                    <i class="mdi mdi-eye"></i>
+                    Ver Detalles
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // Ver detalles del participante
+        window.viewParticipant = async function (id) {
+          try {
+            const response = await UserService.getUserById(id);
+
+            if (response.success) {
+              const participant = response.data;
+              const statusText = participant.active == 1 ? "Activo" : "Inactivo";
+              const registrationDate = new Date(participant.created_at).toLocaleDateString('es-ES');
+              const lastLogin = participant.last_login ? new Date(participant.last_login).toLocaleDateString('es-ES') : "Nunca";
+
+              const initials = getInitials(participant.name);
+              document.getElementById("participantDetailsContent").innerHTML = `
+                <div class="row">
+                  <div class="col-md-4 text-center mb-4">
+                    <div class="participant-avatar-placeholder mx-auto" style="width: 120px; height: 120px; font-size: 3rem;">${initials}</div>
+                    <h4 class="mt-3">${participant.name}</h4>
+                    <p class="text-muted">@${participant.user}</p>
+                    <span class="badge ${participant.active == 1 ? 'bg-success' : 'bg-secondary'}">${statusText}</span>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="row">
+                      <div class="col-sm-6 mb-3">
+                        <strong>Email:</strong><br>
+                        <span class="text-muted">${participant.email}</span>
+                      </div>
+                      <div class="col-sm-6 mb-3">
+                        <strong>Cargo:</strong><br>
+                        <span class="text-muted">${participant.position_name || "Sin cargo"}</span>
+                      </div>
+                      <div class="col-sm-6 mb-3">
+                        <strong>Fecha de Registro:</strong><br>
+                        <span class="text-muted">${registrationDate}</span>
+                      </div>
+                      <div class="col-sm-6 mb-3">
+                        <strong>Último Login:</strong><br>
+                        <span class="text-muted">${lastLogin}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+
+              const modal = new bootstrap.Modal(document.getElementById("viewParticipantModal"));
+              modal.show();
+            } else {
+              showError(response.message || "Error al cargar participante");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            showError("Error al cargar participante");
+          }
+        };
+
+        // Filtros
+        document.getElementById("filterStatus").addEventListener("change", applyFilters);
+        document.getElementById("filterSearch").addEventListener("input", applyFilters);
+
+        function applyFilters() {
+          const statusFilter = document.getElementById("filterStatus").value;
+          const searchFilter = document.getElementById("filterSearch").value.toLowerCase();
+
+          filteredParticipants = allParticipants.filter((participant) => {
+            const matchesStatus = !statusFilter || participant.active == statusFilter;
+            const matchesSearch = !searchFilter || 
+              participant.name.toLowerCase().includes(searchFilter) ||
+              participant.email.toLowerCase().includes(searchFilter) ||
+              participant.user.toLowerCase().includes(searchFilter);
+            
+            return matchesStatus && matchesSearch;
+          });
+
+          renderParticipants(filteredParticipants);
+          updateParticipantCount(filteredParticipants.length);
+        }
+
+        // Actualizar contador
+        function updateParticipantCount(count) {
+          document.getElementById("participantCount").textContent = `${count} participante${count !== 1 ? "s" : ""}`;
+        }
+
+        // Actualizar estadísticas
+        function updateStats(participants) {
+          const totalParticipants = participants.length;
+          const activeParticipants = participants.filter(p => p.active == 1).length;
+          
+          // Contar participantes nuevos este mes
+          const currentMonth = new Date().getMonth();
+          const currentYear = new Date().getFullYear();
+          const newThisMonth = participants.filter(p => {
+            const participantDate = new Date(p.created_at);
+            return participantDate.getMonth() === currentMonth && 
+                   participantDate.getFullYear() === currentYear;
+          }).length;
+
+          document.getElementById("totalParticipants").textContent = totalParticipants;
+          document.getElementById("activeParticipants").textContent = activeParticipants;
+          document.getElementById("newThisMonth").textContent = newThisMonth;
+        }
+
+        // Mostrar mensajes
+        function showSuccess(message) {
+          alert(message);
+        }
+
+        function showError(message) {
+          alert("Error: " + message);
+        }
+
+        // Cargar participantes al iniciar
+        loadParticipants();
+
+        // Configurar logout
+        const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+        if (confirmLogoutBtn) {
+          confirmLogoutBtn.addEventListener("click", () => {
+            const logoutModal = bootstrap.Modal.getInstance(document.getElementById("logoutModal"));
+            if (logoutModal) logoutModal.hide();
+
+            confirmLogoutBtn.innerHTML = '<i class="mdi mdi-loading mdi-spin"></i> Cerrando...';
+            confirmLogoutBtn.disabled = true;
+
+            setTimeout(() => {
+              AuthService.logout();
+            }, 300);
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

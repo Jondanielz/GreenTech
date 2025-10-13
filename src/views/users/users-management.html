@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Gestión de Usuarios - GreenTech</title>
+    <!-- plugins:css -->
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/mdi/css/materialdesignicons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/ti-icons/css/themify-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/css/vendor.bundle.base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/font-awesome/css/font-awesome.min.css"
+    />
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../../assets/images/favicon.png" />
+    <!-- Estilos personalizados para usuarios -->
+    <style>
+      .user-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e9ecef;
+      }
+      .user-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      .user-avatar {
+        width: 50px !important;
+        height: 50px !important;
+        border-radius: 50% !important;
+        object-fit: cover;
+      }
+      /* Sobrescribir estilos globales de tabla */
+      .table th .user-avatar,
+      .table td .user-avatar {
+        width: 50px !important;
+        height: 50px !important;
+        border-radius: 50% !important;
+        object-fit: cover;
+      }
+      .user-avatar-placeholder {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #57c785 0%, #62a984 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+      .role-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+      }
+      .role-admin {
+        background: #dc3545;
+        color: white;
+      }
+      .role-coordinator {
+        background: #ffc107;
+        color: #212529;
+      }
+      .role-participant {
+        background: #17a2b8;
+        color: white;
+      }
+      .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+      }
+      .status-active {
+        background: #28a745;
+        color: white;
+      }
+      .status-inactive {
+        background: #6c757d;
+        color: white;
+      }
+      .filters-bar {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-right: 1.5rem;
+      }
+      .filter-group:last-child {
+        margin-right: 0;
+      }
+      .filter-group label {
+        white-space: nowrap;
+        font-weight: 500;
+        color: #495057;
+      }
+      .filter-group select,
+      .filter-group input {
+        min-width: 120px;
+      }
+      .filter-group #filterStatus {
+        min-width: 140px;
+      }
+      .table-responsive {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .table th {
+        background: #f8f9fa;
+        border-top: none;
+        font-weight: 600;
+        color: #495057;
+      }
+      .action-buttons {
+        display: flex;
+        gap: 0.25rem;
+      }
+      .btn-action {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-action:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .btn-view {
+        background: #007bff;
+        color: white;
+      }
+      .btn-edit {
+        background: #ffc107;
+        color: #212529;
+      }
+      .btn-delete {
+        background: #dc3545;
+        color: white;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .empty-state i {
+        font-size: 4rem;
+        color: #ccc;
+        margin-bottom: 1rem;
+      }
+      #loadingSpinner {
+        text-align: center;
+        padding: 3rem;
+      }
+      .modal-lg {
+        max-width: 800px;
+      }
+      .form-group label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+      .user-stats {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .stat-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        text-align: center;
+      }
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #11998e;
+      }
+      .stat-label {
+        color: #6c757d;
+        font-size: 0.875rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- Navbar Container -->
+      <nav id="navbar-container" class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <!-- Cargando navbar... -->
+      </nav>
+
+      <div class="container-fluid page-body-wrapper">
+        <!-- Sidebar Container -->
+        <div id="sidebar-container">
+          <!-- Cargando sidebar... -->
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <!-- Page Header -->
+            <div class="page-header">
+              <h3 class="page-title">
+                <span
+                  class="page-title-icon bg-gradient-primary text-white me-2"
+                >
+                  <i class="mdi mdi-account-multiple"></i>
+                </span>
+                Gestión de Usuarios
+              </h3>
+              <nav aria-label="breadcrumb">
+                <ul class="breadcrumb">
+                  <li class="breadcrumb-item active" aria-current="page">
+                    <button
+                      class="btn btn-gradient-primary btn-sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#createUserModal"
+                    >
+                      <i class="mdi mdi-account-plus"></i> Nuevo Usuario
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="user-stats">
+              <div class="stat-card">
+                <div class="stat-number" id="totalUsers">0</div>
+                <div class="stat-label">Total Usuarios</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number" id="activeUsers">0</div>
+                <div class="stat-label">Activos</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number" id="adminUsers">0</div>
+                <div class="stat-label">Administradores</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number" id="coordinatorUsers">0</div>
+                <div class="stat-label">Coordinadores</div>
+              </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filters-bar">
+              <div class="filter-group">
+                <label for="filterRole" class="mb-0">Rol:</label>
+                <select id="filterRole" class="form-select form-select-sm">
+                  <option value="">Todos</option>
+                  <option value="1">Administrador</option>
+                  <option value="2">Coordinador</option>
+                  <option value="3">Participante</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="filterStatus" class="mb-0">Estado:</label>
+                <select id="filterStatus" class="form-select form-select-sm">
+                  <option value="">Todos</option>
+                  <option value="1">Activo</option>
+                  <option value="0">Inactivo</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="filterSearch" class="mb-0">Buscar:</label>
+                <input
+                  type="text"
+                  id="filterSearch"
+                  class="form-control form-control-sm"
+                  placeholder="Nombre, email o usuario..."
+                />
+              </div>
+              <div class="filter-group ms-auto">
+                <span id="userCount" class="badge bg-success"
+                  >0 usuarios</span
+                >
+              </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loadingSpinner" style="display: none">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+              <p class="mt-2">Cargando usuarios...</p>
+            </div>
+
+            <!-- Users Table -->
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Usuario</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Cargo</th>
+                    <th>Estado</th>
+                    <th>Fecha de Registro</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                  <!-- Los usuarios se cargarán aquí dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display: none">
+              <i class="mdi mdi-account-multiple-outline"></i>
+              <h4>No hay usuarios</h4>
+              <p class="text-muted">
+                Aún no hay usuarios registrados. Haz clic en "Nuevo Usuario" para
+                comenzar.
+              </p>
+            </div>
+          </div>
+
+          <!-- Footer Container -->
+          <div id="footer-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Crear Usuario -->
+    <div
+      class="modal fade"
+      id="createUserModal"
+      tabindex="-1"
+      aria-labelledby="createUserModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="createUserModalLabel">
+              <i class="mdi mdi-account-plus"></i> Crear Nuevo Usuario
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="createUserForm">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="userName" class="form-label"
+                    >Nombre Completo <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="userName"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="userEmail" class="form-label"
+                    >Email <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="userEmail"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="userUsername" class="form-label"
+                    >Nombre de Usuario <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="userUsername"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="userPassword" class="form-label"
+                    >Contraseña <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="userPassword"
+                    required
+                    minlength="4"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="userRole" class="form-label"
+                    >Rol <span class="text-danger">*</span></label
+                  >
+                  <select class="form-select" id="userRole" required>
+                    <option value="">Seleccionar rol...</option>
+                    <option value="1">Administrador</option>
+                    <option value="2">Coordinador</option>
+                    <option value="3">Participante</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="userPosition" class="form-label">Cargo</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="userPosition"
+                    placeholder="Ej: Desarrollador, Analista, etc."
+                  />
+                </div>
+              </div>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="saveUserBtn">
+              <i class="mdi mdi-content-save"></i> Guardar Usuario
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Editar Usuario -->
+    <div
+      class="modal fade"
+      id="editUserModal"
+      tabindex="-1"
+      aria-labelledby="editUserModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editUserModalLabel">
+              <i class="mdi mdi-account-edit"></i> Editar Usuario
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editUserForm">
+              <input type="hidden" id="editUserId" />
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="editUserName" class="form-label"
+                    >Nombre Completo <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="editUserName"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="editUserEmail" class="form-label"
+                    >Email <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="editUserEmail"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="editUserUsername" class="form-label"
+                    >Nombre de Usuario <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="editUserUsername"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="editUserPassword" class="form-label"
+                    >Nueva Contraseña</label
+                  >
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="editUserPassword"
+                    minlength="4"
+                  />
+                  <small class="form-text text-muted">
+                    Dejar vacío para mantener la contraseña actual.
+                  </small>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="editUserRole" class="form-label"
+                    >Rol <span class="text-danger">*</span></label
+                  >
+                  <select class="form-select" id="editUserRole" required>
+                    <option value="1">Administrador</option>
+                    <option value="2">Coordinador</option>
+                    <option value="3">Participante</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="editUserPosition" class="form-label">Cargo</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="editUserPosition"
+                    placeholder="Ej: Desarrollador, Analista, etc."
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="editUserActive" class="form-label">Estado</label>
+                  <select class="form-select" id="editUserActive">
+                    <option value="1">Activo</option>
+                    <option value="0">Inactivo</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="updateUserBtn">
+              <i class="mdi mdi-content-save"></i> Actualizar Usuario
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Ver Detalles de Usuario -->
+    <div
+      class="modal fade"
+      id="viewUserModal"
+      tabindex="-1"
+      aria-labelledby="viewUserModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="viewUserModalLabel">
+              <i class="mdi mdi-account-eye"></i> Detalles del Usuario
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="userDetailsContent">
+              <!-- Los detalles se cargarán aquí dinámicamente -->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Logout -->
+    <div
+      class="modal fade"
+      id="logoutModal"
+      tabindex="-1"
+      aria-labelledby="logoutModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="logoutModalLabel">
+              <i class="mdi mdi-logout"></i> Cerrar Sesión
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>¿Estás seguro de que deseas cerrar sesión?</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="confirmLogoutBtn">
+              Sí, cerrar sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- plugins:js -->
+    <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- inject:js -->
+    <script src="../../assets/js/off-canvas.js"></script>
+    <script src="../../assets/js/misc.js"></script>
+    <script src="../../assets/js/settings.js"></script>
+    <script src="../../assets/js/todolist.js"></script>
+    <!-- endinject -->
+
+    <!-- Script Principal -->
+    <script type="module">
+      import AuthService from "../../services/auth.js";
+      import UserService from "../../services/users.js";
+      import ComponentsLoader from "../../utils/components-loader.js";
+
+      // Verificar autenticación y permisos de administrador
+      if (!AuthService.isAuthenticated()) {
+        window.location.href = "/src/views/auth/login.html";
+      } else {
+        const userData = AuthService.getCurrentUser();
+
+        // Solo administradores pueden acceder a esta vista
+        if (userData.role_id !== 1) {
+          alert("No tienes permisos para acceder a esta sección");
+          window.location.href = "/";
+        }
+
+        // Cargar componentes
+        ComponentsLoader.loadCommonComponents({
+          navbar: true,
+          sidebar: true,
+          footer: true,
+          basePath: "../../components/",
+        });
+
+        let allUsers = [];
+        let filteredUsers = [];
+
+        // Cargar usuarios
+        async function loadUsers() {
+          const spinner = document.getElementById("loadingSpinner");
+          const tableBody = document.getElementById("usersTableBody");
+          const emptyState = document.getElementById("emptyState");
+
+          try {
+            spinner.style.display = "block";
+            tableBody.innerHTML = "";
+            emptyState.style.display = "none";
+
+            const response = await UserService.getUsers();
+
+            if (response.success) {
+              allUsers = response.data || [];
+              filteredUsers = [...allUsers];
+              renderUsers(filteredUsers);
+              updateUserCount(filteredUsers.length);
+              updateStats(allUsers);
+            } else {
+              showError(response.message || "Error al cargar usuarios");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            showError("Error de conexión con el servidor");
+          } finally {
+            spinner.style.display = "none";
+          }
+        }
+
+        // Renderizar usuarios
+        function renderUsers(users) {
+          const tableBody = document.getElementById("usersTableBody");
+          const emptyState = document.getElementById("emptyState");
+
+          if (!users || users.length === 0) {
+            tableBody.innerHTML = "";
+            emptyState.style.display = "block";
+            return;
+          }
+
+          emptyState.style.display = "none";
+          tableBody.innerHTML = users
+            .map((user) => createUserRow(user))
+            .join("");
+        }
+
+        // Función para obtener iniciales del nombre
+        function getInitials(name) {
+          const words = name.trim().split(' ');
+          if (words.length >= 2) {
+            return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
+          } else {
+            return words[0].charAt(0).toUpperCase();
+          }
+        }
+
+        // Crear fila de usuario
+        function createUserRow(user) {
+          const roleClass = user.role_id === 1 ? "role-admin" : 
+                           user.role_id === 2 ? "role-coordinator" : "role-participant";
+          const roleName = user.role_name || "Sin rol";
+          const statusClass = user.active == 1 ? "status-active" : "status-inactive";
+          const statusText = user.active == 1 ? "Activo" : "Inactivo";
+          const registrationDate = new Date(user.created_at).toLocaleDateString('es-ES');
+          const initials = getInitials(user.name);
+
+          return `
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="user-avatar-placeholder me-3">${initials}</div>
+                  <div>
+                    <div class="fw-bold">${user.name}</div>
+                    <small class="text-muted">@${user.user}</small>
+                  </div>
+                </div>
+              </td>
+              <td>${user.email}</td>
+              <td>
+                <span class="role-badge ${roleClass}">${roleName}</span>
+              </td>
+              <td>${user.position || "Sin cargo"}</td>
+              <td>
+                <span class="status-badge ${statusClass}">${statusText}</span>
+              </td>
+              <td>${registrationDate}</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-action btn-view" onclick="viewUser(${user.id})" title="Ver detalles">
+                    <i class="mdi mdi-eye"></i>
+                  </button>
+                  <button class="btn-action btn-edit" onclick="editUser(${user.id})" title="Editar">
+                    <i class="mdi mdi-pencil"></i>
+                  </button>
+                  <button class="btn-action btn-delete" onclick="deleteUser(${user.id}, '${user.name}')" title="Eliminar">
+                    <i class="mdi mdi-delete"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }
+
+        // Ver detalles del usuario
+        window.viewUser = async function (id) {
+          try {
+            const response = await UserService.getUserById(id);
+
+            if (response.success) {
+              const user = response.data;
+              const roleClass = user.role_id === 1 ? "role-admin" : 
+                               user.role_id === 2 ? "role-coordinator" : "role-participant";
+              const roleName = user.role_name || "Sin rol";
+              const statusClass = user.active == 1 ? "status-active" : "status-inactive";
+              const statusText = user.active == 1 ? "Activo" : "Inactivo";
+              const registrationDate = new Date(user.created_at).toLocaleDateString('es-ES');
+              const lastLogin = user.last_login ? new Date(user.last_login).toLocaleDateString('es-ES') : "Nunca";
+
+              const initials = getInitials(user.name);
+               document.getElementById("userDetailsContent").innerHTML = `
+                 <div class="row">
+                   <div class="col-md-4 text-center mb-4">
+                     <div class="user-avatar-placeholder mx-auto" style="width: 100px; height: 100px; font-size: 2rem;">${initials}</div>
+                     <h5 class="mt-3">${user.name}</h5>
+                     <p class="text-muted">@${user.user}</p>
+                   </div>
+                   <div class="col-md-8">
+                     <div class="row">
+                       <div class="col-sm-6 mb-3">
+                         <strong>Email:</strong><br>
+                         <span class="text-muted">${user.email}</span>
+                       </div>
+                       <div class="col-sm-6 mb-3">
+                         <strong>Rol:</strong><br>
+                         <span class="role-badge ${roleClass}">${roleName}</span>
+                       </div>
+                       <div class="col-sm-6 mb-3">
+                         <strong>Cargo:</strong><br>
+                         <span class="text-muted">${user.position || "Sin cargo"}</span>
+                       </div>
+                       <div class="col-sm-6 mb-3">
+                         <strong>Estado:</strong><br>
+                         <span class="status-badge ${statusClass}">${statusText}</span>
+                       </div>
+                       <div class="col-sm-6 mb-3">
+                         <strong>Fecha de Registro:</strong><br>
+                         <span class="text-muted">${registrationDate}</span>
+                       </div>
+                       <div class="col-sm-6 mb-3">
+                         <strong>Último Login:</strong><br>
+                         <span class="text-muted">${lastLogin}</span>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+                 
+                 <!-- Sección de Proyectos Asignados -->
+                 <div class="row mt-4">
+                   <div class="col-12">
+                     <h6 class="text-success mb-3">
+                       <i class="mdi mdi-folder-multiple text-success"></i> Proyectos Asignados
+                     </h6>
+                     <div id="userProjects" class="mb-3">
+                       <div class="text-center text-muted">
+                         <i class="mdi mdi-loading mdi-spin"></i> Cargando proyectos...
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+                 
+                 <!-- Sección de Tareas Asignadas -->
+                 <div class="row mt-4">
+                   <div class="col-12">
+                     <h6 class="text-success mb-3">
+                       <i class="mdi mdi-checkbox-multiple-marked text-success"></i> Tareas Asignadas
+                     </h6>
+                     <div id="userTasks" class="mb-3">
+                       <div class="text-center text-muted">
+                         <i class="mdi mdi-loading mdi-spin"></i> Cargando tareas...
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               `;
+
+              const modal = new bootstrap.Modal(document.getElementById("viewUserModal"));
+              modal.show();
+              
+              // Cargar proyectos y tareas del usuario
+              loadUserProjects(id);
+              loadUserTasks(id);
+            } else {
+              showError(response.message || "Error al cargar usuario");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            showError("Error al cargar usuario");
+          }
+        };
+
+        // Cargar proyectos del usuario
+        async function loadUserProjects(userId) {
+          try {
+            const response = await UserService.getUserProjects(userId);
+            const projectsContainer = document.getElementById("userProjects");
+            
+            if (response.success && response.data && response.data.length > 0) {
+              const projectsList = response.data.map(project => `
+                <div class="d-flex align-items-center mb-2 p-2 bg-light rounded">
+                  <i class="mdi mdi-folder text-primary me-2"></i>
+                  <span class="fw-medium">${project.name}</span>
+                </div>
+              `).join('');
+              
+              projectsContainer.innerHTML = projectsList;
+            } else {
+              projectsContainer.innerHTML = `
+                <div class="text-center text-muted py-3">
+                  <i class="mdi mdi-folder-outline"></i>
+                  <p class="mb-0">No hay proyectos asignados</p>
+                </div>
+              `;
+            }
+          } catch (error) {
+            console.error("Error al cargar proyectos:", error);
+            document.getElementById("userProjects").innerHTML = `
+              <div class="text-center text-danger py-3">
+                <i class="mdi mdi-alert-circle"></i>
+                <p class="mb-0">Error al cargar proyectos</p>
+              </div>
+            `;
+          }
+        }
+
+        // Cargar tareas del usuario
+        async function loadUserTasks(userId) {
+          try {
+            const response = await UserService.getUserTasks(userId);
+            const tasksContainer = document.getElementById("userTasks");
+            
+            if (response.success && response.data && response.data.length > 0) {
+              const tasksList = response.data.map(task => `
+                <div class="d-flex align-items-center mb-2 p-2 bg-light rounded">
+                  <i class="mdi mdi-checkbox-marked-circle text-success me-2"></i>
+                  <span class="fw-medium">${task.title}</span>
+                </div>
+              `).join('');
+              
+              tasksContainer.innerHTML = tasksList;
+            } else {
+              tasksContainer.innerHTML = `
+                <div class="text-center text-muted py-3">
+                  <i class="mdi mdi-checkbox-blank-outline"></i>
+                  <p class="mb-0">No hay tareas asignadas</p>
+                </div>
+              `;
+            }
+          } catch (error) {
+            console.error("Error al cargar tareas:", error);
+            document.getElementById("userTasks").innerHTML = `
+              <div class="text-center text-danger py-3">
+                <i class="mdi mdi-alert-circle"></i>
+                <p class="mb-0">Error al cargar tareas</p>
+              </div>
+            `;
+          }
+        }
+
+        // Editar usuario
+        window.editUser = async function (id) {
+          try {
+            const response = await UserService.getUserById(id);
+
+            if (response.success) {
+              const user = response.data;
+
+              document.getElementById("editUserId").value = user.id;
+              document.getElementById("editUserName").value = user.name;
+              document.getElementById("editUserEmail").value = user.email;
+              document.getElementById("editUserUsername").value = user.user;
+              document.getElementById("editUserRole").value = user.role_id;
+              document.getElementById("editUserPosition").value = user.position || "";
+              document.getElementById("editUserActive").value = user.active;
+
+              const modal = new bootstrap.Modal(document.getElementById("editUserModal"));
+              modal.show();
+            } else {
+              showError(response.message || "Error al cargar usuario");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            showError("Error al cargar usuario");
+          }
+        };
+
+        // Eliminar usuario
+        window.deleteUser = async function (id, name) {
+          if (!confirm(`¿Estás seguro de que deseas eliminar al usuario "${name}"?\n\nEsta acción no se puede deshacer.`)) {
+            return;
+          }
+
+          try {
+            const response = await UserService.deleteUser(id);
+
+            if (response.success) {
+              showSuccess("Usuario eliminado exitosamente");
+              loadUsers();
+            } else {
+              showError(response.message || "Error al eliminar usuario");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            showError("Error al eliminar usuario");
+          }
+        };
+
+        // Guardar nuevo usuario
+        document.getElementById("saveUserBtn").addEventListener("click", async () => {
+          const form = document.getElementById("createUserForm");
+
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+
+          const userData = {
+            name: document.getElementById("userName").value,
+            email: document.getElementById("userEmail").value,
+            user: document.getElementById("userUsername").value,
+            password: document.getElementById("userPassword").value,
+            role_id: document.getElementById("userRole").value,
+            position: document.getElementById("userPosition").value
+          };
+
+          try {
+            const response = await UserService.createUser(userData);
+
+            if (response.success) {
+              showSuccess("Usuario creado exitosamente");
+              bootstrap.Modal.getInstance(document.getElementById("createUserModal")).hide();
+              form.reset();
+              loadUsers();
+            } else {
+              showError(response.message || "Error al crear usuario");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            showError("Error al crear usuario");
+          }
+        });
+
+        // Actualizar usuario
+        document.getElementById("updateUserBtn").addEventListener("click", async () => {
+          const form = document.getElementById("editUserForm");
+
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+
+          const id = document.getElementById("editUserId").value;
+          const userData = {
+            name: document.getElementById("editUserName").value,
+            email: document.getElementById("editUserEmail").value,
+            user: document.getElementById("editUserUsername").value,
+            role_id: document.getElementById("editUserRole").value,
+            position: document.getElementById("editUserPosition").value,
+            active: document.getElementById("editUserActive").value
+          };
+
+          // Solo incluir contraseña si se proporciona
+          const password = document.getElementById("editUserPassword").value;
+          if (password) {
+            userData.password = password;
+          }
+
+          try {
+            const response = await UserService.updateUser(id, userData);
+
+            if (response.success) {
+              showSuccess("Usuario actualizado exitosamente");
+              bootstrap.Modal.getInstance(document.getElementById("editUserModal")).hide();
+              loadUsers();
+            } else {
+              showError(response.message || "Error al actualizar usuario");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            showError("Error al actualizar usuario");
+          }
+        });
+
+        // Filtros
+        document.getElementById("filterRole").addEventListener("change", applyFilters);
+        document.getElementById("filterStatus").addEventListener("change", applyFilters);
+        document.getElementById("filterSearch").addEventListener("input", applyFilters);
+
+        function applyFilters() {
+          const roleFilter = document.getElementById("filterRole").value;
+          const statusFilter = document.getElementById("filterStatus").value;
+          const searchFilter = document.getElementById("filterSearch").value.toLowerCase();
+
+          filteredUsers = allUsers.filter((user) => {
+            const matchesRole = !roleFilter || user.role_id == roleFilter;
+            const matchesStatus = !statusFilter || user.active == statusFilter;
+            const matchesSearch = !searchFilter || 
+              user.name.toLowerCase().includes(searchFilter) ||
+              user.email.toLowerCase().includes(searchFilter) ||
+              user.user.toLowerCase().includes(searchFilter);
+            
+            return matchesRole && matchesStatus && matchesSearch;
+          });
+
+          renderUsers(filteredUsers);
+          updateUserCount(filteredUsers.length);
+        }
+
+        // Actualizar contador
+        function updateUserCount(count) {
+          document.getElementById("userCount").textContent = `${count} usuario${count !== 1 ? "s" : ""}`;
+        }
+
+        // Actualizar estadísticas
+        function updateStats(users) {
+          const totalUsers = users.length;
+          const activeUsers = users.filter(u => u.active == 1).length;
+          const adminUsers = users.filter(u => u.role_id == 1).length;
+          const coordinatorUsers = users.filter(u => u.role_id == 2).length;
+
+          document.getElementById("totalUsers").textContent = totalUsers;
+          document.getElementById("activeUsers").textContent = activeUsers;
+          document.getElementById("adminUsers").textContent = adminUsers;
+          document.getElementById("coordinatorUsers").textContent = coordinatorUsers;
+        }
+
+        // Mostrar mensajes
+        function showSuccess(message) {
+          alert(message);
+        }
+
+        function showError(message) {
+          alert("Error: " + message);
+        }
+
+        // Cargar usuarios al iniciar
+        loadUsers();
+
+        // Configurar logout
+        const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+        if (confirmLogoutBtn) {
+          confirmLogoutBtn.addEventListener("click", () => {
+            const logoutModal = bootstrap.Modal.getInstance(document.getElementById("logoutModal"));
+            if (logoutModal) logoutModal.hide();
+
+            confirmLogoutBtn.innerHTML = '<i class="mdi mdi-loading mdi-spin"></i> Cerrando...';
+            confirmLogoutBtn.disabled = true;
+
+            setTimeout(() => {
+              AuthService.logout();
+            }, 300);
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

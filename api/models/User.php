@@ -15,7 +15,7 @@ class User {
     public $user;
     public $password;
     public $role_id;
-    public $position_id;
+    public $position;
     public $avatar;
     public $active;
     public $last_login;
@@ -37,16 +37,12 @@ class User {
     public function login() {
         $query = "SELECT 
                     u.id, u.name, u.email, u.user, u.password, 
-                    u.role_id, u.position_id, u.avatar, u.active, u.last_login,
+                    u.role_id, u.position, u.avatar, u.active, u.last_login,
                     r.name as role_name, 
                     r.permissions,
-                    r.description as role_description,
-                    p.name as position_name, 
-                    p.department,
-                    p.description as position_description
+                    r.description as role_description
                   FROM " . $this->table_name . " u
                   LEFT JOIN roles r ON u.role_id = r.id
-                  LEFT JOIN positions p ON u.position_id = p.id
                   WHERE u.user = :user AND u.active = 1
                   LIMIT 1";
 
@@ -209,15 +205,12 @@ class User {
     public function getUserById($id) {
         $query = "SELECT 
                     u.id, u.name, u.email, u.user, 
-                    u.role_id, u.position_id, u.avatar, u.active, u.last_login,
+                    u.role_id, u.position, u.avatar, u.active, u.last_login,
                     r.name as role_name, 
                     r.permissions,
-                    p.name as position_name, 
-                    p.department,
                     u.created_at, u.updated_at
                   FROM " . $this->table_name . " u
                   LEFT JOIN roles r ON u.role_id = r.id
-                  LEFT JOIN positions p ON u.position_id = p.id
                   WHERE u.id = :id LIMIT 1";
 
         $stmt = $this->conn->prepare($query);
@@ -315,6 +308,258 @@ class User {
         } catch(PDOException $e) {
             error_log("Error al limpiar sesiones: " . $e->getMessage());
             return false;
+        }
+    }
+
+    /**
+     * Obtener todos los usuarios con información completa
+     * @return array
+     */
+    public function getAllUsers() {
+        $query = "SELECT 
+                    u.id, u.name, u.email, u.user, 
+                    u.role_id, u.position, u.avatar, u.active, u.last_login,
+                    r.name as role_name, 
+                    u.created_at, u.updated_at
+                  FROM " . $this->table_name . " u
+                  LEFT JOIN roles r ON u.role_id = r.id
+                  ORDER BY u.created_at DESC";
+
+        $stmt = $this->conn->prepare($query);
+        
+        try {
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch(PDOException $e) {
+            error_log("Error al obtener usuarios: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Obtener solo participantes (rol_id = 3)
+     * @return array
+     */
+    public function getParticipants() {
+        $query = "SELECT 
+                    u.id, u.name, u.email, u.user, 
+                    u.role_id, u.position, u.avatar, u.active, u.last_login,
+                    r.name as role_name, 
+                    u.created_at, u.updated_at
+                  FROM " . $this->table_name . " u
+                  LEFT JOIN roles r ON u.role_id = r.id
+                  WHERE u.role_id = 3
+                  ORDER BY u.created_at DESC";
+
+        $stmt = $this->conn->prepare($query);
+        
+        try {
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch(PDOException $e) {
+            error_log("Error al obtener participantes: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Actualizar usuario
+     * @param int $id - ID del usuario
+     * @param array $data - Datos a actualizar
+     * @return bool
+     */
+    public function updateUser($id, $data) {
+        $fields = [];
+        $params = [':id' => $id];
+
+        // Campos que se pueden actualizar
+        $allowedFields = ['name', 'email', 'user', 'role_id', 'position', 'avatar', 'active'];
+        
+        foreach ($allowedFields as $field) {
+            if (isset($data[$field])) {
+                $fields[] = "$field = :$field";
+                $params[":$field"] = $data[$field];
+            }
+        }
+
+        // Si se proporciona contraseña, hashearla
+        if (isset($data['password']) && !empty($data['password'])) {
+            $fields[] = "password = :password";
+            $params[':password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+        }
+
+        if (empty($fields)) {
+            return false;
+        }
+
+        $fields[] = "updated_at = NOW()";
+        $query = "UPDATE " . $this->table_name . " SET " . implode(', ', $fields) . " WHERE id = :id";
+
+        $stmt = $this->conn->prepare($query);
+        
+        // Sanitizar datos
+        foreach ($params as $key => $value) {
+            if ($key !== ':id' && $key !== ':password') {
+                $params[$key] = htmlspecialchars(strip_tags($value));
+            }
+        }
+        
+        $stmt->bindParam(':id', $params[':id']);
+        foreach ($params as $key => $value) {
+            if ($key !== ':id') {
+                $stmt->bindValue($key, $value);
+            }
+        }
+
+        try {
+            return $stmt->execute();
+        } catch(PDOException $e) {
+            error_log("Error al actualizar usuario: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Eliminar usuario (eliminación real - solo usuarios inactivos)
+     * @param int $id - ID del usuario
+     * @return bool
+     */
+    public function deleteUser($id) {
+        $query = "DELETE FROM " . $this->table_name . " 
+                  WHERE id = :id AND active = 0";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id);
+
+        try {
+            return $stmt->execute();
+        } catch(PDOException $e) {
+            error_log("Error al eliminar usuario: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Crear usuario con datos extendidos
+     * @param array $data - Datos del usuario
+     * @return bool
+     */
+    public function createUser($data) {
+        $query = "INSERT INTO " . $this->table_name . " 
+                  (name, email, user, password, role_id, position, avatar, active)
+                  VALUES 
+                  (:name, :email, :user, :password, :role_id, :position, :avatar, 1)";
+
+        $stmt = $this->conn->prepare($query);
+
+        // Sanitizar datos
+        $name = htmlspecialchars(strip_tags($data['name']));
+        $email = htmlspecialchars(strip_tags($data['email']));
+        $user = htmlspecialchars(strip_tags($data['user']));
+        $password = password_hash($data['password'], PASSWORD_BCRYPT);
+        $role_id = $data['role_id'];
+        $position = $data['position'] ?? null;
+        $avatar = $data['avatar'] ?? null;
+
+        // Vincular parámetros
+        $stmt->bindParam(":name", $name);
+        $stmt->bindParam(":email", $email);
+        $stmt->bindParam(":user", $user);
+        $stmt->bindParam(":password", $password);
+        $stmt->bindParam(":role_id", $role_id);
+        $stmt->bindParam(":position", $position);
+        $stmt->bindParam(":avatar", $avatar);
+
+        try {
+            if ($stmt->execute()) {
+                $this->id = $this->conn->lastInsertId();
+                return true;
+            }
+            return false;
+        } catch(PDOException $e) {
+            error_log("Error al crear usuario: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Obtener estadísticas de usuarios
+     * @return array
+     */
+    public function getUserStats() {
+        $query = "SELECT 
+                    COUNT(*) as total_users,
+                    SUM(CASE WHEN active = 1 THEN 1 ELSE 0 END) as active_users,
+                    SUM(CASE WHEN role_id = 1 THEN 1 ELSE 0 END) as admin_users,
+                    SUM(CASE WHEN role_id = 2 THEN 1 ELSE 0 END) as coordinator_users,
+                    SUM(CASE WHEN role_id = 3 THEN 1 ELSE 0 END) as participant_users,
+                    SUM(CASE WHEN created_at >= DATE_SUB(NOW(), INTERVAL 1 MONTH) THEN 1 ELSE 0 END) as new_this_month
+                  FROM " . $this->table_name;
+
+        $stmt = $this->conn->prepare($query);
+        
+        try {
+            $stmt->execute();
+            return $stmt->fetch();
+        } catch(PDOException $e) {
+            error_log("Error al obtener estadísticas: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Obtener proyectos asignados a un usuario
+     * @param int $userId - ID del usuario
+     * @return array
+     */
+    public function getUserProjects($userId) {
+        $query = "SELECT 
+                    p.id, p.name, p.description, p.status, p.priority,
+                    p.start_date, p.end_date, p.progress, p.budget,
+                    pu.assigned_at, pu.assigned_by
+                  FROM projects p
+                  INNER JOIN project_users pu ON p.id = pu.project_id
+                  WHERE pu.user_id = :user_id
+                  ORDER BY pu.assigned_at DESC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":user_id", $userId);
+        
+        try {
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            error_log("Error al obtener proyectos del usuario: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Obtener tareas asignadas a un usuario
+     * @param int $userId - ID del usuario
+     * @return array
+     */
+    public function getUserTasks($userId) {
+        $query = "SELECT 
+                    t.id, t.title, t.description, t.status, t.priority,
+                    t.due_date, t.progress, t.estimated_hours, t.actual_hours,
+                    p.name as project_name,
+                    ta.assigned_at, ta.assigned_by
+                  FROM tasks t
+                  INNER JOIN task_assignments ta ON t.id = ta.task_id
+                  LEFT JOIN projects p ON t.project_id = p.id
+                  WHERE ta.user_id = :user_id
+                  ORDER BY ta.assigned_at DESC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":user_id", $userId);
+        
+        try {
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            error_log("Error al obtener tareas del usuario: " . $e->getMessage());
+            return [];
         }
     }
 }

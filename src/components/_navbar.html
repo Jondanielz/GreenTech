@@ -1,3 +1,31 @@
+<!-- Estilos para avatares con iniciales -->
+<style>
+  .navbar-avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #57c785 0%, #62a984 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  .sidebar-avatar-placeholder {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #57c785 0%, #62a984 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+</style>
+
 <nav
 class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row"
 >
@@ -113,8 +141,7 @@ class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-r
         aria-expanded="false"
       >
         <div class="nav-profile-img">
-          <img src="../assets/images/faces/face1.jpg" alt="image" class="navbar-profile-img" />
-          <span class="availability-status online"></span>
+          <div class="navbar-avatar-placeholder" id="navbarUserAvatar">U</div>
         </div>
           <div class="nav-profile-text">
             <p class="mb-1 text-black" id="navbarUserName">Cargando...</p>
@@ -124,12 +151,8 @@ class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-r
         class="dropdown-menu navbar-dropdown"
         aria-labelledby="profileDropdown"
       >
-        <a class="dropdown-item" href="#">
-          <i class="mdi mdi-cached me-2 text-success"></i> Activity Log
-        </a>
-        <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#" id="navbarLogoutBtn">
-            <i class="mdi mdi-logout me-2 text-primary"></i> Signout
+            <i class="mdi mdi-logout me-2 text-primary"></i> Cerrar Sesión
           </a>
       </div>
     </li>
