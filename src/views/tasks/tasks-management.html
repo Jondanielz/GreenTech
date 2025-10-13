@@ -1849,6 +1849,7 @@
 
             if (response.success) {
               renderAssignedUsers(response.data);
+              updateAvailableUsers(response.data);
             } else {
               showError(response.message || "Error al cargar asignaciones");
             }
@@ -1892,6 +1893,39 @@
           `
             )
             .join("");
+        }
+
+        // Actualizar usuarios disponibles en el selector
+        function updateAvailableUsers(assignments) {
+          const assignUserSelect = document.getElementById("assignUserSelect");
+
+          if (!assignUserSelect) return;
+
+          // Obtener IDs de usuarios ya asignados
+          const assignedUserIds = assignments.map(
+            (assignment) => assignment.user_id
+          );
+
+          // Filtrar usuarios disponibles (excluir los ya asignados)
+          const availableUsers = allUsers.filter(
+            (user) => !assignedUserIds.includes(user.id)
+          );
+
+          // Actualizar el selector
+          assignUserSelect.innerHTML =
+            '<option value="">Seleccionar usuario...</option>' +
+            availableUsers
+              .map((user) => `<option value="${user.id}">${user.name}</option>`)
+              .join("");
+
+          // Si no hay usuarios disponibles, mostrar mensaje
+          if (availableUsers.length === 0) {
+            assignUserSelect.innerHTML =
+              '<option value="">No hay usuarios disponibles</option>';
+            assignUserSelect.disabled = true;
+          } else {
+            assignUserSelect.disabled = false;
+          }
         }
 
         // Asignar usuario a tarea
