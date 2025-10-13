@@ -3,7 +3,7 @@
  * Maneja todas las operaciones relacionadas con usuarios
  */
 
-import ApiClient from '../utils/api-client.js';
+import APIClient from '../utils/api-client.js';
 
 class UserService {
     constructor() {
@@ -16,7 +16,7 @@ class UserService {
      */
     async getUsers() {
         try {
-            const response = await ApiClient.get('/users');
+            const response = await APIClient.get('/users');
             return response;
         } catch (error) {
             console.error('Error al obtener usuarios:', error);
@@ -33,7 +33,7 @@ class UserService {
      */
     async getParticipants() {
         try {
-            const response = await ApiClient.get('/users/participants');
+            const response = await APIClient.get('/users/participants');
             return response;
         } catch (error) {
             console.error('Error al obtener participantes:', error);
@@ -51,7 +51,7 @@ class UserService {
      */
     async getUserById(id) {
         try {
-            const response = await ApiClient.get(`/users/${id}`);
+            const response = await APIClient.get(`/users/${id}`);
             return response;
         } catch (error) {
             console.error('Error al obtener usuario:', error);
@@ -69,7 +69,7 @@ class UserService {
      */
     async createUser(userData) {
         try {
-            const response = await ApiClient.post('/users/create', userData);
+            const response = await APIClient.post('/users/create', userData);
             return response;
         } catch (error) {
             console.error('Error al crear usuario:', error);
@@ -88,7 +88,7 @@ class UserService {
      */
     async updateUser(id, userData) {
         try {
-            const response = await ApiClient.put(`/users/${id}`, userData);
+            const response = await APIClient.put(`/users/${id}`, userData);
             return response;
         } catch (error) {
             console.error('Error al actualizar usuario:', error);
@@ -106,7 +106,7 @@ class UserService {
      */
     async deleteUser(id) {
         try {
-            const response = await ApiClient.delete(`/users/${id}`);
+            const response = await APIClient.delete(`/users/${id}`);
             return response;
         } catch (error) {
             console.error('Error al eliminar usuario:', error);
@@ -123,7 +123,7 @@ class UserService {
      */
     async getUserStats() {
         try {
-            const response = await ApiClient.get('/users/stats');
+            const response = await APIClient.get('/users/stats');
             return response;
         } catch (error) {
             console.error('Error al obtener estadísticas:', error);
@@ -141,7 +141,7 @@ class UserService {
      */
     async getUserProjects(userId) {
         try {
-            const response = await ApiClient.get(`/users/${userId}/projects`);
+            const response = await APIClient.get(`/users/${userId}/projects`);
             return response;
         } catch (error) {
             console.error('Error al obtener proyectos del usuario:', error);
@@ -159,7 +159,7 @@ class UserService {
      */
     async getUserTasks(userId) {
         try {
-            const response = await ApiClient.get(`/users/${userId}/tasks`);
+            const response = await APIClient.get(`/users/${userId}/tasks`);
             return response;
         } catch (error) {
             console.error('Error al obtener tareas del usuario:', error);
