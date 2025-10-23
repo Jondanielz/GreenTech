@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Indicadores</title>
+    <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css" />
+    <link rel="stylesheet" href="../../assets/css/style.css" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      <div id="navbar-container" data-component="navbar"></div>
+      <div class="container-fluid page-body-wrapper">
+        <nav class="sidebar sidebar-offcanvas" id="sidebar" data-component="sidebar"></nav>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="row mb-3">
+              <div class="col-12">
+                <h3 class="text-success d-flex align-items-center">
+                  <i class="mdi mdi-chart-line me-2"></i>
+                  Indicadores
+                </h3>
+              </div>
+            </div>
+
+            <div class="card mb-4">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="card-title mb-0">Catálogo de Indicadores</h5>
+                  <button id="btnNewIndicator" class="btn btn-success btn-sm">
+                    <i class="mdi mdi-plus"></i> Nuevo Indicador
+                  </button>
+                </div>
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Unidad</th>
+                        <th>Tipo</th>
+                        <th>Frecuencia</th>
+                        <th>Dirección</th>
+                        <th>Estado</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="indicatorsTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="card-title mb-0">Unidades de Medida</h5>
+                  <button id="btnNewUnit" class="btn btn-outline-success btn-sm">
+                    <i class="mdi mdi-plus"></i> Nueva Unidad
+                  </button>
+                </div>
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Símbolo</th>
+                        <th>Tipo</th>
+                        <th>Estado</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="unitsTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <footer class="footer" data-component="footer"></footer>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import '../../utils/components-loader.js';
+      import indicatorsService from '../../services/indicators.js';
+
+      function renderIndicators(list) {
+        const tbody = document.getElementById('indicatorsTableBody');
+        tbody.innerHTML = list.map(i => `
+          <tr>
+            <td>${i.name}</td>
+            <td>${i.category || '-'}</td>
+            <td>${i.unit_symbol ? `${i.unit_name} (${i.unit_symbol})` : '-'}</td>
+            <td>${i.type}</td>
+            <td>${i.frequency}</td>
+            <td>${i.direction === 'up' ? '↑ Mejor' : '↓ Mejor'}</td>
+            <td>
+              <span class="badge ${i.active ? 'bg-success' : 'bg-secondary'}">
+                ${i.active ? 'Activo' : 'Inactivo'}
+              </span>
+            </td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-primary" data-id="${i.id}" data-action="edit-indicator">Editar</button>
+              <button class="btn btn-sm btn-outline-danger" data-id="${i.id}" data-action="delete-indicator">Eliminar</button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      function renderUnits(list) {
+        const tbody = document.getElementById('unitsTableBody');
+        tbody.innerHTML = list.map(u => `
+          <tr>
+            <td>${u.name}</td>
+            <td>${u.symbol}</td>
+            <td>${u.type || '-'}</td>
+            <td>
+              <span class="badge ${u.active ? 'bg-success' : 'bg-secondary'}">
+                ${u.active ? 'Activa' : 'Inactiva'}
+              </span>
+            </td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-primary" data-id="${u.id}" data-action="edit-unit">Editar</button>
+              <button class="btn btn-sm btn-outline-danger" data-id="${u.id}" data-action="delete-unit">Eliminar</button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      async function loadData() {
+        try {
+          const [indRes, unitRes] = await Promise.all([
+            indicatorsService.listIndicators(),
+            indicatorsService.listUnits(),
+          ]);
+          renderIndicators(indRes.data || []);
+          renderUnits(unitRes.data || []);
+        } catch (e) {
+          console.error('Error cargando indicadores/unidades', e);
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', loadData);
+    </script>
+  </body>
+</html>
+
+
