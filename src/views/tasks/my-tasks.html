@@ -317,6 +317,30 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        margin-right: 1.5rem;
+      }
+
+      .filters-bar .filter-group:last-child {
+        margin-right: 0;
+      }
+
+      .filter-group label {
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .filter-group select,
+      .filter-group input[type="text"],
+      .filter-group input[type="search"] {
+        min-width: 160px;
+      }
+
+      #filterProject {
+        min-width: 180px;
+      }
+
+      #filterSearch {
+        min-width: 220px;
       }
 
       .empty-column {
@@ -511,9 +535,15 @@
               <nav aria-label="breadcrumb">
                 <ul class="breadcrumb">
                   <li class="breadcrumb-item active" aria-current="page">
-                    <span id="taskCount" class="badge bg-success"
-                      >0 tareas</span
+                    <span id="taskCount" class="badge bg-success">0 tareas</span>
+                    <button
+                      class="btn btn-success btn-sm ms-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#createTaskModal"
+                      id="openCreateTaskBtn"
                     >
+                      <i class="mdi mdi-plus"></i> Nueva Tarea
+                    </button>
                   </li>
                 </ul>
               </nav>
@@ -637,7 +667,7 @@
     >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header bg-success text-white">
             <h5 class="modal-title" id="editTaskModalLabel">
               <i class="mdi mdi-pencil"></i> Editar Tarea
             </h5>
@@ -720,45 +750,22 @@
                 </div>
               </div>
 
+              <!-- Campos ocultos: Horas Estimadas, Horas Reales y Progreso (%) para coordinador
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="editTaskEstimatedHours" class="form-label">
-                    Horas Estimadas
-                  </label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="editTaskEstimatedHours"
-                    min="0"
-                    step="0.5"
-                  />
+                  <label for="editTaskEstimatedHours" class="form-label">Horas Estimadas</label>
+                  <input type="number" class="form-control" id="editTaskEstimatedHours" min="0" step="0.5" />
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label for="editTaskActualHours" class="form-label">
-                    Horas Reales
-                  </label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="editTaskActualHours"
-                    min="0"
-                    step="0.5"
-                  />
+                  <label for="editTaskActualHours" class="form-label">Horas Reales</label>
+                  <input type="number" class="form-control" id="editTaskActualHours" min="0" step="0.5" />
                 </div>
               </div>
-
               <div class="mb-3">
-                <label for="editTaskProgress" class="form-label">
-                  Progreso (%)
-                </label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="editTaskProgress"
-                  min="0"
-                  max="100"
-                />
+                <label for="editTaskProgress" class="form-label">Progreso (%)</label>
+                <input type="number" class="form-control" id="editTaskProgress" min="0" max="100" />
               </div>
+              -->
             </form>
           </div>
           <div class="modal-footer">
@@ -767,6 +774,79 @@
             </button>
             <button type="button" class="btn btn-primary" id="updateTaskBtn">
               <i class="mdi mdi-content-save"></i> Actualizar Tarea
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Crear Tarea -->
+    <div
+      class="modal fade"
+      id="createTaskModal"
+      tabindex="-1"
+      aria-labelledby="createTaskModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title" id="createTaskModalLabel">
+              <i class="mdi mdi-clipboard-plus"></i> Nueva Tarea
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="createTaskForm">
+              <div class="row">
+                <div class="col-md-8 mb-3">
+                  <label for="taskTitle" class="form-label">Título <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="taskTitle" required />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="taskProject" class="form-label">Proyecto <span class="text-danger">*</span></label>
+                  <select id="taskProject" class="form-select" required></select>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="taskDescription" class="form-label">Descripción</label>
+                <textarea class="form-control" id="taskDescription" rows="3"></textarea>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label for="taskStatus" class="form-label">Estado</label>
+                  <select id="taskStatus" class="form-select">
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="En progreso">En Progreso</option>
+                    <option value="Completada">Completada</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="taskPriority" class="form-label">Prioridad</label>
+                  <select id="taskPriority" class="form-select">
+                    <option value="Baja">Baja</option>
+                    <option value="Media" selected>Media</option>
+                    <option value="Alta">Alta</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="taskDueDate" class="form-label">Fecha de Vencimiento</label>
+                  <input type="date" class="form-control" id="taskDueDate" />
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-success" id="saveTaskBtn">
+              <i class="mdi mdi-content-save"></i> Guardar Tarea
             </button>
           </div>
         </div>
@@ -846,6 +926,12 @@
           basePath: "../../components/",
         });
 
+        // Ocultar botón "Nueva Tarea" para participantes (rol 3)
+        const createTaskBtn = document.getElementById("openCreateTaskBtn");
+        if (createTaskBtn && userData.role_id === 3) {
+          createTaskBtn.style.display = "none";
+        }
+
         let allTasks = [];
         let allProjects = [];
         let originalTasks = []; // Array para mantener las tareas originales
@@ -858,6 +944,13 @@
             if (projectsResponse.success) {
               allProjects = projectsResponse.data || [];
               populateProjectSelect();
+              // Poblar select del modal de crear
+              const createSelect = document.getElementById("taskProject");
+              if (createSelect) {
+                createSelect.innerHTML = allProjects
+                  .map((p) => `<option value="${p.id}">${p.name}</option>`)
+                  .join("");
+              }
             }
 
             // Cargar tareas del usuario
@@ -1256,12 +1349,7 @@
                 task.start_date || "";
               document.getElementById("editTaskDueDate").value =
                 task.due_date || "";
-              document.getElementById("editTaskEstimatedHours").value =
-                task.estimated_hours || "";
-              document.getElementById("editTaskActualHours").value =
-                task.actual_hours || "";
-              document.getElementById("editTaskProgress").value =
-                task.progress || 0;
+              // Campos ocultos: horas y progreso
 
               const modal = new bootstrap.Modal(
                 document.getElementById("editTaskModal")
@@ -1432,11 +1520,7 @@
               status: document.getElementById("editTaskStatus").value,
               start_date: document.getElementById("editTaskStartDate").value,
               due_date: document.getElementById("editTaskDueDate").value,
-              estimated_hours: document.getElementById("editTaskEstimatedHours")
-                .value,
-              actual_hours: document.getElementById("editTaskActualHours")
-                .value,
-              progress: document.getElementById("editTaskProgress").value,
+              // Campos removidos: estimated_hours, actual_hours, progress
             };
 
             try {
@@ -1507,6 +1591,47 @@
 
         // Cargar datos al iniciar
         loadInitialData();
+
+        // Guardar nueva tarea
+        document.getElementById("saveTaskBtn").addEventListener("click", async () => {
+          const form = document.getElementById("createTaskForm");
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+
+          // Validar fecha
+          const dueDate = document.getElementById("taskDueDate").value;
+          const today = new Date().toISOString().split("T")[0];
+          if (dueDate && dueDate < today) {
+            showErrorMessage("La fecha de vencimiento no puede ser anterior a la fecha actual");
+            return;
+          }
+
+          const taskData = {
+            project_id: document.getElementById("taskProject").value,
+            title: document.getElementById("taskTitle").value,
+            description: document.getElementById("taskDescription").value,
+            status: document.getElementById("taskStatus").value,
+            priority: document.getElementById("taskPriority").value,
+            due_date: dueDate,
+          };
+
+          try {
+            const response = await TaskService.createTask(taskData);
+            if (response.success) {
+              showSuccessMessage("Tarea creada exitosamente");
+              bootstrap.Modal.getInstance(document.getElementById("createTaskModal")).hide();
+              form.reset();
+              await loadMyTasks();
+            } else {
+              showErrorMessage(response.message || "Error al crear tarea");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            showErrorMessage("Error al crear tarea");
+          }
+        });
 
         // Cargar sistema de notificaciones después de que todo esté listo
         const notificationScript = document.createElement("script");

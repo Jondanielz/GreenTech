@@ -12,14 +12,16 @@ export class ComponentsLoader {
    * @returns {string} Iniciales
    */
   static getInitials(name) {
-    if (!name) return 'U';
-    
-    const words = name.trim().split(' ');
+    if (!name) return "U";
+
+    const words = name.trim().split(" ");
     if (words.length === 1) {
       return words[0].charAt(0).toUpperCase();
     }
-    
-    return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
+
+    return (
+      words[0].charAt(0) + words[words.length - 1].charAt(0)
+    ).toUpperCase();
   }
 
   /**
@@ -196,49 +198,54 @@ export class ComponentsLoader {
 
       if (container) {
         // Ajustar rutas de imágenes para navbar si es necesario
-        if (componentPath.includes('_navbar.html')) {
+        if (componentPath.includes("_navbar.html")) {
           // Remover la etiqueta <nav> y sus clases para evitar duplicación
           html = html.replace(
             /<nav[^>]*class="navbar default-layout-navbar[^"]*"[^>]*>/,
-            ''
+            ""
           );
-          html = html.replace('</nav>', '');
-          
+          html = html.replace("</nav>", "");
+
           // Ajustar rutas de imágenes y enlaces según la ubicación del archivo
           const currentPath = window.location.pathname;
           const currentUrl = window.location.href;
-          
+
           // Detectar si estamos en una vista dentro de src/views/
-          const isInViews = currentPath.includes('/views/') || currentUrl.includes('/views/');
-          
+          const isInViews =
+            currentPath.includes("/views/") || currentUrl.includes("/views/");
+
           if (isInViews) {
             // Calcular la profundidad de la subcarpeta
-            const pathParts = currentPath.split('/').filter(part => part !== '');
-            const viewsIndex = pathParts.findIndex(part => part === 'views');
-            
+            const pathParts = currentPath
+              .split("/")
+              .filter((part) => part !== "");
+            const viewsIndex = pathParts.findIndex((part) => part === "views");
+
             if (viewsIndex !== -1) {
               // Contar cuántas carpetas hay después de 'views'
               const depth = pathParts.length - viewsIndex - 2; // -2 para excluir 'views' y el archivo actual
-              
+
               console.log(`🔍 Debug - Path: ${currentPath}`);
               console.log(`🔍 Debug - PathParts: ${JSON.stringify(pathParts)}`);
               console.log(`🔍 Debug - ViewsIndex: ${viewsIndex}`);
               console.log(`🔍 Debug - Depth: ${depth}`);
-              
+
               // Ajustar rutas de imágenes según la profundidad
               if (depth > 0) {
                 // Para subcarpetas como views/projects/, necesitamos ../../assets/
                 // depth=1 significa que necesitamos 2 niveles hacia arriba: ../../assets/
-                const assetPath = '../'.repeat(depth + 1) + 'assets/';
+                const assetPath = "../".repeat(depth + 1) + "assets/";
                 html = html.replace(/\.\.\/assets\//g, assetPath);
-                console.log(`📁 Ajustando rutas para subcarpeta (profundidad: ${depth}): ${assetPath}`);
+                console.log(
+                  `📁 Ajustando rutas para subcarpeta (profundidad: ${depth}): ${assetPath}`
+                );
               } else {
                 // Para vistas directamente en src/views/, las rutas ya están correctas (../assets/)
                 console.log("📁 Rutas ya correctas para vista en src/views/");
               }
-              
+
               // Ajustar enlaces del logo según la profundidad
-              const logoPath = '../'.repeat(depth + 1) + 'index.html';
+              const logoPath = "../".repeat(depth + 1) + "index.html";
               html = html.replace(/href="index\.html"/g, `href="${logoPath}"`);
               console.log(`📁 Ajustando enlaces del logo: ${logoPath}`);
             } else {
@@ -246,48 +253,55 @@ export class ComponentsLoader {
             }
           } else {
             // Para index.html raíz, ajustar rutas de imágenes
-            html = html.replace(/\.\.\/assets\//g, 'src/assets/');
+            html = html.replace(/\.\.\/assets\//g, "src/assets/");
             console.log("📁 Ajustando rutas para index.html raíz");
           }
         }
-        
+
         // Ajustar rutas de imágenes para footer si es necesario
-        if (componentPath.includes('_footer.html')) {
+        if (componentPath.includes("_footer.html")) {
           const currentPath = window.location.pathname;
           const currentUrl = window.location.href;
-          
+
           // Detectar si estamos en una vista dentro de src/views/
-          const isInViews = currentPath.includes('/views/') || currentUrl.includes('/views/');
-          
+          const isInViews =
+            currentPath.includes("/views/") || currentUrl.includes("/views/");
+
           if (isInViews) {
             // Calcular la profundidad de la subcarpeta
-            const pathParts = currentPath.split('/').filter(part => part !== '');
-            const viewsIndex = pathParts.findIndex(part => part === 'views');
-            
+            const pathParts = currentPath
+              .split("/")
+              .filter((part) => part !== "");
+            const viewsIndex = pathParts.findIndex((part) => part === "views");
+
             if (viewsIndex !== -1) {
               // Contar cuántas carpetas hay después de 'views'
               const depth = pathParts.length - viewsIndex - 2; // -2 para excluir 'views' y el archivo actual
-              
+
               console.log(`🔍 Debug Footer - Path: ${currentPath}`);
               console.log(`🔍 Debug Footer - Depth: ${depth}`);
-              
+
               // Ajustar rutas de imágenes según la profundidad
               if (depth > 0) {
                 // Para subcarpetas como views/projects/, necesitamos ../../assets/
                 // depth=1 significa que necesitamos 2 niveles hacia arriba: ../../assets/
-                const assetPath = '../'.repeat(depth + 1) + 'assets/';
+                const assetPath = "../".repeat(depth + 1) + "assets/";
                 html = html.replace(/\.\.\/assets\//g, assetPath);
-                console.log(`📁 Ajustando rutas de footer para subcarpeta (profundidad: ${depth}): ${assetPath}`);
+                console.log(
+                  `📁 Ajustando rutas de footer para subcarpeta (profundidad: ${depth}): ${assetPath}`
+                );
               } else {
                 // Para vistas directamente en src/views/, las rutas ya están correctas (../assets/)
-                console.log("📁 Rutas de footer ya correctas para vista en src/views/");
+                console.log(
+                  "📁 Rutas de footer ya correctas para vista en src/views/"
+                );
               }
             } else {
               console.log("⚠️ No se encontró 'views' en el path del footer");
             }
           } else {
             // Para index.html raíz, ajustar rutas
-            html = html.replace(/\.\.\/assets\//g, 'src/assets/');
+            html = html.replace(/\.\.\/assets\//g, "src/assets/");
             console.log("📁 Ajustando rutas de footer para index.html raíz");
           }
         }
@@ -311,17 +325,19 @@ export class ComponentsLoader {
       navbar: true,
       sidebar: true,
       footer: true,
-      basePath: "../components/",
+      basePath: "../../components/",
     };
 
     const settings = { ...defaults, ...config };
-    const basePath = settings.basePath;
+    const finalBasePath = settings.basePath;
+
+    console.log(`🔍 Usando basePath: ${finalBasePath}`);
 
     try {
       // Cargar navbar
       if (settings.navbar) {
         await this.loadComponent(
-          `${basePath}_navbar.html`,
+          `${finalBasePath}_navbar.html`,
           "#navbar-container"
         );
       }
@@ -356,7 +372,7 @@ export class ComponentsLoader {
         }
 
         await this.loadComponent(
-          `${basePath}${sidebarFile}`,
+          `${finalBasePath}${sidebarFile}`,
           "#sidebar-container"
         );
       }
@@ -364,7 +380,7 @@ export class ComponentsLoader {
       // Cargar footer
       if (settings.footer) {
         await this.loadComponent(
-          `${basePath}_footer.html`,
+          `${finalBasePath}_footer.html`,
           "#footer-container"
         );
       }

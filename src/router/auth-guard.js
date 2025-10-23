@@ -10,7 +10,8 @@ export function checkAuth() {
 export function requireAuth() {
   if (!checkAuth()) {
     // Redirigir a login si no está autenticado
-    window.location.href = "/src/views/auth/login.html";
+    window.location.href =
+      "http://localhost/eco-app/GreenTech/src/views/auth/login.html";
     return false;
   }
   return true;
@@ -19,7 +20,7 @@ export function requireAuth() {
 export function redirectIfAuthenticated() {
   if (checkAuth()) {
     // Si ya está autenticado, redirigir al dashboard
-    window.location.href = "/";
+    window.location.href = "http://localhost/eco-app/GreenTech/";
     return true;
   }
   return false;

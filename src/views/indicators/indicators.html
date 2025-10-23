@@ -2,148 +2,959 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Indicadores</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Indicadores - GreenTech</title>
+    <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css" />
+    <link rel="stylesheet" href="../../assets/vendors/ti-icons/css/themify-icons.css" />
     <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css" />
+    <link rel="stylesheet" href="../../assets/vendors/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../../assets/css/style.css" />
+    <link rel="shortcut icon" href="../../assets/images/favicon.png" />
+    <style>
+      .filters-bar {
+        background: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+      }
+      .filter-group { display: flex; align-items: center; gap: 0.75rem; margin-right: 1.5rem; }
+      .filter-group:last-child { margin-right: 0; }
+      .filters-bar label { white-space: nowrap; font-weight: 500; color: #495057; margin-bottom: 0; }
+      .filters-bar .form-select, .filters-bar input[type="text"], .filters-bar input[type="search"] { min-width: 160px; }
+      #filterCategory, #filterType { min-width: 180px; }
+      #filterSearchIndicators, #filterSearchUnits { min-width: 220px; }
+      @media (max-width: 576px) {
+        .filters-bar { gap: 0.75rem; }
+        .filter-group { margin-right: 0; width: 100%; }
+        .filters-bar .form-select, .filters-bar input { width: 100%; }
+      }
+      .tab-nav .nav-link { cursor: pointer; }
+      /* Tabs en verde (activo/hover) */
+      .nav-tabs .nav-link {
+        color: #62a984;
+      }
+      .nav-tabs .nav-link:hover {
+        color: #57c785;
+      }
+      .nav-tabs .nav-link.active {
+        color: #fff !important;
+        background: linear-gradient(135deg, #57c785 0%, #62a984 100%) !important;
+        border-color: #57c785 #57c785 #fff !important;
+      }
+      .nav-tabs {
+        --bs-nav-tabs-link-active-border-color: #57c785 #57c785 #fff;
+      }
+      .table-responsive { border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,.06); }
+      .page-title-icon { background: linear-gradient(to right, #57c785, #62a984) !important; }
+      .empty-state { text-align: center; padding: 3rem; background: #fff; border-radius: 8px; }
+      /* Ajustes de modales de Unidades: evitar overflow del checkbox */
+      #newUnitModal .modal-dialog, #editUnitModal .modal-dialog { max-width: 520px; }
+      #newUnitModal .form-check, #editUnitModal .form-check { margin-top: .25rem; margin-bottom: 0; display: flex; align-items: center; gap: .5rem; }
+      #newUnitModal .form-check-label, #editUnitModal .form-check-label { margin: 0; }
+      .custom-inline-help { font-size: .85rem; color: #6c757d; }
+    </style>
   </head>
   <body>
     <div class="container-scroller">
-      <div id="navbar-container" data-component="navbar"></div>
+      <nav id="navbar-container" class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row"></nav>
       <div class="container-fluid page-body-wrapper">
-        <nav class="sidebar sidebar-offcanvas" id="sidebar" data-component="sidebar"></nav>
+        <div id="sidebar-container"></div>
+
         <div class="main-panel">
           <div class="content-wrapper">
-            <div class="row mb-3">
-              <div class="col-12">
-                <h3 class="text-success d-flex align-items-center">
-                  <i class="mdi mdi-chart-line me-2"></i>
-                  Indicadores
-                </h3>
-              </div>
+            <div class="page-header">
+              <h3 class="page-title">
+                <span class="page-title-icon bg-gradient-primary text-white me-2">
+                  <i class="mdi mdi-chart-timeline-variant"></i>
+                </span>
+                Indicadores
+              </h3>
+              <nav aria-label="breadcrumb">
+                <ul class="breadcrumb">
+                  <li class="breadcrumb-item active" aria-current="page">
+                    <div class="btn-group" role="group">
+                      <button id="btnNewIndicator" class="btn btn-gradient-primary btn-sm" style="display:none;">
+                        <i class="mdi mdi-plus"></i> Nuevo Indicador
+                      </button>
+                      <button id="btnNewUnit" class="btn btn-outline-success btn-sm" style="display:none;">
+                        <i class="mdi mdi-plus"></i> Nueva Unidad
+                      </button>
+                    </div>
+                  </li>
+                </ul>
+              </nav>
             </div>
 
-            <div class="card mb-4">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                  <h5 class="card-title mb-0">Catálogo de Indicadores</h5>
-                  <button id="btnNewIndicator" class="btn btn-success btn-sm">
-                    <i class="mdi mdi-plus"></i> Nuevo Indicador
-                  </button>
+            <ul class="nav nav-tabs tab-nav" id="indicatorsTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="indicators-tab" data-bs-toggle="tab" data-bs-target="#indicatorsPane" type="button" role="tab">Indicadores</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="units-tab" data-bs-toggle="tab" data-bs-target="#unitsPane" type="button" role="tab">Unidades</button>
+              </li>
+            </ul>
+
+            <div class="tab-content" id="indicatorsTabsContent" style="margin-top: 1rem;">
+              <div class="tab-pane fade show active" id="indicatorsPane" role="tabpanel">
+                <div class="filters-bar">
+                  <div class="filter-group">
+                    <label class="mb-0" for="filterCategory">Categoría:</label>
+                    <select id="filterCategory" class="form-select form-select-sm">
+                      <option value="">Todas</option>
+                      <option value="energia">Energía</option>
+                      <option value="clima">Clima</option>
+                      <option value="general">General</option>
+                    </select>
+                  </div>
+                  <div class="filter-group">
+                    <label class="mb-0" for="filterSearchIndicators">Buscar:</label>
+                    <input id="filterSearchIndicators" type="text" class="form-control form-control-sm" placeholder="Nombre o descripción" />
+                  </div>
+                  <div class="filter-group ms-auto">
+                    <span id="indicatorCount" class="badge bg-success">0 indicadores</span>
+                  </div>
                 </div>
+
+                <div id="indicatorsLoading" class="text-center" style="display:none;">
+                  <div class="spinner-border text-success" role="status"><span class="visually-hidden">Cargando...</span></div>
+                  <p class="mt-2">Cargando indicadores...</p>
+                </div>
+
                 <div class="table-responsive">
-                  <table class="table">
+                  <table class="table table-hover">
                     <thead>
                       <tr>
                         <th>Nombre</th>
                         <th>Categoría</th>
                         <th>Unidad</th>
-                        <th>Tipo</th>
-                        <th>Frecuencia</th>
                         <th>Dirección</th>
+                        <th>Frecuencia</th>
                         <th>Estado</th>
-                        <th></th>
+                        <th style="width: 120px;">Acciones</th>
                       </tr>
                     </thead>
                     <tbody id="indicatorsTableBody"></tbody>
                   </table>
                 </div>
-              </div>
-            </div>
 
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                  <h5 class="card-title mb-0">Unidades de Medida</h5>
-                  <button id="btnNewUnit" class="btn btn-outline-success btn-sm">
-                    <i class="mdi mdi-plus"></i> Nueva Unidad
-                  </button>
+                <div id="indicatorsEmpty" class="empty-state" style="display:none;">
+                  <i class="mdi mdi-chart-line"></i>
+                  <h4>No hay indicadores</h4>
+                  <p class="text-muted">Crea tu primer indicador para comenzar.</p>
                 </div>
+              </div>
+
+              <div class="tab-pane fade" id="unitsPane" role="tabpanel">
+                <div class="filters-bar">
+                  <div class="filter-group">
+                    <label class="mb-0" for="filterType">Tipo:</label>
+                    <select id="filterType" class="form-select form-select-sm">
+                      <option value="">Todos</option>
+                      <option value="energia">Energía</option>
+                      <option value="clima">Clima</option>
+                      <option value="general">General</option>
+                    </select>
+                  </div>
+                  <div class="filter-group">
+                    <label class="mb-0" for="filterSearchUnits">Buscar:</label>
+                    <input id="filterSearchUnits" type="text" class="form-control form-control-sm" placeholder="Nombre o símbolo" />
+                  </div>
+                  <div class="filter-group ms-auto">
+                    <span id="unitCount" class="badge bg-success">0 unidades</span>
+                  </div>
+                </div>
+
+                <div id="unitsLoading" class="text-center" style="display:none;">
+                  <div class="spinner-border text-info" role="status"><span class="visually-hidden">Cargando...</span></div>
+                  <p class="mt-2">Cargando unidades...</p>
+                </div>
+
                 <div class="table-responsive">
-                  <table class="table">
+                  <table class="table table-hover">
                     <thead>
                       <tr>
                         <th>Nombre</th>
                         <th>Símbolo</th>
                         <th>Tipo</th>
                         <th>Estado</th>
-                        <th></th>
+                        <th style="width: 120px;">Acciones</th>
                       </tr>
                     </thead>
                     <tbody id="unitsTableBody"></tbody>
                   </table>
                 </div>
+
+                <div id="unitsEmpty" class="empty-state" style="display:none;">
+                  <i class="mdi mdi-ruler"></i>
+                  <h4>No hay unidades</h4>
+                  <p class="text-muted">Crea una unidad para asociarla a indicadores.</p>
+                </div>
               </div>
             </div>
           </div>
-          <footer class="footer" data-component="footer"></footer>
+
+          <div id="footer-container"></div>
         </div>
       </div>
     </div>
 
+    <!-- Modal: Nueva Unidad -->
+    <div class="modal fade" id="newUnitModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title"><i class="mdi mdi-ruler"></i> Nueva Unidad</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="newUnitForm">
+              <div class="mb-3">
+                <label for="unitName" class="form-label">Nombre <span class="text-danger">*</span></label>
+                <input type="text" id="unitName" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label for="unitSymbol" class="form-label">Símbolo</label>
+                <input type="text" id="unitSymbol" class="form-control" placeholder="Ej: kWh, tCO2e, %" />
+              </div>
+              <div class="mb-3">
+                <label for="unitType" class="form-label">Tipo</label>
+                <select id="unitType" class="form-select">
+                  <option value="energia">Energía</option>
+                  <option value="clima">Clima</option>
+                  <option value="general">General</option>
+                </select>
+              </div>
+              <div class="mb-3" id="unitTypeCustomWrapper" style="display:none;">
+                <label for="unitTypeCustom" class="form-label">Otro tipo</label>
+                <input type="text" id="unitTypeCustom" class="form-control" placeholder="Especifica el tipo..." />
+                <div class="custom-inline-help">Se usará este valor cuando el tipo sea General.</div>
+              </div>
+              <div class="mb-3">
+                <label for="unitActiveSelect" class="form-label">Estado</label>
+                <select id="unitActiveSelect" class="form-select">
+                  <option value="1" selected>Activo</option>
+                  <option value="0">Inactivo</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-success" id="saveUnitBtn">
+              <i class="mdi mdi-content-save"></i> Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Nuevo Indicador -->
+    <div class="modal fade" id="newIndicatorModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title"><i class="mdi mdi-chart-timeline-variant"></i> Nuevo Indicador</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="newIndicatorForm">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="indicatorName" class="form-label">Nombre <span class="text-danger">*</span></label>
+                  <input type="text" id="indicatorName" class="form-control" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="indicatorCategory" class="form-label">Categoría</label>
+                  <select id="indicatorCategory" class="form-select">
+                    <option value="energia">Energía</option>
+                    <option value="clima">Clima</option>
+                    <option value="general">General</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3" id="indicatorCategoryCustomWrapper" style="display:none;">
+                <label for="indicatorCategoryCustom" class="form-label">Otra categoría</label>
+                <input type="text" id="indicatorCategoryCustom" class="form-control" placeholder="Especifica la categoría..." />
+                <div class="custom-inline-help">Se usará este valor cuando la categoría sea General.</div>
+              </div>
+              <div class="mb-3">
+                <label for="indicatorDescription" class="form-label">Descripción</label>
+                <textarea id="indicatorDescription" class="form-control" rows="2"></textarea>
+              </div>
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label for="indicatorUnit" class="form-label">Unidad <span class="text-danger">*</span></label>
+                  <select id="indicatorUnit" class="form-select" required></select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="indicatorDirection" class="form-label">Dirección</label>
+                  <select id="indicatorDirection" class="form-select">
+                    <option value="Sube">Sube (más es mejor)</option>
+                    <option value="Baja">Baja (menos es mejor)</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="indicatorFrequency" class="form-label">Frecuencia</label>
+                  <select id="indicatorFrequency" class="form-select">
+                    <option value="Mensual">Mensual</option>
+                    <option value="Trimestral">Trimestral</option>
+                    <option value="Anual">Anual</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="indicatorType" class="form-label">Tipo</label>
+                  <select id="indicatorType" class="form-select">
+                    <option value="Absoluto">Absoluto</option>
+                    <option value="Relativo">Relativo</option>
+                  </select>
+                </div>
+                <div class="col-md-6 d-flex align-items-center mt-2">
+                  <div class="w-100">
+                    <label for="indicatorActiveSelect" class="form-label">Estado</label>
+                    <select id="indicatorActiveSelect" class="form-select">
+                      <option value="1" selected>Activo</option>
+                      <option value="0">Inactivo</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="saveIndicatorBtn">
+              <i class="mdi mdi-content-save"></i> Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Editar Unidad -->
+    <div class="modal fade" id="editUnitModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title"><i class="mdi mdi-ruler"></i> Editar Unidad</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="editUnitForm">
+              <input type="hidden" id="editUnitId" />
+              <div class="mb-3">
+                <label for="editUnitName" class="form-label">Nombre <span class="text-danger">*</span></label>
+                <input type="text" id="editUnitName" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label for="editUnitSymbol" class="form-label">Símbolo</label>
+                <input type="text" id="editUnitSymbol" class="form-control" />
+              </div>
+              <div class="mb-3">
+                <label for="editUnitType" class="form-label">Tipo</label>
+                <select id="editUnitType" class="form-select">
+                  <option value="energia">Energía</option>
+                  <option value="clima">Clima</option>
+                  <option value="general">General</option>
+                </select>
+              </div>
+              <div class="mb-3" id="editUnitTypeCustomWrapper" style="display:none;">
+                <label for="editUnitTypeCustom" class="form-label">Otro tipo</label>
+                <input type="text" id="editUnitTypeCustom" class="form-control" placeholder="Especifica el tipo..." />
+                <div class="custom-inline-help">Se usará este valor cuando el tipo sea General.</div>
+              </div>
+              <div class="mb-3">
+                <label for="editUnitActiveSelect" class="form-label">Estado</label>
+                <select id="editUnitActiveSelect" class="form-select">
+                  <option value="1">Activo</option>
+                  <option value="0">Inactivo</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-success" id="updateUnitBtn">
+              <i class="mdi mdi-content-save"></i> Guardar cambios
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Editar Indicador -->
+    <div class="modal fade" id="editIndicatorModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title"><i class="mdi mdi-chart-timeline-variant"></i> Editar Indicador</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="editIndicatorForm">
+              <input type="hidden" id="editIndicatorId" />
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="editIndicatorName" class="form-label">Nombre <span class="text-danger">*</span></label>
+                  <input type="text" id="editIndicatorName" class="form-control" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="editIndicatorCategory" class="form-label">Categoría</label>
+                  <select id="editIndicatorCategory" class="form-select">
+                    <option value="energia">Energía</option>
+                    <option value="clima">Clima</option>
+                    <option value="general">General</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3" id="editIndicatorCategoryCustomWrapper" style="display:none;">
+                <label for="editIndicatorCategoryCustom" class="form-label">Otra categoría</label>
+                <input type="text" id="editIndicatorCategoryCustom" class="form-control" placeholder="Especifica la categoría..." />
+                <div class="custom-inline-help">Se usará este valor cuando la categoría sea General.</div>
+              </div>
+              <div class="mb-3">
+                <label for="editIndicatorDescription" class="form-label">Descripción</label>
+                <textarea id="editIndicatorDescription" class="form-control" rows="2"></textarea>
+              </div>
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label for="editIndicatorUnit" class="form-label">Unidad <span class="text-danger">*</span></label>
+                  <select id="editIndicatorUnit" class="form-select" required></select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="editIndicatorDirection" class="form-label">Dirección</label>
+                  <select id="editIndicatorDirection" class="form-select">
+                    <option value="Sube">Sube (más es mejor)</option>
+                    <option value="Baja">Baja (menos es mejor)</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="editIndicatorFrequency" class="form-label">Frecuencia</label>
+                  <select id="editIndicatorFrequency" class="form-select">
+                    <option value="Mensual">Mensual</option>
+                    <option value="Trimestral">Trimestral</option>
+                    <option value="Anual">Anual</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="editIndicatorType" class="form-label">Tipo</label>
+                  <select id="editIndicatorType" class="form-select">
+                    <option value="Absoluto">Absoluto</option>
+                    <option value="Relativo">Relativo</option>
+                  </select>
+                </div>
+                <div class="col-md-6 d-flex align-items-center mt-2">
+                  <div class="w-100">
+                    <label for="editIndicatorActiveSelect" class="form-label">Estado</label>
+                    <select id="editIndicatorActiveSelect" class="form-select">
+                      <option value="1">Activo</option>
+                      <option value="0">Inactivo</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="updateIndicatorBtn">
+              <i class="mdi mdi-content-save"></i> Guardar cambios
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+    <script src="../../assets/js/off-canvas.js"></script>
+    <script src="../../assets/js/misc.js"></script>
+    <script src="../../assets/js/settings.js"></script>
+    <script src="../../assets/js/todolist.js"></script>
+
     <script type="module">
-      import '../../utils/components-loader.js';
-      import indicatorsService from '../../services/indicators.js';
+      import AuthService from "../../services/auth.js";
+      import IndicatorsService from "../../services/indicators.js";
+      import ComponentsLoader from "../../utils/components-loader.js";
 
-      function renderIndicators(list) {
-        const tbody = document.getElementById('indicatorsTableBody');
-        tbody.innerHTML = list.map(i => `
-          <tr>
-            <td>${i.name}</td>
-            <td>${i.category || '-'}</td>
-            <td>${i.unit_symbol ? `${i.unit_name} (${i.unit_symbol})` : '-'}</td>
-            <td>${i.type}</td>
-            <td>${i.frequency}</td>
-            <td>${i.direction === 'up' ? '↑ Mejor' : '↓ Mejor'}</td>
-            <td>
-              <span class="badge ${i.active ? 'bg-success' : 'bg-secondary'}">
-                ${i.active ? 'Activo' : 'Inactivo'}
-              </span>
-            </td>
-            <td class="text-end">
-              <button class="btn btn-sm btn-outline-primary" data-id="${i.id}" data-action="edit-indicator">Editar</button>
-              <button class="btn btn-sm btn-outline-danger" data-id="${i.id}" data-action="delete-indicator">Eliminar</button>
-            </td>
-          </tr>
-        `).join('');
-      }
+      if (!AuthService.isAuthenticated()) {
+        window.location.href = "/src/views/auth/login.html";
+      } else {
+        const user = AuthService.getCurrentUser();
 
-      function renderUnits(list) {
-        const tbody = document.getElementById('unitsTableBody');
-        tbody.innerHTML = list.map(u => `
-          <tr>
-            <td>${u.name}</td>
-            <td>${u.symbol}</td>
-            <td>${u.type || '-'}</td>
-            <td>
-              <span class="badge ${u.active ? 'bg-success' : 'bg-secondary'}">
-                ${u.active ? 'Activa' : 'Inactiva'}
-              </span>
-            </td>
-            <td class="text-end">
-              <button class="btn btn-sm btn-outline-primary" data-id="${u.id}" data-action="edit-unit">Editar</button>
-              <button class="btn btn-sm btn-outline-danger" data-id="${u.id}" data-action="delete-unit">Eliminar</button>
-            </td>
-          </tr>
-        `).join('');
-      }
-
-      async function loadData() {
-        try {
-          const [indRes, unitRes] = await Promise.all([
-            indicatorsService.listIndicators(),
-            indicatorsService.listUnits(),
-          ]);
-          renderIndicators(indRes.data || []);
-          renderUnits(unitRes.data || []);
-        } catch (e) {
-          console.error('Error cargando indicadores/unidades', e);
+        // Solo admin y coordinador pueden ver este catálogo
+        const canManage = user.role_id === 1; // admin gestiona (crear/editar/borrar)
+        const canView = user.role_id === 1 || user.role_id === 2;
+        if (!canView) {
+          alert("No tienes permisos para acceder a Indicadores");
+          window.location.href = "/";
         }
-      }
 
-      window.addEventListener('DOMContentLoaded', loadData);
+        // Cargar navbar/sidebar/footer
+        ComponentsLoader.loadCommonComponents({ navbar: true, sidebar: true, footer: true, basePath: "../../components/" });
+
+        // Mostrar/ocultar botones según permisos
+        const btnNewIndicator = document.getElementById("btnNewIndicator");
+        const btnNewUnit = document.getElementById("btnNewUnit");
+        function updateActionButtons(activeTab) {
+          if (!canManage) {
+            if (btnNewIndicator) btnNewIndicator.style.display = 'none';
+            if (btnNewUnit) btnNewUnit.style.display = 'none';
+            return;
+          }
+          if (activeTab === 'indicators') {
+            if (btnNewIndicator) btnNewIndicator.style.display = 'inline-block';
+            if (btnNewUnit) btnNewUnit.style.display = 'none';
+          } else if (activeTab === 'units') {
+            if (btnNewIndicator) btnNewIndicator.style.display = 'none';
+            if (btnNewUnit) btnNewUnit.style.display = 'inline-block';
+          }
+        }
+
+        // Estado inicial: pestaña Indicadores activa por defecto
+        updateActionButtons('indicators');
+
+        // Cambiar visibilidad al alternar pestañas
+        const indicatorsTabBtn = document.getElementById('indicators-tab');
+        const unitsTabBtn = document.getElementById('units-tab');
+        indicatorsTabBtn?.addEventListener('shown.bs.tab', () => updateActionButtons('indicators'));
+        unitsTabBtn?.addEventListener('shown.bs.tab', () => updateActionButtons('units'));
+
+        // Estado en memoria
+        let allIndicators = [];
+        let filteredIndicators = [];
+        let allUnits = [];
+        let filteredUnits = [];
+
+        // Carga de datos
+        async function loadIndicators() {
+          const loading = document.getElementById("indicatorsLoading");
+          const tbody = document.getElementById("indicatorsTableBody");
+          const empty = document.getElementById("indicatorsEmpty");
+          loading.style.display = "block";
+          tbody.innerHTML = "";
+          empty.style.display = "none";
+          try {
+            const resp = await IndicatorsService.getIndicators();
+            allIndicators = resp.success ? (resp.data || []) : [];
+            filteredIndicators = [...allIndicators];
+            renderIndicators(filteredIndicators);
+            updateIndicatorCount(filteredIndicators.length);
+          } catch (e) {
+            console.error(e);
+            empty.style.display = "block";
+          } finally {
+            loading.style.display = "none";
+          }
+        }
+
+        async function loadUnits() {
+          const loading = document.getElementById("unitsLoading");
+          const tbody = document.getElementById("unitsTableBody");
+          const empty = document.getElementById("unitsEmpty");
+          loading.style.display = "block";
+          tbody.innerHTML = "";
+          empty.style.display = "none";
+          try {
+            const resp = await IndicatorsService.getUnits();
+            allUnits = resp.success ? (resp.data || []) : [];
+            filteredUnits = [...allUnits];
+            renderUnits(filteredUnits);
+            updateUnitCount(filteredUnits.length);
+          } catch (e) {
+            console.error(e);
+            empty.style.display = "block";
+          } finally {
+            loading.style.display = "none";
+          }
+        }
+
+        function updateIndicatorCount(n){
+          document.getElementById("indicatorCount").textContent = `${n} indicador${n!==1?"es":""}`;
+        }
+        function updateUnitCount(n){
+          document.getElementById("unitCount").textContent = `${n} unidad${n!==1?"es":""}`;
+        }
+
+        // Render
+        function renderIndicators(list) {
+          const tbody = document.getElementById("indicatorsTableBody");
+          const empty = document.getElementById("indicatorsEmpty");
+          if (!list || list.length === 0) {
+            tbody.innerHTML = "";
+            empty.style.display = "block";
+            return;
+          }
+          empty.style.display = "none";
+          tbody.innerHTML = list.map((i) => {
+            const activeBadge = i.active == 1 ? '<span class="badge bg-success">Activo</span>' : '<span class="badge bg-secondary">Inactivo</span>';
+            const unitLabel = i.unit_symbol ? `${i.unit_name} (${i.unit_symbol})` : (i.unit_name || "-");
+            const safeName = (i.name || '').replace(/'/g, "\\'");
+            const actions = canManage
+              ? '<button class="btn btn-sm btn-outline-success" title="Editar" onclick="window.openEditIndicator(' + i.id + ')">\n'
+                + '  <i class="mdi mdi-pencil"></i>\n'
+                + '</button>\n'
+                + '<button class="btn btn-sm btn-outline-danger" title="Eliminar" onclick="window.deleteIndicator(' + i.id + ', \'' + safeName + '\')">\n'
+                + '  <i class="mdi mdi-delete"></i>\n'
+                + '</button>'
+              : '<button class="btn btn-sm btn-outline-info" title="Ver" onclick="window.viewIndicator(' + i.id + ')">\n'
+                + '  <i class="mdi mdi-eye"></i>\n'
+                + '</button>';
+
+            return `
+              <tr>
+                <td>${i.name}</td>
+                <td>${i.category || "-"}</td>
+                <td>${unitLabel}</td>
+                <td>${i.direction || "-"}</td>
+                <td>${i.frequency || "-"}</td>
+                <td>${activeBadge}</td>
+                <td>${actions}</td>
+              </tr>`;
+          }).join("");
+        }
+
+        function renderUnits(list) {
+          const tbody = document.getElementById("unitsTableBody");
+          const empty = document.getElementById("unitsEmpty");
+          if (!list || list.length === 0) {
+            tbody.innerHTML = "";
+            empty.style.display = "block";
+            return;
+          }
+          empty.style.display = "none";
+          tbody.innerHTML = list.map((u) => {
+            const activeBadge = u.active == 1 ? '<span class="badge bg-success">Activo</span>' : '<span class="badge bg-secondary">Inactivo</span>';
+            const safeName = (u.name || '').replace(/'/g, "\\'");
+            const actions = canManage
+              ? '<button class="btn btn-sm btn-outline-success" title="Editar" onclick="window.openEditUnit(' + u.id + ')">\n'
+                + '  <i class="mdi mdi-pencil"></i>\n'
+                + '</button>\n'
+                + '<button class="btn btn-sm btn-outline-danger" title="Eliminar" onclick="window.deleteUnit(' + u.id + ', \'' + safeName + '\')">\n'
+                + '  <i class="mdi mdi-delete"></i>\n'
+                + '</button>'
+              : '<button class="btn btn-sm btn-outline-info" title="Ver" onclick="window.viewUnit(' + u.id + ')">\n'
+                + '  <i class="mdi mdi-eye"></i>\n'
+                + '</button>';
+
+            return `
+              <tr>
+                <td>${u.name}</td>
+                <td>${u.symbol || "-"}</td>
+                <td>${u.type || "-"}</td>
+                <td>${activeBadge}</td>
+                <td>${actions}</td>
+              </tr>`;
+          }).join("");
+        }
+
+        // Filtros
+        document.getElementById("filterCategory").addEventListener("change", applyIndicatorFilters);
+        document.getElementById("filterSearchIndicators").addEventListener("input", applyIndicatorFilters);
+        function applyIndicatorFilters() {
+          const category = document.getElementById("filterCategory").value;
+          const q = document.getElementById("filterSearchIndicators").value.toLowerCase();
+          filteredIndicators = allIndicators.filter((i) => {
+            const matchesCategory = !category || (i.category||"") === category;
+            const matchesSearch = !q || (i.name||"").toLowerCase().includes(q) || (i.description||"").toLowerCase().includes(q);
+            return matchesCategory && matchesSearch;
+          });
+          renderIndicators(filteredIndicators);
+          updateIndicatorCount(filteredIndicators.length);
+        }
+
+        document.getElementById("filterType").addEventListener("change", applyUnitFilters);
+        document.getElementById("filterSearchUnits").addEventListener("input", applyUnitFilters);
+        function applyUnitFilters() {
+          const type = document.getElementById("filterType").value;
+          const q = document.getElementById("filterSearchUnits").value.toLowerCase();
+          filteredUnits = allUnits.filter((u) => {
+            const matchesType = !type || (u.type||"") === type;
+            const matchesSearch = !q || (u.name||"").toLowerCase().includes(q) || (u.symbol||"").toLowerCase().includes(q);
+            return matchesType && matchesSearch;
+          });
+          renderUnits(filteredUnits);
+          updateUnitCount(filteredUnits.length);
+        }
+
+        // Acciones
+        window.viewIndicator = (id) => { alert("Detalle de indicador #"+id); };
+        window.editIndicator = async (id) => { return; };
+        window.deleteIndicator = async (id, name) => {
+          if (!confirm(`¿Eliminar indicador "${name}"?`)) return;
+          try {
+            const resp = await IndicatorsService.deleteIndicator(id);
+            if (resp.success) { await loadIndicators(); }
+            else { alert(resp.message || "No se pudo eliminar"); }
+          } catch (e) { alert("Error de conexión"); }
+        };
+
+        window.viewUnit = (id) => { alert("Detalle de unidad #"+id); };
+        window.editUnit = async (id) => { return; };
+        window.deleteUnit = async (id, name) => {
+          if (!confirm(`¿Eliminar unidad "${name}"?`)) return;
+          try {
+            const resp = await IndicatorsService.deleteUnit(id);
+            if (resp.success) { await loadUnits(); }
+            else { alert(resp.message || "No se pudo eliminar"); }
+          } catch (e) { alert("Error de conexión"); }
+        };
+
+        // Abrir modales
+        btnNewUnit?.addEventListener('click', () => {
+          const modal = new bootstrap.Modal(document.getElementById('newUnitModal'));
+          modal.show();
+        });
+        btnNewIndicator?.addEventListener('click', async () => {
+          await ensureUnitsForIndicatorSelect();
+          const modal = new bootstrap.Modal(document.getElementById('newIndicatorModal'));
+          modal.show();
+        });
+
+        async function ensureUnitsForIndicatorSelect() {
+          // Si no hay unidades cargadas, cargar
+          if (!allUnits || allUnits.length === 0) {
+            await loadUnits();
+          }
+          const select = document.getElementById('indicatorUnit');
+          select.innerHTML = (allUnits||[]).map(u => `<option value="${u.id}">${u.name}${u.symbol?` (${u.symbol})`:''}</option>`).join('');
+        }
+
+        // Utilidad: capitalizar primera letra y el resto en minúsculas
+        function capitalizeFirst(value) {
+          if (!value) return '';
+          const s = String(value).trim();
+          if (!s) return '';
+          return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+        }
+
+        // Mostrar/ocultar campos "Otro" según selección
+        function toggleUnitTypeCustom(selectId, wrapperId, inputId) {
+          const sel = document.getElementById(selectId);
+          const wrap = document.getElementById(wrapperId);
+          const input = document.getElementById(inputId);
+          if (!sel || !wrap || !input) return;
+          if (sel.value === 'general') { wrap.style.display = ''; input.focus(); }
+          else { wrap.style.display = 'none'; input.value = ''; }
+        }
+        document.getElementById('unitType')?.addEventListener('change', ()=>toggleUnitTypeCustom('unitType','unitTypeCustomWrapper','unitTypeCustom'));
+        document.getElementById('editUnitType')?.addEventListener('change', ()=>toggleUnitTypeCustom('editUnitType','editUnitTypeCustomWrapper','editUnitTypeCustom'));
+
+        function toggleIndicatorCategoryCustom(selectId, wrapperId, inputId) {
+          const sel = document.getElementById(selectId);
+          const wrap = document.getElementById(wrapperId);
+          const input = document.getElementById(inputId);
+          if (!sel || !wrap || !input) return;
+          if (sel.value === 'general') { wrap.style.display = ''; input.focus(); }
+          else { wrap.style.display = 'none'; input.value = ''; }
+        }
+        document.getElementById('indicatorCategory')?.addEventListener('change', ()=>toggleIndicatorCategoryCustom('indicatorCategory','indicatorCategoryCustomWrapper','indicatorCategoryCustom'));
+        document.getElementById('editIndicatorCategory')?.addEventListener('change', ()=>toggleIndicatorCategoryCustom('editIndicatorCategory','editIndicatorCategoryCustomWrapper','editIndicatorCategoryCustom'));
+
+        // Guardar Unidad
+        document.getElementById('saveUnitBtn')?.addEventListener('click', async () => {
+          const form = document.getElementById('newUnitForm');
+          if (!form.checkValidity()) { form.reportValidity(); return; }
+          const payload = {
+            name: document.getElementById('unitName').value.trim(),
+            symbol: document.getElementById('unitSymbol').value.trim(),
+            type: capitalizeFirst((document.getElementById('unitType').value === 'general' && document.getElementById('unitTypeCustom').value.trim())
+              ? document.getElementById('unitTypeCustom').value.trim()
+              : document.getElementById('unitType').value),
+            active: parseInt(document.getElementById('unitActiveSelect').value, 10),
+          };
+          try {
+            const resp = await IndicatorsService.createUnit(payload);
+            if (resp.success) {
+              bootstrap.Modal.getInstance(document.getElementById('newUnitModal')).hide();
+              form.reset();
+              await loadUnits();
+              // refrescar select de indicador si está abierto
+              await ensureUnitsForIndicatorSelect();
+            } else {
+              alert(resp.message || 'No se pudo crear la unidad');
+            }
+          } catch (e) {
+            alert('Error de conexión');
+          }
+        });
+
+        // Guardar Indicador
+        document.getElementById('saveIndicatorBtn')?.addEventListener('click', async () => {
+          const form = document.getElementById('newIndicatorForm');
+          if (!form.checkValidity()) { form.reportValidity(); return; }
+          const payload = {
+            name: document.getElementById('indicatorName').value.trim(),
+            description: document.getElementById('indicatorDescription').value.trim(),
+            category: capitalizeFirst((document.getElementById('indicatorCategory').value === 'general' && document.getElementById('indicatorCategoryCustom').value.trim())
+              ? document.getElementById('indicatorCategoryCustom').value.trim()
+              : document.getElementById('indicatorCategory').value),
+            unit_id: document.getElementById('indicatorUnit').value,
+            direction: document.getElementById('indicatorDirection').value,
+            type: document.getElementById('indicatorType').value,
+            frequency: document.getElementById('indicatorFrequency').value,
+            active: parseInt(document.getElementById('indicatorActiveSelect').value, 10),
+          };
+          try {
+            const resp = await IndicatorsService.createIndicator(payload);
+            if (resp.success) {
+              bootstrap.Modal.getInstance(document.getElementById('newIndicatorModal')).hide();
+              form.reset();
+              await loadIndicators();
+            } else {
+              alert(resp.message || 'No se pudo crear el indicador');
+            }
+          } catch (e) {
+            alert('Error de conexión');
+          }
+        });
+
+        // Carga inicial
+        await loadIndicators();
+        await loadUnits();
+
+        // Editar: abrir y poblar modales
+        window.openEditIndicator = async (id) => {
+          try {
+            if (!allUnits || allUnits.length === 0) { await loadUnits(); }
+            const resp = await IndicatorsService.getIndicators();
+            const indicator = (resp.data || []).find(i => i.id == id);
+            if (!indicator) { alert('Indicador no encontrado'); return; }
+            const unitSelect = document.getElementById('editIndicatorUnit');
+            unitSelect.innerHTML = (allUnits||[]).map(u => `<option value="${u.id}">${u.name}${u.symbol?` (${u.symbol})`:''}</option>`).join('');
+            document.getElementById('editIndicatorId').value = indicator.id;
+            document.getElementById('editIndicatorName').value = indicator.name || '';
+            document.getElementById('editIndicatorDescription').value = indicator.description || '';
+            // Si la categoría no es energia/clima/general, marcar general y mostrar campo custom
+            const knownCategories = ['energia','clima','general'];
+            const editCatSel = document.getElementById('editIndicatorCategory');
+            const editCatCustomWrap = document.getElementById('editIndicatorCategoryCustomWrapper');
+            const editCatCustom = document.getElementById('editIndicatorCategoryCustom');
+            const catValue = indicator.category || 'general';
+            if (knownCategories.includes(catValue)) {
+              editCatSel.value = catValue;
+              editCatCustomWrap.style.display = 'none';
+              editCatCustom.value = '';
+            } else {
+              editCatSel.value = 'general';
+              editCatCustomWrap.style.display = '';
+              editCatCustom.value = catValue;
+            }
+            document.getElementById('editIndicatorUnit').value = indicator.unit_id || '';
+            // Mapear valores antiguos o variantes a capitalizado
+            const dirRaw = (indicator.direction||'');
+            const freqRaw = (indicator.frequency||'');
+            const typeRaw = (indicator.type||'');
+            const mapDir = { 'up':'Sube', 'down':'Baja', 'sube':'Sube', 'baja':'Baja' };
+            const mapFreq = { 'monthly':'Mensual', 'quarterly':'Trimestral', 'yearly':'Anual', 'mensual':'Mensual', 'trimestral':'Trimestral', 'anual':'Anual' };
+            const mapType = { 'absolute':'Absoluto', 'relative':'Relativo', 'absoluto':'Absoluto', 'relativo':'Relativo' };
+            document.getElementById('editIndicatorDirection').value = mapDir[dirRaw.toLowerCase()] || 'Sube';
+            document.getElementById('editIndicatorFrequency').value = mapFreq[freqRaw.toLowerCase()] || 'Mensual';
+            document.getElementById('editIndicatorType').value = mapType[typeRaw.toLowerCase()] || 'Absoluto';
+            document.getElementById('editIndicatorType').value = indicator.type || 'absolute';
+            document.getElementById('editIndicatorActiveSelect').value = String(indicator.active == 1 ? 1 : 0);
+            const modal = new bootstrap.Modal(document.getElementById('editIndicatorModal'));
+            modal.show();
+          } catch (e) {
+            console.error(e);
+            alert('Error al cargar indicador');
+          }
+        };
+
+        window.openEditUnit = async (id) => {
+          try {
+            const resp = await IndicatorsService.getUnits();
+            const unit = (resp.data || []).find(u => u.id == id);
+            if (!unit) { alert('Unidad no encontrada'); return; }
+            document.getElementById('editUnitId').value = unit.id;
+            document.getElementById('editUnitName').value = unit.name || '';
+            document.getElementById('editUnitSymbol').value = unit.symbol || '';
+            // Si el tipo no es energia/clima/general, marcar general y mostrar campo custom con el valor
+            const knownTypes = ['energia','clima','general'];
+            const editTypeSel = document.getElementById('editUnitType');
+            const editTypeCustomWrap = document.getElementById('editUnitTypeCustomWrapper');
+            const editTypeCustom = document.getElementById('editUnitTypeCustom');
+            const typeValue = unit.type || 'general';
+            if (knownTypes.includes(typeValue)) {
+              editTypeSel.value = typeValue;
+              editTypeCustomWrap.style.display = 'none';
+              editTypeCustom.value = '';
+            } else {
+              editTypeSel.value = 'general';
+              editTypeCustomWrap.style.display = '';
+              editTypeCustom.value = typeValue;
+            }
+            document.getElementById('editUnitActiveSelect').value = String(unit.active == 1 ? 1 : 0);
+            const modal = new bootstrap.Modal(document.getElementById('editUnitModal'));
+            modal.show();
+          } catch (e) {
+            console.error(e);
+            alert('Error al cargar unidad');
+          }
+        };
+
+        // Actualizar Unidad
+        document.getElementById('updateUnitBtn')?.addEventListener('click', async () => {
+          const form = document.getElementById('editUnitForm');
+          if (!form.checkValidity()) { form.reportValidity(); return; }
+          const id = document.getElementById('editUnitId').value;
+          const payload = {
+            name: document.getElementById('editUnitName').value.trim(),
+            symbol: document.getElementById('editUnitSymbol').value.trim(),
+            type: capitalizeFirst((document.getElementById('editUnitType').value === 'general' && document.getElementById('editUnitTypeCustom').value.trim())
+              ? document.getElementById('editUnitTypeCustom').value.trim()
+              : document.getElementById('editUnitType').value),
+            active: parseInt(document.getElementById('editUnitActiveSelect').value, 10),
+          };
+          try {
+            const resp = await IndicatorsService.updateUnit(id, payload);
+            if (resp.success) {
+              bootstrap.Modal.getInstance(document.getElementById('editUnitModal')).hide();
+              await loadUnits();
+              await ensureUnitsForIndicatorSelect();
+            } else {
+              alert(resp.message || 'No se pudo actualizar la unidad');
+            }
+          } catch (e) { alert('Error de conexión'); }
+        });
+
+        // Actualizar Indicador
+        document.getElementById('updateIndicatorBtn')?.addEventListener('click', async () => {
+          const form = document.getElementById('editIndicatorForm');
+          if (!form.checkValidity()) { form.reportValidity(); return; }
+          const id = document.getElementById('editIndicatorId').value;
+          const payload = {
+            name: document.getElementById('editIndicatorName').value.trim(),
+            description: document.getElementById('editIndicatorDescription').value.trim(),
+            category: capitalizeFirst((document.getElementById('editIndicatorCategory').value === 'general' && document.getElementById('editIndicatorCategoryCustom').value.trim())
+              ? document.getElementById('editIndicatorCategoryCustom').value.trim()
+              : document.getElementById('editIndicatorCategory').value),
+            unit_id: document.getElementById('editIndicatorUnit').value,
+            direction: document.getElementById('editIndicatorDirection').value,
+            type: document.getElementById('editIndicatorType').value,
+            frequency: document.getElementById('editIndicatorFrequency').value,
+            active: parseInt(document.getElementById('editIndicatorActiveSelect').value, 10),
+          };
+          try {
+            const resp = await IndicatorsService.updateIndicator(id, payload);
+            if (resp.success) {
+              bootstrap.Modal.getInstance(document.getElementById('editIndicatorModal')).hide();
+              await loadIndicators();
+            } else {
+              alert(resp.message || 'No se pudo actualizar el indicador');
+            }
+          } catch (e) { alert('Error de conexión'); }
+        });
+      }
     </script>
   </body>
-</html>
+ </html>
 
 

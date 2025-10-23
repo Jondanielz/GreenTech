@@ -433,44 +433,27 @@
                 </div>
               </div>
 
+              <!-- Campos ocultos: Presupuesto, Ubicación, Objetivos -->
+              <!--
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="projectBudget" class="form-label"
-                    >Presupuesto</label
-                  >
+                  <label for="projectBudget" class="form-label">Presupuesto</label>
                   <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="projectBudget"
-                      min="0"
-                      step="0.01"
-                    />
+                    <input type="number" class="form-control" id="projectBudget" min="0" step="0.01" />
                   </div>
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label for="projectLocation" class="form-label"
-                    >Ubicación</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="projectLocation"
-                  />
+                  <label for="projectLocation" class="form-label">Ubicación</label>
+                  <input type="text" class="form-control" id="projectLocation" />
                 </div>
               </div>
 
               <div class="mb-3">
-                <label for="projectObjectives" class="form-label"
-                  >Objetivos</label
-                >
-                <textarea
-                  class="form-control"
-                  id="projectObjectives"
-                  rows="2"
-                ></textarea>
+                <label for="projectObjectives" class="form-label">Objetivos</label>
+                <textarea class="form-control" id="projectObjectives" rows="2"></textarea>
               </div>
+              -->
             </form>
           </div>
           <div class="modal-footer">
@@ -627,44 +610,27 @@
                 </div>
               </div>
 
+              <!-- Campos ocultos: Presupuesto, Ubicación, Objetivos (editar) -->
+              <!--
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="editProjectBudget" class="form-label"
-                    >Presupuesto</label
-                  >
+                  <label for="editProjectBudget" class="form-label">Presupuesto</label>
                   <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="editProjectBudget"
-                      min="0"
-                      step="0.01"
-                    />
+                    <input type="number" class="form-control" id="editProjectBudget" min="0" step="0.01" />
                   </div>
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label for="editProjectLocation" class="form-label"
-                    >Ubicación</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="editProjectLocation"
-                  />
+                  <label for="editProjectLocation" class="form-label">Ubicación</label>
+                  <input type="text" class="form-control" id="editProjectLocation" />
                 </div>
               </div>
 
               <div class="mb-3">
-                <label for="editProjectObjectives" class="form-label"
-                  >Objetivos</label
-                >
-                <textarea
-                  class="form-control"
-                  id="editProjectObjectives"
-                  rows="2"
-                ></textarea>
+                <label for="editProjectObjectives" class="form-label">Objetivos</label>
+                <textarea class="form-control" id="editProjectObjectives" rows="2"></textarea>
               </div>
+              -->
             </form>
           </div>
           <div class="modal-footer">
@@ -934,18 +900,7 @@
                     }</span>
                   </div>
                   
-                  ${
-                    project.budget && project.budget > 0
-                      ? `
-                  <div class="project-stat">
-                    <i class="mdi mdi-currency-usd text-warning"></i>
-                    <span><strong>Presupuesto:</strong> ${ProjectService.formatBudget(
-                      project.budget
-                    )}</span>
-                  </div>
-                  `
-                      : ""
-                  }
+                  <!-- Presupuesto oculto en tarjeta de proyecto -->
                   
                   <div class="project-progress">
                     <div class="d-flex justify-content-between mb-1">
@@ -1025,12 +980,7 @@
                 project.start_date || "";
               document.getElementById("editProjectEndDate").value =
                 project.end_date || "";
-              document.getElementById("editProjectBudget").value =
-                project.budget || "";
-              document.getElementById("editProjectLocation").value =
-                project.location || "";
-              document.getElementById("editProjectObjectives").value =
-                project.objectives || "";
+              // Campos ocultos: presupuesto, ubicación, objetivos
 
               const modal = new bootstrap.Modal(
                 document.getElementById("editProjectModal")
@@ -1104,9 +1054,7 @@
               status: document.getElementById("projectStatus").value,
               start_date: startDate,
               end_date: endDate,
-              budget: document.getElementById("projectBudget").value,
-              location: document.getElementById("projectLocation").value,
-              objectives: document.getElementById("projectObjectives").value,
+              // Campos removidos: budget, location, objectives
             };
 
             try {
@@ -1147,10 +1095,7 @@
               status: document.getElementById("editProjectStatus").value,
               start_date: document.getElementById("editProjectStartDate").value,
               end_date: document.getElementById("editProjectEndDate").value,
-              budget: document.getElementById("editProjectBudget").value,
-              location: document.getElementById("editProjectLocation").value,
-              objectives: document.getElementById("editProjectObjectives")
-                .value,
+              // Campos removidos: budget, location, objectives
             };
 
             try {
