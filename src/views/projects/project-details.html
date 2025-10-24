@@ -187,6 +187,7 @@
         margin-bottom: 0.75rem;
         display: -webkit-box;
         -webkit-line-clamp: 2;
+        line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
       }
@@ -328,6 +329,536 @@
       .back-button {
         margin-bottom: 1rem;
       }
+
+      /* Estilos para el Diagrama Gantt */
+      .gantt-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow-x: scroll !important;
+        overflow-y: scroll !important;
+        border: 1px solid #e0e0e0;
+        height: 500px;
+        width: 100%;
+        position: relative;
+        cursor: grab;
+        -webkit-user-select: none;
+        user-select: none;
+        transition: cursor 0.2s ease;
+        /* Asegurar espacio para scrollbars */
+        box-sizing: border-box;
+        padding-bottom: 20px; /* Espacio para scrollbar horizontal */
+        margin-bottom: 20px; /* Espacio adicional */
+      }
+
+      .gantt-container:active {
+        cursor: grabbing;
+      }
+
+      .gantt-container.dragging {
+        cursor: grabbing !important;
+        -webkit-user-select: none !important;
+        user-select: none !important;
+      }
+
+      .gantt-container::-webkit-scrollbar {
+        width: 20px; /* Más ancho para mejor visibilidad */
+        height: 20px; /* Más alto para mejor visibilidad */
+      }
+
+      .gantt-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+      }
+
+      .gantt-container::-webkit-scrollbar-thumb {
+        background: #007bff;
+        border-radius: 10px;
+        border: 2px solid #f1f1f1;
+        min-height: 20px; /* Altura mínima para visibilidad */
+        min-width: 20px; /* Ancho mínimo para visibilidad */
+      }
+
+      .gantt-container::-webkit-scrollbar-thumb:hover {
+        background: #0056b3;
+        border: 2px solid #fff;
+      }
+
+      .gantt-container::-webkit-scrollbar-corner {
+        background: #f1f1f1;
+        border: 1px solid #ddd;
+      }
+
+      /* Forzar visibilidad de scrollbars */
+      .gantt-container {
+        scrollbar-width: thick;
+        scrollbar-color: #007bff #f1f1f1;
+      }
+
+      /* Wrapper para asegurar espacio para scrollbars */
+      .gantt-wrapper {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .gantt-wrapper .gantt-container {
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      /* Forzar visibilidad de scrollbars en todos los tamaños */
+      .gantt-container {
+        scrollbar-gutter: stable;
+      }
+
+      .gantt-tasks {
+        scrollbar-gutter: stable;
+      }
+
+      .gantt-chart {
+        scrollbar-gutter: stable;
+      }
+
+      /* Asegurar que los scrollbars sean visibles en pantallas pequeñas */
+      @media (max-width: 768px) {
+        .gantt-container::-webkit-scrollbar {
+          width: 14px !important;
+          height: 14px !important;
+        }
+
+        .gantt-tasks::-webkit-scrollbar {
+          width: 14px !important;
+          height: 14px !important;
+        }
+
+        .gantt-chart::-webkit-scrollbar {
+          width: 14px !important;
+          height: 14px !important;
+        }
+      }
+
+      .gantt-header {
+        background: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+        padding: 1rem;
+        font-weight: 600;
+        color: #495057;
+      }
+
+      .gantt-content {
+        max-height: 500px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: #6c757d #f8f9fa;
+      }
+
+      .gantt-content::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .gantt-content::-webkit-scrollbar-track {
+        background: #f8f9fa;
+        border-radius: 4px;
+      }
+
+      .gantt-content::-webkit-scrollbar-thumb {
+        background: #6c757d;
+        border-radius: 4px;
+      }
+
+      .gantt-content::-webkit-scrollbar-thumb:hover {
+        background: #495057;
+      }
+
+      .gantt-timeline {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 0;
+        background: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        overflow: hidden;
+      }
+
+      .gantt-timeline-header {
+        background: #f8f9fa;
+        padding: 1rem;
+        font-weight: 600;
+        color: #495057;
+        border-right: 1px solid #dee2e6;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .gantt-timeline-dates {
+        display: flex;
+        background: #e0e0e0;
+        min-width: -webkit-fill-available;
+        min-width: -moz-available;
+        min-width: fit-content;
+        overflow: hidden;
+        align-items: stretch;
+      }
+
+      .gantt-date-header {
+        background: #f8f9fa;
+        padding: 0.75rem 0.5rem;
+        text-align: center;
+        border-right: 1px solid #e0e0e0;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #495057;
+        width: 100px;
+        min-width: 100px;
+        max-width: 100px;
+        box-sizing: border-box;
+        flex-shrink: 0;
+      }
+
+      .gantt-date-header.today {
+        background: #e3f2fd;
+        color: #1976d2;
+        font-weight: 700;
+      }
+
+      .gantt-date-header.weekend {
+        background: #f5f5f5;
+        color: #999;
+      }
+
+      .gantt-tasks {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 0;
+        max-height: 500px;
+        overflow-y: hidden;
+        overflow-x: hidden;
+        position: relative;
+        border: 2px solid #17a2b8;
+        border-radius: 8px;
+      }
+
+      /* Scrollbars eliminados de gantt-tasks - solo el contenedor principal tiene scroll */
+
+      .gantt-task-list {
+        background: white;
+        border-right: 1px solid #dee2e6;
+      }
+
+      .gantt-task-item {
+        padding: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        min-height: 60px;
+        height: 60px;
+        box-sizing: border-box;
+      }
+
+      .gantt-task-item:hover {
+        background: #f8f9fa;
+      }
+
+      .gantt-task-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .gantt-task-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .gantt-task-title {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .gantt-task-meta {
+        display: flex;
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        color: #6c757d;
+      }
+
+      .gantt-task-priority {
+        padding: 0.125rem 0.375rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.625rem;
+      }
+
+      .gantt-task-dates {
+        font-size: 0.75rem;
+        color: #6c757d;
+      }
+
+      .gantt-chart {
+        background: white;
+        position: relative;
+        min-height: 400px;
+        max-height: 500px;
+        overflow-y: hidden;
+        overflow-x: hidden;
+        border-left: 1px solid #dee2e6;
+        border: 2px solid #28a745;
+        border-radius: 8px;
+        margin: 5px;
+      }
+
+      /* Scrollbars eliminados de gantt-chart - solo el contenedor principal tiene scroll */
+
+      .gantt-chart-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: linear-gradient(
+            to right,
+            #e0e0e0 1px,
+            transparent 1px
+          ),
+          linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
+        background-size: 100px 60px;
+        background-position: 0 0;
+        pointer-events: none;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+      }
+
+      .gantt-task-bar {
+        position: absolute;
+        height: 24px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        z-index: 2;
+        min-width: 20px;
+        top: 18px;
+      }
+
+      .gantt-task-bar:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        z-index: 3;
+      }
+
+      .gantt-task-bar-progress {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        border-radius: 4px;
+        opacity: 0.8;
+        transition: all 0.3s ease;
+      }
+
+      .gantt-task-bar-progress:hover {
+        opacity: 1;
+        transform: scaleY(1.1);
+      }
+
+      .gantt-task-bar-text {
+        position: relative;
+        z-index: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        padding: 0 0.5rem;
+      }
+
+      /* Colores de estado para las barras */
+      .gantt-bar-pendiente {
+        background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+      }
+
+      .gantt-bar-en-progreso {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+      }
+
+      .gantt-bar-completada {
+        background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+      }
+
+      .gantt-bar-critica {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      }
+
+      /* Colores de prioridad */
+      .priority-alta {
+        background: #dc3545;
+        color: white;
+      }
+
+      .priority-media {
+        background: #ffc107;
+        color: #212529;
+      }
+
+      .priority-baja {
+        background: #28a745;
+        color: white;
+      }
+
+      .priority-critica {
+        background: #6f42c1;
+        color: white;
+      }
+
+      /* Indicadores de estado */
+      .status-pendiente {
+        background: #ffc107;
+      }
+
+      .status-en-progreso {
+        background: #17a2b8;
+      }
+
+      .status-completada {
+        background: #28a745;
+      }
+
+      .status-critica {
+        background: #dc3545;
+      }
+
+      /* Controles del Gantt */
+      .gantt-controls {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem;
+        border: 1px solid #dee2e6;
+      }
+
+      .gantt-controls .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .gantt-timeline {
+          grid-template-columns: 200px 1fr;
+        }
+
+        .gantt-tasks {
+          grid-template-columns: 200px 1fr;
+        }
+
+        .gantt-task-item {
+          padding: 0.75rem;
+          min-height: 50px;
+        }
+
+        .gantt-task-title {
+          font-size: 0.875rem;
+        }
+
+        .gantt-date-header {
+          padding: 0.5rem 0.25rem;
+          font-size: 0.75rem;
+        }
+      }
+
+      /* Loading state */
+      .gantt-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 200px;
+        color: #6c757d;
+      }
+
+      .gantt-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 200px;
+        color: #6c757d;
+        text-align: center;
+      }
+
+      .gantt-empty i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 1rem;
+      }
+
+      /* Clases para estilos inline */
+      .loading-spinner {
+        display: block;
+      }
+
+      .project-content-hidden {
+        display: none;
+      }
+
+      .add-task-btn-hidden {
+        display: none;
+      }
+
+      .delete-task-btn-hidden {
+        display: none;
+      }
+
+      .gantt-timeline-dates-dynamic {
+        display: flex;
+        min-width: var(--timeline-width, 1000px);
+        width: var(--timeline-width, 1000px);
+      }
+
+      .gantt-date-header-dynamic {
+        flex: 0 0 100px;
+        width: 100px;
+      }
+
+      .gantt-chart-dynamic {
+        min-width: var(--chart-width, 1000px);
+      }
+
+      .gantt-task-bar-dynamic {
+        position: absolute;
+        z-index: 2;
+      }
+
+      .gantt-task-bar-progress-dynamic {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        border-radius: 4px;
+        z-index: 1;
+        display: block;
+      }
+
+      .gantt-task-bar-text-dynamic {
+        position: relative;
+        z-index: 2;
+      }
     </style>
   </head>
   <body>
@@ -360,7 +891,7 @@
             </div>
 
             <!-- Loading Spinner -->
-            <div id="loadingSpinner" style="display: block">
+            <div id="loadingSpinner" class="loading-spinner">
               <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Cargando...</span>
               </div>
@@ -368,7 +899,7 @@
             </div>
 
             <!-- Project Content -->
-            <div id="projectContent" style="display: none">
+            <div id="projectContent" class="project-content-hidden">
               <!-- Project Header Banner -->
               <div class="project-header-banner" id="projectHeader">
                 <!-- Se llenará dinámicamente -->
@@ -398,6 +929,19 @@
                     role="tab"
                   >
                     <i class="mdi mdi-view-column"></i> Tablero Kanban
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="gantt-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#gantt"
+                    type="button"
+                    role="tab"
+                  >
+                    <i class="mdi mdi-chart-timeline-variant"></i> Diagrama
+                    Gantt
                   </button>
                 </li>
               </ul>
@@ -433,18 +977,13 @@
                         <p id="projectDescription" class="text-muted"></p>
                       </div>
 
-                      <!-- Objetivos -->
-                      <div
-                        class="info-card"
-                        id="objectivesCard"
-                        style="display: none"
-                      >
-                        <h5 class="info-card-title">
-                          <i class="mdi mdi-target"></i>
-                          Objetivos
-                        </h5>
+                      <!-- Objetivos ocultos para coordinador -->
+                      <!--
+                      <div class="info-card" id="objectivesCard" style="display: none">
+                        <h5 class="info-card-title"><i class="mdi mdi-target"></i> Objetivos</h5>
                         <p id="projectObjectives" class="text-muted"></p>
                       </div>
+                      -->
                     </div>
 
                     <div class="col-lg-4">
@@ -485,9 +1024,8 @@
                   >
                     <h4>Tablero de Tareas</h4>
                     <button
-                      class="btn btn-outline-info btn-sm"
+                      class="btn btn-outline-info btn-sm add-task-btn-hidden"
                       id="addTaskBtn"
-                      style="display: none"
                     >
                       <i class="mdi mdi-plus"></i> Nueva Tarea
                     </button>
@@ -552,6 +1090,97 @@
                         data-status="Completada"
                       >
                         <!-- Las tareas se cargarán aquí -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Pestaña del Diagrama Gantt -->
+                <div
+                  class="tab-pane fade"
+                  id="gantt"
+                  role="tabpanel"
+                  aria-labelledby="gantt-tab"
+                >
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-3"
+                  >
+                    <h4>Diagrama Gantt del Proyecto</h4>
+                    <div class="btn-group" role="group">
+                      <button
+                        class="btn btn-outline-primary btn-sm"
+                        id="zoomInBtn"
+                        title="Acercar"
+                      >
+                        <i class="mdi mdi-magnify-plus"></i>
+                      </button>
+                      <button
+                        class="btn btn-outline-primary btn-sm"
+                        id="zoomOutBtn"
+                        title="Alejar"
+                      >
+                        <i class="mdi mdi-magnify-minus"></i>
+                      </button>
+                      <button
+                        class="btn btn-outline-info btn-sm"
+                        id="fitToScreenBtn"
+                        title="Ajustar a pantalla"
+                      >
+                        <i class="mdi mdi-fit-to-screen"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Controles del Gantt -->
+                  <div class="gantt-controls mb-3">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <label class="form-label">Filtro por Estado:</label>
+                        <select
+                          class="form-select form-select-sm"
+                          id="ganttStatusFilter"
+                        >
+                          <option value="all">Todos los estados</option>
+                          <option value="Pendiente">Pendiente</option>
+                          <option value="En progreso">En Progreso</option>
+                          <option value="Completada">Completada</option>
+                        </select>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label">Filtro por Prioridad:</label>
+                        <select
+                          class="form-select form-select-sm"
+                          id="ganttPriorityFilter"
+                        >
+                          <option value="all">Todas las prioridades</option>
+                          <option value="Alta">Alta</option>
+                          <option value="Media">Media</option>
+                          <option value="Baja">Baja</option>
+                          <option value="Crítica">Crítica</option>
+                        </select>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label">Vista:</label>
+                        <select
+                          class="form-select form-select-sm"
+                          id="ganttViewMode"
+                        >
+                          <option value="weeks">Por Semanas</option>
+                          <option value="days">Por Días</option>
+                          <option value="months">Por Meses</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Contenedor del Diagrama Gantt -->
+                  <div class="gantt-wrapper">
+                    <div class="gantt-container">
+                      <div class="gantt-header" id="ganttHeader">
+                        <!-- Se llenará dinámicamente -->
+                      </div>
+                      <div class="gantt-content" id="ganttContent">
+                        <!-- Se llenará dinámicamente -->
                       </div>
                     </div>
                   </div>
@@ -732,18 +1361,13 @@
                 </div>
               </div>
 
+              <!-- Campo Horas Estimadas oculto -->
+              <!--
               <div class="mb-3">
-                <label for="taskHours" class="form-label"
-                  >Horas Estimadas</label
-                >
-                <input
-                  type="number"
-                  class="form-control"
-                  id="taskHours"
-                  min="0"
-                  step="0.5"
-                />
+                <label for="taskHours" class="form-label">Horas Estimadas</label>
+                <input type="number" class="form-control" id="taskHours" min="0" step="0.5" />
               </div>
+              -->
             </form>
           </div>
           <div class="modal-footer">
@@ -752,9 +1376,8 @@
             </button>
             <button
               type="button"
-              class="btn btn-danger"
+              class="btn btn-danger delete-task-btn-hidden"
               id="deleteTaskBtn"
-              style="display: none"
             >
               <i class="mdi mdi-delete"></i> Eliminar
             </button>
@@ -825,6 +1448,9 @@
 
         let currentProject = null;
         let currentTasks = [];
+        let ganttTasks = [];
+        let ganttTimeline = [];
+        let ganttZoom = 1;
 
         // Cargar detalles del proyecto
         async function loadProjectDetails() {
@@ -838,14 +1464,23 @@
               renderProjectStats(currentProject);
               renderProjectMembers(currentProject.members || []);
 
+              // Ocultar spinner de carga
               document.getElementById("loadingSpinner").style.display = "none";
-              document.getElementById("projectContent").style.display = "block";
+
+              // Mostrar contenido del proyecto
+              document
+                .getElementById("projectContent")
+                .classList.remove("project-content-hidden");
             } else {
+              // Ocultar spinner en caso de error
+              document.getElementById("loadingSpinner").style.display = "none";
               showError(response.message || "Error al cargar proyecto");
               window.location.href = "/";
             }
           } catch (error) {
             console.error("Error:", error);
+            // Ocultar spinner en caso de error
+            document.getElementById("loadingSpinner").style.display = "none";
             showError("Error al cargar proyecto");
             window.location.href = "/";
           }
@@ -941,28 +1576,7 @@
                 project.end_date
               )}</div>
             </div>
-            ${
-              project.budget && project.budget > 0
-                ? `
-            <div class="info-row">
-              <div class="info-label">Presupuesto:</div>
-              <div class="info-value">${ProjectService.formatBudget(
-                project.budget
-              )}</div>
-            </div>
-            `
-                : ""
-            }
-            ${
-              project.location
-                ? `
-            <div class="info-row">
-              <div class="info-label">Ubicación:</div>
-              <div class="info-value">${project.location}</div>
-            </div>
-            `
-                : ""
-            }
+            <!-- Presupuesto y Ubicación ocultos para coordinador -->
             <div class="info-row">
               <div class="info-label">Días Restantes:</div>
               <div class="info-value ${
@@ -1051,8 +1665,9 @@
 
               // Mostrar botón de agregar tarea si tiene permisos
               if (canEditTasks) {
-                document.getElementById("addTaskBtn").style.display =
-                  "inline-block";
+                document
+                  .getElementById("addTaskBtn")
+                  .classList.remove("add-task-btn-hidden");
               }
             } else {
               console.error("Error al cargar tareas:", response.message);
@@ -1285,8 +1900,9 @@
                 "Editar Tarea";
               document.getElementById("saveTaskBtnText").textContent =
                 "Actualizar";
-              document.getElementById("deleteTaskBtn").style.display =
-                "inline-block";
+              document
+                .getElementById("deleteTaskBtn")
+                .classList.remove("delete-task-btn-hidden");
 
               document.getElementById("taskId").value = task.id;
               document.getElementById("taskProjectId").value = task.project_id;
@@ -1297,8 +1913,8 @@
               document.getElementById("taskPriority").value = task.priority;
               document.getElementById("taskDueDate").value =
                 task.due_date || "";
-              document.getElementById("taskHours").value =
-                task.estimated_hours || "";
+              // document.getElementById("taskHours").value =
+              //   task.estimated_hours || "";
 
               const modal = new bootstrap.Modal(
                 document.getElementById("taskModal")
@@ -1315,7 +1931,9 @@
         document.getElementById("addTaskBtn").addEventListener("click", () => {
           document.getElementById("taskModalTitle").textContent = "Nueva Tarea";
           document.getElementById("saveTaskBtnText").textContent = "Crear";
-          document.getElementById("deleteTaskBtn").style.display = "none";
+          document
+            .getElementById("deleteTaskBtn")
+            .classList.add("delete-task-btn-hidden");
 
           document.getElementById("taskForm").reset();
           document.getElementById("taskId").value = "";
@@ -1357,7 +1975,7 @@
               status: document.getElementById("taskStatus").value,
               priority: document.getElementById("taskPriority").value,
               due_date: dueDate,
-              estimated_hours: document.getElementById("taskHours").value,
+              // estimated_hours: document.getElementById("taskHours").value,
             };
 
             try {
@@ -1451,6 +2069,490 @@
               loadTasks();
             }
           });
+
+        // Cargar cuando se cambia a la pestaña de Gantt
+        document
+          .getElementById("gantt-tab")
+          .addEventListener("shown.bs.tab", () => {
+            if (ganttTasks.length === 0) {
+              loadGanttData();
+            }
+          });
+
+        // Cargar datos para el Gantt
+        async function loadGanttData() {
+          try {
+            if (currentTasks.length === 0) {
+              await loadTasks();
+            }
+
+            ganttTasks = currentTasks.filter((task) => {
+              // Filtrar solo tareas del proyecto actual
+              return task.project_id == projectId;
+            });
+
+            if (ganttTasks.length === 0) {
+              renderEmptyGantt();
+              return;
+            }
+
+            // Generar timeline del proyecto
+            generateProjectTimeline();
+
+            // Renderizar Gantt
+            renderGanttChart();
+
+            // Configurar controles
+            setupGanttControls();
+          } catch (error) {
+            console.error("Error al cargar datos del Gantt:", error);
+            showError("Error al cargar el diagrama Gantt");
+          }
+        }
+
+        // Generar timeline del proyecto basado en fechas del proyecto
+        function generateProjectTimeline() {
+          if (!currentProject) return;
+
+          const today = new Date();
+          // Usar exactamente las fechas de inicio y finalización del proyecto
+          const timelineStart = new Date(currentProject.start_date);
+          const timelineEnd = new Date(currentProject.end_date);
+
+          console.log("📅 Timeline del Gantt basado en fechas del proyecto:");
+          console.log("- Inicio del proyecto:", currentProject.start_date);
+          console.log("- Fin del proyecto:", currentProject.end_date);
+          console.log(
+            "- Inicio del timeline:",
+            timelineStart.toISOString().split("T")[0]
+          );
+          console.log(
+            "- Fin del timeline:",
+            timelineEnd.toISOString().split("T")[0]
+          );
+          console.log(
+            "- Tareas encontradas:",
+            ganttTasks ? ganttTasks.length : 0
+          );
+
+          ganttTimeline = [];
+          const currentDate = new Date(timelineStart);
+
+          while (currentDate <= timelineEnd) {
+            const isToday = currentDate.toDateString() === today.toDateString();
+            const isWeekend =
+              currentDate.getDay() === 0 || currentDate.getDay() === 6;
+
+            ganttTimeline.push({
+              date: new Date(currentDate),
+              isToday: isToday,
+              isWeekend: isWeekend,
+              label: formatGanttDate(currentDate),
+            });
+
+            currentDate.setDate(currentDate.getDate() + 1);
+          }
+
+          console.log("- Días en el timeline:", ganttTimeline.length);
+        }
+
+        // Formatear fecha para el Gantt
+        function formatGanttDate(date) {
+          const day = date.getDate().toString().padStart(2, "0");
+          const month = (date.getMonth() + 1).toString().padStart(2, "0");
+          const dayName = date.toLocaleDateString("es", { weekday: "short" });
+          return `${day}/${month} ${dayName}`;
+        }
+
+        // Renderizar diagrama Gantt
+        function renderGanttChart() {
+          const ganttHeader = document.getElementById("ganttHeader");
+          const ganttContent = document.getElementById("ganttContent");
+
+          if (!ganttHeader || !ganttContent) return;
+
+          // Renderizar header del timeline
+          ganttHeader.innerHTML = `
+            <div class="gantt-timeline">
+              <div class="gantt-timeline-header">
+                <i class="mdi mdi-chart-timeline-variant"></i>
+                Cronograma del Proyecto
+              </div>
+              <div class="gantt-timeline-dates gantt-timeline-dates-dynamic" style="--timeline-width: ${
+                ganttTimeline.length * 100
+              }px;">
+                ${ganttTimeline
+                  .map(
+                    (day) => `
+                  <div class="gantt-date-header ${day.isToday ? "today" : ""} ${
+                      day.isWeekend ? "weekend" : ""
+                    }" class="gantt-date-header-dynamic">
+                    ${day.label}
+                  </div>
+                `
+                  )
+                  .join("")}
+              </div>
+            </div>
+          `;
+
+          // Usar solo las tareas reales del proyecto
+          const allTasks = ganttTasks;
+
+          // FORZAR CONTENIDO ANCHO PARA ACTIVAR SCROLL HORIZONTAL
+          const forceWidth = 3000; // 3000px de ancho para forzar scroll
+          const forceHeight = 800; // 800px de alto para forzar scroll vertical
+
+          console.log(
+            "📏 Forzando dimensiones del Gantt:",
+            forceWidth,
+            "x",
+            forceHeight
+          );
+
+          // Renderizar contenido del Gantt con dimensiones forzadas
+          ganttContent.innerHTML = `
+            <div class="gantt-tasks" style="width: ${forceWidth}px; min-width: ${forceWidth}px; height: ${forceHeight}px; min-height: ${forceHeight}px; display: flex; overflow: visible;">
+              <div class="gantt-task-list" style="width: 250px; height: 100%; position: relative; flex-shrink: 0;">
+                ${allTasks.map((task) => renderGanttTaskItem(task)).join("")}
+              </div>
+              <div class="gantt-chart" style="width: ${
+                forceWidth - 250
+              }px; position: relative; height: 100%; overflow: visible; flex-shrink: 0;">
+                <div class="gantt-chart-grid"></div>
+                ${allTasks
+                  .map((task, index) => renderGanttTaskBar(task, index))
+                  .join("")}
+              </div>
+            </div>
+          `;
+
+          // CONFIGURACIÓN SIMPLE - Los scrollbars ya están configurados en CSS
+          console.log("✅ Gantt renderizado con scrollbars automáticos");
+
+          // Forzar visibilidad de scrollbars después de renderizar
+          setTimeout(() => {
+            const ganttContainer = document.querySelector(".gantt-container");
+            if (ganttContainer) {
+              // Forzar scrollbars visibles
+              ganttContainer.style.overflowX = "scroll";
+              ganttContainer.style.overflowY = "scroll";
+              ganttContainer.style.scrollbarWidth = "thick";
+              ganttContainer.style.scrollbarColor = "#007bff #f1f1f1";
+
+              // Asegurar que el contenedor tenga espacio para scrollbars
+              ganttContainer.style.paddingBottom = "20px";
+              ganttContainer.style.marginBottom = "20px";
+
+              // Forzar scroll horizontal específicamente
+              const ganttContent =
+                ganttContainer.querySelector(".gantt-content");
+              if (ganttContent) {
+                ganttContent.style.overflowX = "visible";
+                ganttContent.style.overflowY = "visible";
+                ganttContent.style.width = "3000px";
+                ganttContent.style.minWidth = "3000px";
+              }
+
+              console.log("📊 Scrollbars forzados:");
+              console.log("- OverflowX:", ganttContainer.style.overflowX);
+              console.log("- OverflowY:", ganttContainer.style.overflowY);
+              console.log("- ScrollWidth:", ganttContainer.scrollWidth);
+              console.log("- ClientWidth:", ganttContainer.clientWidth);
+              console.log("- ScrollHeight:", ganttContainer.scrollHeight);
+              console.log("- ClientHeight:", ganttContainer.clientHeight);
+            }
+          }, 100);
+
+          // Configurar arrastre con mouse
+          setupGanttDragScroll();
+        }
+
+        // Configurar arrastre con mouse para el Gantt - SOLUCIÓN BÁSICA
+        function setupGanttDragScroll() {
+          const ganttContainer = document.querySelector(".gantt-container");
+
+          if (!ganttContainer) {
+            console.log("❌ Gantt container no encontrado");
+            return;
+          }
+
+          console.log("✅ Configurando arrastre BÁSICO para:", ganttContainer);
+
+          // Solo configurar el cursor
+          ganttContainer.style.cursor = "grab";
+
+          // Configurar scroll horizontal con rueda del mouse (Shift + Wheel)
+          ganttContainer.addEventListener("wheel", function (e) {
+            if (e.shiftKey) {
+              e.preventDefault();
+              ganttContainer.scrollLeft += e.deltaY;
+              console.log(
+                "🎡 Wheel scroll horizontal:",
+                ganttContainer.scrollLeft
+              );
+            }
+          });
+
+          // Configurar arrastre básico
+          let isDragging = false;
+          let startX = 0;
+          let scrollLeft = 0;
+
+          ganttContainer.addEventListener("mousedown", function (e) {
+            // Solo si no es en un elemento interactivo
+            if (
+              e.target.closest(
+                ".gantt-task-bar, .gantt-task-item, button, input, select"
+              )
+            ) {
+              return;
+            }
+
+            isDragging = true;
+            ganttContainer.style.cursor = "grabbing";
+            startX = e.pageX;
+            scrollLeft = ganttContainer.scrollLeft;
+            e.preventDefault();
+          });
+
+          document.addEventListener("mousemove", function (e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX;
+            const walk = (startX - x) * 2;
+            ganttContainer.scrollLeft = scrollLeft + walk;
+          });
+
+          document.addEventListener("mouseup", function () {
+            isDragging = false;
+            ganttContainer.style.cursor = "grab";
+          });
+
+          console.log("✅ Configuración BÁSICA completada");
+          console.log("✅ Cursor:", ganttContainer.style.cursor);
+        }
+
+        // Renderizar item de tarea en la lista
+        function renderGanttTaskItem(task) {
+          const statusClass = getTaskStatusClass(task.status);
+          const priorityClass = getTaskPriorityClass(task.priority);
+          const isOverdue = TaskService.isOverdue(task.due_date, task.status);
+
+          return `
+            <div class="gantt-task-item" data-task-id="${task.id}">
+              <div class="gantt-task-indicator ${statusClass}"></div>
+              <div class="gantt-task-info">
+                <div class="gantt-task-title">${task.title}</div>
+                <div class="gantt-task-meta">
+                  <span class="gantt-task-priority ${priorityClass}">${
+            task.priority
+          }</span>
+                  <span class="gantt-task-dates">
+                    ${
+                      task.due_date
+                        ? formatGanttDate(new Date(task.due_date))
+                        : "Sin fecha"
+                    }
+                  </span>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // Renderizar barra de tarea en el Gantt
+        function renderGanttTaskBar(task, index) {
+          if (!task.due_date) return "";
+
+          const startDate = new Date(task.created_at);
+          const endDate = new Date(task.due_date);
+
+          // Usar el timeline calculado dinámicamente
+          if (!ganttTimeline || ganttTimeline.length === 0) return "";
+
+          const timelineStart = ganttTimeline[0].date;
+          const timelineEnd = ganttTimeline[ganttTimeline.length - 1].date;
+
+          console.log(`📊 Renderizando tarea "${task.title}":`);
+          console.log(
+            "- Fecha de inicio:",
+            startDate.toISOString().split("T")[0]
+          );
+          console.log("- Fecha de fin:", endDate.toISOString().split("T")[0]);
+          console.log(
+            "- Timeline inicio:",
+            timelineStart.toISOString().split("T")[0]
+          );
+          console.log(
+            "- Timeline fin:",
+            timelineEnd.toISOString().split("T")[0]
+          );
+
+          // Calcular posición relativa al timeline
+          const daysFromTimelineStart = Math.floor(
+            (startDate - timelineStart) / (1000 * 60 * 60 * 24)
+          );
+          const taskDuration = Math.ceil(
+            (endDate - startDate) / (1000 * 60 * 60 * 24)
+          );
+
+          // Usar el mismo ancho de columna que el grid (100px)
+          const columnWidth = 100;
+          const leftPosition = daysFromTimelineStart * columnWidth;
+          const width = Math.max(taskDuration * columnWidth, 20);
+          const topPosition = index * 60 + 18; // Ajustar para centrar en la fila
+
+          console.log("- Días desde inicio:", daysFromTimelineStart);
+          console.log("- Duración de tarea:", taskDuration);
+          console.log("- Posición izquierda:", leftPosition);
+          console.log("- Ancho:", width);
+
+          const statusClass = getTaskStatusClass(task.status);
+          const priorityClass = getTaskPriorityClass(task.priority);
+          const progress = calculateTaskProgress(task);
+
+          return `
+            <div class="gantt-task-bar gantt-bar-${task.status
+              .toLowerCase()
+              .replace(" ", "-")} gantt-task-bar-dynamic"
+                 style="left: ${leftPosition}px; width: ${width}px; top: ${topPosition}px;"
+                 data-task-id="${task.id}"
+                 title="${task.title} - ${task.status} - ${progress}%">
+              <div class="gantt-task-bar-progress gantt-task-bar-progress-dynamic"
+                   style="width: ${progress}%;
+                          background: linear-gradient(90deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.3) 100%);"></div>
+              <div class="gantt-task-bar-text gantt-task-bar-text-dynamic">${
+                task.title
+              }</div>
+            </div>
+          `;
+        }
+
+        // Obtener clase de estado para tareas
+        function getTaskStatusClass(status) {
+          const statusMap = {
+            Pendiente: "status-pendiente",
+            "En progreso": "status-en-progreso",
+            Completada: "status-completada",
+          };
+          return statusMap[status] || "status-pendiente";
+        }
+
+        // Obtener clase de prioridad para tareas
+        function getTaskPriorityClass(priority) {
+          const priorityMap = {
+            Alta: "priority-alta",
+            Media: "priority-media",
+            Baja: "priority-baja",
+            Crítica: "priority-critica",
+          };
+          return priorityMap[priority] || "priority-media";
+        }
+
+        // Calcular progreso de tarea
+        function calculateTaskProgress(task) {
+          if (task.progress !== undefined && task.progress !== null) {
+            return Math.max(0, Math.min(100, parseInt(task.progress)));
+          }
+
+          const progressMap = {
+            Pendiente: 0,
+            "En progreso": 50,
+            Completada: 100,
+          };
+
+          return progressMap[task.status] || 0;
+        }
+
+        // Renderizar Gantt vacío
+        function renderEmptyGantt() {
+          const ganttContent = document.getElementById("ganttContent");
+          if (ganttContent) {
+            ganttContent.innerHTML = `
+              <div class="gantt-empty">
+                <i class="mdi mdi-chart-timeline-variant"></i>
+                <h5>No hay tareas en este proyecto</h5>
+                <p>Las tareas aparecerán aquí cuando se agreguen al proyecto</p>
+              </div>
+            `;
+          }
+        }
+
+        // Configurar controles del Gantt
+        function setupGanttControls() {
+          // Filtros
+          const statusFilter = document.getElementById("ganttStatusFilter");
+          const priorityFilter = document.getElementById("ganttPriorityFilter");
+          const viewMode = document.getElementById("ganttViewMode");
+
+          if (statusFilter) {
+            statusFilter.addEventListener("change", filterGanttTasks);
+          }
+          if (priorityFilter) {
+            priorityFilter.addEventListener("change", filterGanttTasks);
+          }
+          if (viewMode) {
+            viewMode.addEventListener("change", changeGanttView);
+          }
+
+          // Controles de zoom
+          const zoomInBtn = document.getElementById("zoomInBtn");
+          const zoomOutBtn = document.getElementById("zoomOutBtn");
+          const fitToScreenBtn = document.getElementById("fitToScreenBtn");
+
+          if (zoomInBtn) {
+            zoomInBtn.addEventListener("click", () => {
+              ganttZoom = Math.min(ganttZoom * 1.2, 3);
+              renderGanttChart();
+            });
+          }
+
+          if (zoomOutBtn) {
+            zoomOutBtn.addEventListener("click", () => {
+              ganttZoom = Math.max(ganttZoom / 1.2, 0.5);
+              renderGanttChart();
+            });
+          }
+
+          if (fitToScreenBtn) {
+            fitToScreenBtn.addEventListener("click", () => {
+              ganttZoom = 1;
+              renderGanttChart();
+            });
+          }
+        }
+
+        // Filtrar tareas del Gantt
+        function filterGanttTasks() {
+          const statusFilter =
+            document.getElementById("ganttStatusFilter").value;
+          const priorityFilter = document.getElementById(
+            "ganttPriorityFilter"
+          ).value;
+
+          let filteredTasks = currentTasks.filter((task) => {
+            const statusMatch =
+              statusFilter === "all" || task.status === statusFilter;
+            const priorityMatch =
+              priorityFilter === "all" || task.priority === priorityFilter;
+            return statusMatch && priorityMatch;
+          });
+
+          ganttTasks = filteredTasks;
+          renderGanttChart();
+        }
+
+        // Cambiar vista del Gantt
+        function changeGanttView() {
+          const viewMode = document.getElementById("ganttViewMode").value;
+          // Aquí se podría implementar lógica para cambiar entre días, semanas, meses
+          console.log("Cambiando vista a:", viewMode);
+          renderGanttChart();
+        }
+
+        // La sincronización de scroll ya no es necesaria
+        // El scroll es manejado por el contenedor principal del Gantt
 
         // Inicializar
         loadProjectDetails();

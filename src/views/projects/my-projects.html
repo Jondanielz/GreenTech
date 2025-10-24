@@ -276,6 +276,7 @@
                       class="btn btn-gradient-primary btn-sm ms-2"
                       data-bs-toggle="modal"
                       data-bs-target="#createProjectModal"
+                      id="openCreateProjectBtn"
                     >
                       <i class="mdi mdi-plus"></i> Nuevo Proyecto
                     </button>
@@ -347,7 +348,7 @@
     >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header bg-success text-white">
             <h5 class="modal-title" id="createProjectModalLabel">
               <i class="mdi mdi-folder-plus"></i> Crear Nuevo Proyecto
             </h5>
@@ -414,51 +415,14 @@
                 </div>
               </div>
 
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="projectBudget" class="form-label"
-                    >Presupuesto</label
-                  >
-                  <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="projectBudget"
-                      min="0"
-                      step="0.01"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label for="projectLocation" class="form-label"
-                    >Ubicación</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="projectLocation"
-                  />
-                </div>
-              </div>
-
-              <div class="mb-3">
-                <label for="projectObjectives" class="form-label"
-                  >Objetivos</label
-                >
-                <textarea
-                  class="form-control"
-                  id="projectObjectives"
-                  rows="2"
-                ></textarea>
-              </div>
+              <!-- Campos ocultos: Presupuesto, Ubicación, Objetivos (crear) -->
             </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-light" data-bs-dismiss="modal">
               Cancelar
             </button>
-            <button type="button" class="btn btn-primary" id="saveProjectBtn">
+            <button type="button" class="btn btn-success" id="saveProjectBtn">
               <i class="mdi mdi-content-save"></i> Guardar Proyecto
             </button>
           </div>
@@ -532,7 +496,7 @@
     >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header bg-success text-white">
             <h5 class="modal-title" id="editProjectModalLabel">
               <i class="mdi mdi-pencil"></i> Editar Proyecto
             </h5>
@@ -586,37 +550,13 @@
               </div>
 
               <div class="row">
-                <div class="col-md-4 mb-3">
-                  <label for="editProjectStartDate" class="form-label"
-                    >Fecha de Inicio</label
-                  >
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="editProjectStartDate"
-                  />
+                <div class="col-md-6 mb-3">
+                  <label for="editProjectStartDate" class="form-label">Fecha de Inicio</label>
+                  <input type="date" class="form-control" id="editProjectStartDate" />
                 </div>
-                <div class="col-md-4 mb-3">
-                  <label for="editProjectEndDate" class="form-label"
-                    >Fecha de Fin</label
-                  >
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="editProjectEndDate"
-                  />
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label for="editProjectBudget" class="form-label"
-                    >Presupuesto</label
-                  >
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="editProjectBudget"
-                    step="0.01"
-                    min="0"
-                  />
+                <div class="col-md-6 mb-3">
+                  <label for="editProjectEndDate" class="form-label">Fecha de Fin</label>
+                  <input type="date" class="form-control" id="editProjectEndDate" />
                 </div>
               </div>
 
@@ -632,32 +572,26 @@
                     <option value="Crítica">Crítica</option>
                   </select>
                 </div>
+                <!-- Campo de Progreso oculto para coordinador
                 <div class="col-md-6 mb-3">
-                  <label for="editProjectProgress" class="form-label"
-                    >Progreso (%)</label
-                  >
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="editProjectProgress"
-                    min="0"
-                    max="100"
-                  />
+                  <label for="editProjectProgress" class="form-label">Progreso (%)</label>
+                  <input type="number" class="form-control" id="editProjectProgress" min="0" max="100" />
                 </div>
+                -->
               </div>
             </form>
           </div>
           <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-light"
               data-bs-dismiss="modal"
             >
               Cancelar
             </button>
             <button
               type="button"
-              class="btn btn-primary"
+              class="btn btn-success"
               id="saveEditProjectBtn"
             >
               <i class="mdi mdi-content-save"></i> Guardar Cambios
@@ -805,6 +739,12 @@
           basePath: "../../components/",
         });
 
+        // Ocultar botón "Nuevo Proyecto" para participantes (rol 3)
+        const newProjectBtn = document.getElementById("openCreateProjectBtn");
+        if (newProjectBtn && userData.role_id === 3) {
+          newProjectBtn.style.display = "none";
+        }
+
         let allProjects = [];
         let filteredProjects = [];
 
@@ -924,18 +864,7 @@
                     }</span>
                   </div>
                   
-                  ${
-                    project.budget && project.budget > 0
-                      ? `
-                  <div class="project-stat">
-                    <i class="mdi mdi-currency-usd text-warning"></i>
-                    <span><strong>Presupuesto:</strong> ${ProjectService.formatBudget(
-                      project.budget
-                    )}</span>
-                  </div>
-                  `
-                      : ""
-                  }
+                  <!-- Presupuesto oculto en tarjeta -->
                   
                   <div class="project-progress">
                     <div class="d-flex justify-content-between mb-1">
@@ -1020,16 +949,9 @@
                 project.description || "";
               document.getElementById("editProjectStatus").value =
                 project.status;
-              document.getElementById("editProjectStartDate").value =
-                project.start_date || "";
-              document.getElementById("editProjectEndDate").value =
-                project.end_date || "";
-              document.getElementById("editProjectBudget").value =
-                project.budget || 0;
-              document.getElementById("editProjectPriority").value =
-                project.priority || "Media";
-              document.getElementById("editProjectProgress").value =
-                project.progress || 0;
+              document.getElementById("editProjectStartDate").value = project.start_date || "";
+              document.getElementById("editProjectEndDate").value = project.end_date || "";
+              // Campos ocultos/removidos: presupuesto, prioridad, progreso
 
               // Mostrar modal
               const modal = new bootstrap.Modal(
@@ -1091,9 +1013,7 @@
               status: document.getElementById("editProjectStatus").value,
               start_date: document.getElementById("editProjectStartDate").value,
               end_date: document.getElementById("editProjectEndDate").value,
-              budget: document.getElementById("editProjectBudget").value,
-              priority: document.getElementById("editProjectPriority").value,
-              progress: document.getElementById("editProjectProgress").value,
+              // Campos removidos: budget, priority, progress
             };
 
             try {
@@ -1289,24 +1209,24 @@
                   : member.role_id === 2
                   ? "warning"
                   : "info";
+              const initials = (member.name || "?")
+                .split(" ")
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((w) => w.charAt(0).toUpperCase())
+                .join("") || "?";
               return `
                <div class="list-group-item d-flex justify-content-between align-items-center">
                  <div class="d-flex align-items-center">
                    <div class="mr-3">
-                     ${
-                       member.avatar
-                         ? `<img src="${member.avatar}" class="rounded-circle" width="40" height="40" alt="${member.name}">`
-                         : `<div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
-                         ${member.name.charAt(0).toUpperCase()}
-                       </div>`
-                     }
+                     <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
+                       ${initials}
+                     </div>
                    </div>
                    <div>
                      <div class="font-weight-bold">${member.name}</div>
                      <small class="text-muted">${member.email}</small>
-                     <span class="badge badge-${roleClass} ml-2">${
-                member.role_name
-              }</span>
+                     <span class="badge badge-${roleClass} ml-2">${member.role_name}</span>
                    </div>
                  </div>
                  <button 
@@ -1345,24 +1265,24 @@
                   : user.role_id === 2
                   ? "warning"
                   : "info";
+              const initials = (user.name || "?")
+                .split(" ")
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((w) => w.charAt(0).toUpperCase())
+                .join("") || "?";
               return `
                <div class="list-group-item d-flex justify-content-between align-items-center">
                  <div class="d-flex align-items-center">
                    <div class="mr-3">
-                     ${
-                       user.avatar
-                         ? `<img src="${user.avatar}" class="rounded-circle" width="40" height="40" alt="${user.name}">`
-                         : `<div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
-                         ${user.name.charAt(0).toUpperCase()}
-                       </div>`
-                     }
+                     <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
+                       ${initials}
+                     </div>
                    </div>
                    <div>
                      <div class="font-weight-bold">${user.name}</div>
                      <small class="text-muted">${user.email}</small>
-                     <span class="badge badge-${roleClass} ml-2">${
-                user.role_name
-              }</span>
+                     <span class="badge badge-${roleClass} ml-2">${user.role_name}</span>
                    </div>
                  </div>
                  <button 

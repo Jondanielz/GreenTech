@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Calendario - GreenTech</title>
+    <!-- plugins:css -->
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/mdi/css/materialdesignicons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/ti-icons/css/themify-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/css/vendor.bundle.base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/font-awesome/css/font-awesome.min.css"
+    />
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../../assets/images/favicon.png" />
+    <!-- Estilos personalizados para el calendario Gantt -->
+    <style>
+      .calendar-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin: 0;
+        overflow: hidden;
+      }
+
+      .calendar-header {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        overflow: hidden;
+      }
+
+      .calendar-title {
+        background: white;
+        color: #2c3e50;
+        padding: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .calendar-title h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .task-count {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .task-filters {
+        padding: 20px;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        background: white;
+      }
+
+      .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .filter-label {
+        font-weight: 600;
+        color: #495057;
+        font-size: 0.9rem;
+        min-width: 60px;
+      }
+
+      .filter-select {
+        padding: 8px 12px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-family: "Poppins", sans-serif;
+        background: white;
+        color: #495057;
+        min-width: 120px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease;
+      }
+
+      .filter-select:focus {
+        outline: none;
+        border-color: #57c785;
+        box-shadow: 0 0 0 3px rgba(87, 199, 133, 0.1);
+      }
+
+      .filter-btn {
+        padding: 8px 16px;
+        border: 1px solid #57c785;
+        border-radius: 8px;
+        background: white;
+        color: #57c785;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .filter-btn:hover {
+        background: #57c785;
+        color: white;
+      }
+
+      .filter-btn.clear {
+        border-color: #dc3545;
+        color: #dc3545;
+      }
+
+      .filter-btn.clear:hover {
+        background: #dc3545;
+        color: white;
+      }
+
+      .month-navigation {
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        background: #f8f9fa;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .nav-btn {
+        width: 40px;
+        height: 40px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background: white;
+        color: #495057;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .nav-btn:hover {
+        border-color: #57c785;
+        color: #57c785;
+      }
+
+      .month-display {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #2c3e50;
+      }
+
+      .timeline-header {
+        background: #f8f9fa;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 16px 0;
+      }
+
+      .timeline-grid {
+        display: grid;
+        grid-template-columns: 200px repeat(5, 1fr);
+        gap: 1px;
+        background: #e0e0e0;
+      }
+
+      .timeline-label {
+        background: #f8f9fa;
+        padding: 12px 16px;
+        font-weight: 600;
+        color: #495057;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .week-header {
+        background: #f8f9fa;
+        padding: 12px 8px;
+        text-align: center;
+        border-right: 1px solid #e0e0e0;
+      }
+
+      .week-title {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.9rem;
+      }
+
+      .week-dates {
+        font-size: 0.8rem;
+        color: #666;
+        margin-top: 4px;
+      }
+
+      .tasks-area {
+        background: white;
+        min-height: 400px;
+      }
+
+      .task-row {
+        display: flex;
+        background: #e0e0e0;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .task-info {
+        background: white;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 200px;
+        flex-shrink: 0;
+      }
+
+      .task-status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      .status-pendiente {
+        background: #ffc107;
+      }
+
+      .status-en-progreso {
+        background: #17a2b8;
+      }
+
+      .status-completada {
+        background: #28a745;
+      }
+
+      .status-critica {
+        background: #dc3545;
+      }
+
+      .task-name {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.9rem;
+      }
+
+      .task-chips {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .task-chip {
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 600;
+      }
+
+      .task-chip.status {
+        background: #e9ecef;
+        color: #495057;
+      }
+
+      .task-chip.progress {
+        background: #e3f2fd;
+        color: #1976d2;
+      }
+
+      .task-progress-bar {
+        width: 100%;
+        height: 4px;
+        background: #e9ecef;
+        border-radius: 2px;
+        overflow: hidden;
+      }
+
+      .task-progress-fill {
+        height: 100%;
+        border-radius: 2px;
+        transition: width 0.3s ease;
+      }
+
+      .gantt-bars {
+        background: #f8f9fa;
+        position: relative;
+        height: 40px;
+        border: 1px solid #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+        flex: 1;
+        display: flex;
+        align-items: center;
+      }
+
+      .gantt-bar {
+        position: absolute;
+        height: calc(100% - 4px);
+        border-radius: 4px;
+        top: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        min-width: 20px;
+        z-index: 2;
+      }
+
+      .gantt-bar:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .gantt-bar-progress {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        border-radius: 4px;
+        opacity: 0.8;
+        transition: all 0.3s ease;
+      }
+
+      .gantt-bar-progress:hover {
+        opacity: 1;
+        transform: scaleY(1.1);
+      }
+
+      .gantt-bar-percentage {
+        position: relative;
+        z-index: 1;
+      }
+
+      .gantt-bar-empty {
+        background: transparent;
+        height: 100%;
+        border: none;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+      }
+
+      .empty-state i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 16px;
+      }
+
+      .empty-state h3 {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+        color: #495057;
+      }
+
+      .empty-state p {
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .loading-spinner {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        color: #6c757d;
+      }
+
+      /* Estilos para el modal de logout */
+      .logout-icon-wrapper {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+      }
+
+      .logout-icon-wrapper i {
+        font-size: 24px;
+        color: white;
+      }
+
+      /* Ajustes para el layout del sistema */
+      .content-wrapper {
+        padding: 1.5rem;
+      }
+
+      .page-header {
+        margin-bottom: 1.5rem;
+      }
+
+      .calendar-container {
+        margin: 0;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .task-filters {
+        background: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        margin-bottom: 0;
+        padding: 1rem 1.5rem;
+      }
+
+      .timeline-header {
+        background: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+      }
+
+      .tasks-area {
+        background: white;
+        min-height: 400px;
+        max-height: 70vh;
+        overflow-y: auto;
+      }
+
+      /* Asegurar que el sidebar funcione correctamente */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 1000;
+      }
+
+      .main-panel {
+        width: calc(100% - 260px);
+        margin-left: 260px;
+        transition: all 0.3s ease;
+      }
+
+      @media (max-width: 991px) {
+        .main-panel {
+          width: 100%;
+          margin-left: 0;
+        }
+      }
+
+      /* Asegurar que el contenido del calendario se muestre */
+      .calendar-container {
+        position: relative;
+        z-index: 1;
+        background: white;
+        min-height: 500px;
+      }
+
+      /* Estilos para el footer */
+      #footer-container {
+        position: relative;
+        z-index: 1;
+        margin-top: auto;
+        background: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+        padding: 1rem 0;
+      }
+
+      .main-panel {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 60px); /* Altura total menos navbar */
+      }
+
+      .content-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 0;
+      }
+
+      .calendar-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 0;
+      }
+
+      .tasks-area {
+        flex: 1;
+        min-height: 400px;
+        max-height: calc(100vh - 400px);
+        overflow-y: auto;
+      }
+
+      /* Asegurar que el footer se mantenga en la parte inferior */
+      .container-scroller {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .page-body-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Ocultar cualquier contenido del dashboard que pueda estar interfiriendo */
+      .dashboard-content,
+      .dashboard-stats,
+      .dashboard-charts {
+        display: none !important;
+      }
+
+      @media (max-width: 768px) {
+        .calendar-container {
+          margin: 0;
+        }
+
+        .timeline-grid {
+          grid-template-columns: 150px repeat(3, 1fr);
+        }
+
+        .task-row {
+          grid-template-columns: 150px repeat(3, 1fr);
+        }
+
+        .task-filters {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 12px;
+        }
+
+        /* Ajustes del footer en móviles */
+        #footer-container {
+          padding: 0.5rem 0;
+          font-size: 0.8rem;
+        }
+
+        .main-panel {
+          min-height: calc(100vh - 50px);
+        }
+
+        .tasks-area {
+          max-height: calc(100vh - 300px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- Navbar Container -->
+      <nav
+        id="navbar-container"
+        class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row"
+      >
+        <!-- Cargando navbar... -->
+      </nav>
+
+      <div class="container-fluid page-body-wrapper">
+        <!-- Sidebar Container -->
+        <div id="sidebar-container">
+          <!-- Cargando sidebar... -->
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <!-- Page Header -->
+            <div class="page-header">
+              <h3 class="page-title">
+                <span
+                  class="page-title-icon bg-gradient-primary text-white me-2"
+                >
+                  <i class="mdi mdi-calendar"></i>
+                </span>
+                Calendario del Proyecto
+              </h3>
+              <nav aria-label="breadcrumb">
+                <ul class="breadcrumb">
+                  <li class="breadcrumb-item active" aria-current="page">
+                    <span id="taskCount" class="badge bg-primary"
+                      >0 de 0 tareas</span
+                    >
+                    <button
+                      class="btn btn-gradient-primary btn-sm ms-2"
+                      onclick="refreshCalendar()"
+                      title="Actualizar calendario"
+                      aria-label="Actualizar calendario"
+                    >
+                      <i class="mdi mdi-refresh"></i>
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+
+            <!-- Calendario Container -->
+            <div class="calendar-container">
+              <!-- Filtros de tareas -->
+              <div class="task-filters">
+                <div class="filter-group">
+                  <span class="filter-label">Estado:</span>
+                  <select
+                    class="filter-select"
+                    id="statusFilter"
+                    onchange="filterTasks()"
+                    title="Filtrar por estado"
+                    aria-label="Filtrar por estado"
+                  >
+                    <option value="all">Todos</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="En progreso">En Progreso</option>
+                    <option value="Completada">Completada</option>
+                  </select>
+                </div>
+
+                <div class="filter-group">
+                  <span class="filter-label">Prioridad:</span>
+                  <select
+                    class="filter-select"
+                    id="priorityFilter"
+                    onchange="filterTasks()"
+                    title="Filtrar por prioridad"
+                    aria-label="Filtrar por prioridad"
+                  >
+                    <option value="all">Todas</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Media">Media</option>
+                    <option value="Baja">Baja</option>
+                    <option value="Crítica">Crítica</option>
+                  </select>
+                </div>
+
+                <div class="filter-group">
+                  <span class="filter-label">Proyecto:</span>
+                  <select
+                    class="filter-select"
+                    id="projectFilter"
+                    onchange="filterTasks()"
+                    title="Filtrar por proyecto"
+                    aria-label="Filtrar por proyecto"
+                  >
+                    <option value="all">Todos</option>
+                  </select>
+                </div>
+
+                <button
+                  class="filter-btn"
+                  id="todayBtn"
+                  onclick="showTodayOnly()"
+                >
+                  <i class="mdi mdi-calendar-today"></i>
+                  Hoy
+                </button>
+
+                <button class="filter-btn clear" onclick="clearAllFilters()">
+                  <i class="mdi mdi-filter-remove"></i>
+                  Limpiar
+                </button>
+              </div>
+
+              <!-- Navegación de mes -->
+              <div class="month-navigation">
+                <button
+                  class="nav-btn"
+                  onclick="previousMonth()"
+                  title="Mes anterior"
+                  aria-label="Mes anterior"
+                >
+                  <i class="mdi mdi-chevron-left"></i>
+                </button>
+                <div class="month-display" id="monthDisplay">
+                  diciembre de 2025
+                </div>
+                <button
+                  class="nav-btn"
+                  onclick="nextMonth()"
+                  title="Mes siguiente"
+                  aria-label="Mes siguiente"
+                >
+                  <i class="mdi mdi-chevron-right"></i>
+                </button>
+              </div>
+              <!-- Timeline Header -->
+              <div class="timeline-header">
+                <div class="timeline-grid" id="timelineGrid">
+                  <div class="timeline-label">
+                    <i class="mdi mdi-clipboard-check"></i>
+                    Tareas
+                  </div>
+                </div>
+              </div>
+
+              <!-- Área de tareas -->
+              <div class="tasks-area" id="tasksArea">
+                <div class="empty-state">
+                  <i class="mdi mdi-clipboard-check"></i>
+                  <h3>No hay tareas</h3>
+                  <p>Las tareas aparecerán aquí cuando se agreguen</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loadingSpinner" class="loading-spinner">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+              <p class="mt-2">Cargando calendario...</p>
+            </div>
+          </div>
+
+          <!-- Footer Container -->
+          <div id="footer-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Logout -->
+    <div
+      class="modal fade"
+      id="logoutModal"
+      tabindex="-1"
+      aria-labelledby="logoutModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body text-center pt-0 px-4">
+            <div class="logout-icon-wrapper">
+              <i class="mdi mdi-logout"></i>
+            </div>
+            <h5 class="modal-title mb-2">Cerrar Sesión</h5>
+            <p class="text-muted mb-0">¿Estás seguro de que deseas salir?</p>
+          </div>
+          <div class="modal-footer border-0 justify-content-center pb-4 px-4">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-gradient-primary"
+              id="confirmLogoutBtn"
+            >
+              <i class="mdi mdi-check-circle me-1"></i>
+              Sí, salir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+    <script src="../../assets/js/off-canvas.js"></script>
+    <script src="../../assets/js/misc.js"></script>
+    <script src="../../assets/js/settings.js"></script>
+    <script src="../../assets/js/todolist.js"></script>
+
+    <!-- Componentes del sistema -->
+    <script type="module" src="../../utils/components-loader.js"></script>
+    <script type="module" src="../../services/auth.js"></script>
+    <script type="module" src="../../services/projects.js"></script>
+    <script type="module" src="../../services/tasks.js"></script>
+    <script type="module" src="../../services/calendar.js"></script>
+    <script type="module" src="../../utils/api-client.js"></script>
+
+    <!-- Script del calendario -->
+    <script type="module">
+      import { AuthService } from "../../services/auth.js";
+      import ProjectService from "../../services/projects.js";
+      import TaskService from "../../services/tasks.js";
+      import CalendarService from "../../services/calendar.js";
+      import ComponentsLoader from "../../utils/components-loader.js";
+
+      // Variables globales
+      let currentYear = 2025;
+      let currentMonthIndex = 11; // Diciembre (0-indexed)
+      let tasks = [];
+      let filteredTasks = [];
+
+      // Inicializar calendario
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeCalendar();
+      });
+
+      async function initializeCalendar() {
+        try {
+          showLoading(true);
+
+          // Verificar autenticación
+          if (!AuthService.isAuthenticated()) {
+            window.location.href =
+              "http://localhost/eco-app/GreenTech/src/views/auth/login.html";
+            return;
+          }
+
+          // Cargar componentes del sistema (sidebar, navbar, footer)
+          try {
+            console.log("🔄 Iniciando carga de componentes...");
+
+            // Usar ComponentsLoader estándar como en otras vistas
+            await ComponentsLoader.loadCommonComponents({
+              navbar: true,
+              sidebar: true,
+              footer: true,
+              basePath: "../../components/",
+            });
+
+            console.log("✅ Componentes cargados correctamente");
+
+            // Verificar si el sidebar se cargó, si no, cargarlo manualmente
+            let sidebarContainer = document.getElementById("sidebar-container");
+            if (!sidebarContainer || sidebarContainer.innerHTML.length < 50) {
+              console.log("🔄 Cargando sidebar manualmente...");
+              await loadSidebarManually();
+            }
+
+            // Verificar datos del usuario
+            const userData = AuthService.getCurrentUser();
+            console.log("👤 Datos del usuario:", userData);
+
+            // Verificar si los contenedores tienen contenido
+            const navbarContainer = document.getElementById("navbar-container");
+            sidebarContainer = document.getElementById("sidebar-container");
+            const footerContainer = document.getElementById("footer-container");
+
+            console.log("🔍 Estado de contenedores:");
+            console.log(
+              "- Navbar:",
+              navbarContainer
+                ? navbarContainer.innerHTML.length
+                : "No encontrado"
+            );
+            console.log(
+              "- Sidebar:",
+              sidebarContainer
+                ? sidebarContainer.innerHTML.length
+                : "No encontrado"
+            );
+            console.log(
+              "- Footer:",
+              footerContainer
+                ? footerContainer.innerHTML.length
+                : "No encontrado"
+            );
+
+            // Verificar contenido del sidebar
+            if (sidebarContainer) {
+              console.log(
+                "📋 Contenido del sidebar:",
+                sidebarContainer.innerHTML.substring(0, 200) + "..."
+              );
+            }
+          } catch (error) {
+            console.error("❌ Error al cargar componentes:", error);
+            console.warn("⚠️ Continuando sin componentes");
+          }
+
+          // Cargar datos según el rol del usuario
+          await loadCalendarData();
+
+          // Renderizar calendario
+          renderCalendar();
+
+          // Configurar filtros
+          setupFilters();
+
+          // Configurar logout después de un pequeño delay para asegurar que los componentes estén cargados
+          setTimeout(() => {
+            setupLogout();
+          }, 100);
+        } catch (error) {
+          console.error("Error al inicializar calendario:", error);
+          showError("Error al cargar el calendario");
+        } finally {
+          showLoading(false);
+        }
+      }
+
+      // Función para cargar sidebar manualmente si ComponentsLoader falla
+      async function loadSidebarManually() {
+        try {
+          const userData = AuthService.getCurrentUser();
+          let sidebarFile = "sidebar-admin.html"; // Default
+
+          if (userData) {
+            const roleId = userData.role_id;
+            const roleName = (userData.role_name || "").toLowerCase();
+
+            if (roleId === 1 || roleName.includes("admin")) {
+              sidebarFile = "sidebar-admin.html";
+            } else if (roleId === 2 || roleName.includes("coordinador")) {
+              sidebarFile = "sidebar-coordinador.html";
+            } else if (roleId === 3 || roleName.includes("participante")) {
+              sidebarFile = "sidebar-participante.html";
+            }
+          }
+
+          console.log(`📁 Cargando sidebar: ${sidebarFile}`);
+
+          const response = await fetch(`../../components/${sidebarFile}`);
+          if (response.ok) {
+            const sidebarHTML = await response.text();
+            const sidebarContainer =
+              document.getElementById("sidebar-container");
+            if (sidebarContainer) {
+              sidebarContainer.innerHTML = sidebarHTML;
+              console.log("✅ Sidebar cargado manualmente");
+            }
+          } else {
+            console.error("❌ Error al cargar sidebar:", response.status);
+          }
+        } catch (error) {
+          console.error("❌ Error en loadSidebarManually:", error);
+        }
+      }
+
+      // Configurar funcionalidad de logout
+      function setupLogout() {
+        console.log("🔧 Configurando funcionalidad de logout...");
+
+        // Configurar logout
+        const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+        if (confirmLogoutBtn) {
+          console.log("✅ Botón de confirmación de logout encontrado");
+          confirmLogoutBtn.addEventListener("click", async () => {
+            try {
+              const logoutModal = bootstrap.Modal.getInstance(
+                document.getElementById("logoutModal")
+              );
+              if (logoutModal) logoutModal.hide();
+
+              confirmLogoutBtn.innerHTML =
+                '<i class="mdi mdi-loading mdi-spin"></i> Cerrando...';
+              confirmLogoutBtn.disabled = true;
+
+              // Llamar al logout del AuthService
+              await AuthService.logout();
+
+              console.log("✅ Logout exitoso, redirigiendo al login...");
+            } catch (error) {
+              console.error("❌ Error en logout:", error);
+              // Aún así, limpiar localStorage y redirigir
+              localStorage.removeItem("authToken");
+              localStorage.removeItem("userData");
+              window.location.href =
+                "http://localhost/eco-app/GreenTech/src/views/auth/login.html";
+            }
+          });
+        } else {
+          console.warn("⚠️ Botón de confirmación de logout no encontrado");
+        }
+
+        // Configurar botón de logout en navbar
+        const navbarLogoutBtn = document.getElementById("navbarLogoutBtn");
+        if (navbarLogoutBtn) {
+          console.log("✅ Botón de logout en navbar encontrado");
+          navbarLogoutBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            const logoutModal = new bootstrap.Modal(
+              document.getElementById("logoutModal")
+            );
+            logoutModal.show();
+          });
+        } else {
+          console.warn("⚠️ Botón de logout en navbar no encontrado");
+        }
+
+        // Verificar si el sidebar se cargó correctamente
+        const sidebarContainer = document.getElementById("sidebar-container");
+        if (sidebarContainer && sidebarContainer.innerHTML.length > 50) {
+          console.log("✅ Sidebar cargado correctamente");
+        } else {
+          console.warn("⚠️ Sidebar no se cargó correctamente");
+        }
+      }
+
+      async function loadCalendarData() {
+        try {
+          // Cargar datos del calendario usando el nuevo servicio
+          const calendarResponse = await CalendarService.getCalendarData();
+
+          if (calendarResponse.success) {
+            tasks = calendarResponse.data.tasks || [];
+          } else {
+            // Si hay error, usar datos de prueba
+            console.warn("Usando datos de prueba para el calendario");
+            tasks = [
+              {
+                id: 1,
+                title: "Tarea de ejemplo 1",
+                status: "Pendiente",
+                priority: "Alta",
+                due_date: "2025-01-15",
+                project_name: "Proyecto Demo",
+              },
+              {
+                id: 2,
+                title: "Tarea de ejemplo 2",
+                status: "En progreso",
+                priority: "Media",
+                due_date: "2025-01-20",
+                project_name: "Proyecto Demo",
+              },
+              {
+                id: 3,
+                title: "Tarea de ejemplo 3",
+                status: "Completada",
+                priority: "Baja",
+                due_date: "2025-01-10",
+                project_name: "Proyecto Demo",
+              },
+            ];
+          }
+
+          // Aplicar filtros iniciales
+          filteredTasks = [...tasks];
+
+          // Actualizar contador
+          updateTaskCount();
+        } catch (error) {
+          console.error("Error al cargar datos:", error);
+          // Usar datos de prueba en caso de error
+          // Generar fechas dinámicas para las tareas de prueba
+          const today = new Date();
+          const nextWeek = new Date(today);
+          nextWeek.setDate(today.getDate() + 7);
+          const twoWeeksLater = new Date(today);
+          twoWeeksLater.setDate(today.getDate() + 14);
+          const threeWeeksLater = new Date(today);
+          threeWeeksLater.setDate(today.getDate() + 21);
+
+          tasks = [
+            {
+              id: 1,
+              title: "Instalación de sensores IoT",
+              description: "Configurar sensores de temperatura y humedad",
+              status: "En progreso",
+              priority: "Alta",
+              start_date: new Date(today.getTime() - 3 * 24 * 60 * 60 * 1000)
+                .toISOString()
+                .split("T")[0],
+              due_date: nextWeek.toISOString().split("T")[0],
+              project_name: "Reforestación Urbana",
+              progress: 65,
+            },
+            {
+              id: 2,
+              title: "Análisis de datos ambientales",
+              description: "Procesar datos recopilados de los sensores",
+              status: "Pendiente",
+              priority: "Media",
+              start_date: nextWeek.toISOString().split("T")[0],
+              due_date: twoWeeksLater.toISOString().split("T")[0],
+              project_name: "Energía Solar Comunitaria",
+              progress: 0,
+            },
+            {
+              id: 3,
+              title: "Implementación de paneles solares",
+              description: "Instalación de sistema de energía renovable",
+              status: "Completada",
+              priority: "Crítica",
+              start_date: new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000)
+                .toISOString()
+                .split("T")[0],
+              due_date: new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
+                .toISOString()
+                .split("T")[0],
+              project_name: "Energía Solar Comunitaria",
+              progress: 100,
+            },
+            {
+              id: 4,
+              title: "Plantación de árboles nativos",
+              description: "Sembrar 100 árboles en el parque central",
+              status: "En progreso",
+              priority: "Alta",
+              start_date: new Date(today.getTime() - 5 * 24 * 60 * 60 * 1000)
+                .toISOString()
+                .split("T")[0],
+              due_date: threeWeeksLater.toISOString().split("T")[0],
+              project_name: "Reforestación Urbana",
+              progress: 30,
+            },
+          ];
+          filteredTasks = [...tasks];
+          updateTaskCount();
+        }
+      }
+
+      // Generar semanas para el mes actual
+      function generateWeeksForMonth(year, monthIndex) {
+        const monthStart = new Date(year, monthIndex, 1);
+        const monthEnd = new Date(year, monthIndex + 1, 0);
+        const weeks = [];
+
+        // Obtener tareas para determinar el rango de fechas
+        const calendarTasks = getTasksForCalendar();
+        let extendedStart = new Date(monthStart);
+        let extendedEnd = new Date(monthEnd);
+
+        // Opción para limitar la extensión (cambiar a false para deshabilitar extensión)
+        const enableExtension = true;
+
+        // Extender el rango solo ligeramente si hay tareas que empiezan antes o terminan después
+        if (enableExtension && calendarTasks.length > 0) {
+          const taskDates = calendarTasks
+            .map((task) => {
+              const startDate = parseTaskDate(
+                task.start_date || task.created_at
+              );
+              const endDate = parseTaskDate(task.due_date);
+              return { startDate, endDate };
+            })
+            .filter((dates) => dates.startDate && dates.endDate);
+
+          if (taskDates.length > 0) {
+            const earliestStart = new Date(
+              Math.min(...taskDates.map((d) => d.startDate.getTime()))
+            );
+            const latestEnd = new Date(
+              Math.max(...taskDates.map((d) => d.endDate.getTime()))
+            );
+
+            // Solo extender si las tareas están muy cerca del mes (dentro de 1 semana)
+            const oneWeek = 7 * 24 * 60 * 60 * 1000; // 7 días en milisegundos
+
+            // Solo extender hacia atrás si hay tareas que empiezan dentro de 1 semana antes del mes
+            if (
+              earliestStart.getTime() < monthStart.getTime() &&
+              monthStart.getTime() - earliestStart.getTime() <= oneWeek
+            ) {
+              extendedStart = new Date(earliestStart);
+            }
+
+            // Solo extender hacia adelante si hay tareas que terminan dentro de 1 semana después del mes
+            if (
+              latestEnd.getTime() > monthEnd.getTime() &&
+              latestEnd.getTime() - monthEnd.getTime() <= oneWeek
+            ) {
+              extendedEnd = new Date(latestEnd);
+            }
+          }
+        }
+
+        let currentWeekStart = new Date(extendedStart);
+        // Ajustar al lunes de la semana
+        const dayOfWeek = currentWeekStart.getDay();
+        const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+        currentWeekStart.setDate(currentWeekStart.getDate() - daysToMonday);
+
+        // Generar semanas hasta cubrir el rango extendido
+        while (currentWeekStart <= extendedEnd) {
+          const weekEnd = new Date(currentWeekStart);
+          weekEnd.setDate(weekEnd.getDate() + 6);
+
+          weeks.push({
+            start: formatDate(currentWeekStart),
+            end: formatDate(weekEnd),
+            startDate: new Date(currentWeekStart),
+            endDate: new Date(weekEnd),
+          });
+
+          currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+        }
+
+        console.log(
+          "📅 Semanas generadas:",
+          weeks.length,
+          "semanas desde",
+          formatDate(extendedStart),
+          "hasta",
+          formatDate(extendedEnd)
+        );
+
+        return weeks;
+      }
+
+      // Formatear fecha
+      function formatDate(date) {
+        const day = date.getDate().toString().padStart(2, "0");
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        return `${day}/${month}`;
+      }
+
+      // Obtener tareas para el calendario
+      function getTasksForCalendar() {
+        const monthStart = new Date(currentYear, currentMonthIndex, 1);
+        const monthEnd = new Date(currentYear, currentMonthIndex + 1, 0);
+
+        return filteredTasks.filter((task) => {
+          // Obtener fechas de inicio y fin de la tarea
+          const taskStartDate = parseTaskDate(
+            task.start_date || task.created_at
+          );
+          const taskEndDate = parseTaskDate(task.due_date);
+
+          if (!taskStartDate || !taskEndDate) return false;
+
+          // Incluir tarea si intersecta con el mes actual
+          // La tarea intersecta si:
+          // - Comienza antes del final del mes Y termina después del inicio del mes
+          const intersects =
+            taskStartDate <= monthEnd && taskEndDate >= monthStart;
+
+          if (intersects) {
+            console.log("📅 Tarea incluida en calendario:", task.title, {
+              start: taskStartDate.toISOString().split("T")[0],
+              end: taskEndDate.toISOString().split("T")[0],
+              month: `${currentYear}-${(currentMonthIndex + 1)
+                .toString()
+                .padStart(2, "0")}`,
+            });
+          }
+
+          return intersects;
+        });
+      }
+
+      // Parsear fecha de tarea
+      function parseTaskDate(dateString) {
+        if (!dateString) return null;
+
+        // Formato yyyy-mm-dd
+        const date = new Date(dateString);
+        return isNaN(date.getTime()) ? null : date;
+      }
+
+      // Renderizar calendario
+      function renderCalendar() {
+        console.log("🔄 Renderizando calendario...");
+        console.log("Tareas disponibles:", tasks);
+        console.log("Tareas filtradas:", filteredTasks);
+
+        const monthNames = [
+          "enero",
+          "febrero",
+          "marzo",
+          "abril",
+          "mayo",
+          "junio",
+          "julio",
+          "agosto",
+          "septiembre",
+          "octubre",
+          "noviembre",
+          "diciembre",
+        ];
+
+        const currentMonthName = monthNames[currentMonthIndex];
+        const weeks = generateWeeksForMonth(currentYear, currentMonthIndex);
+        const calendarTasks = getTasksForCalendar();
+
+        console.log("Semanas generadas:", weeks);
+        console.log("Tareas del calendario:", calendarTasks);
+
+        // Actualizar display del mes
+        const monthDisplay = document.getElementById("monthDisplay");
+        if (monthDisplay) {
+          monthDisplay.textContent = `${currentMonthName} de ${currentYear}`;
+        }
+
+        // Actualizar contador de tareas
+        const taskCount = document.getElementById("taskCount");
+        if (taskCount) {
+          taskCount.textContent = `${calendarTasks.length} de ${tasks.length} tareas`;
+        }
+
+        // Renderizar timeline header
+        const timelineGrid = document.getElementById("timelineGrid");
+        if (timelineGrid) {
+          timelineGrid.innerHTML = `
+            <div class="timeline-label">
+              <i class="mdi mdi-clipboard-check"></i>
+              Tareas
+            </div>
+            ${weeks
+              .map(
+                (week, index) => `
+              <div class="week-header">
+                <div class="week-title">Semana ${index + 1}</div>
+                <div class="week-dates">${week.start} - ${week.end}</div>
+              </div>
+            `
+              )
+              .join("")}
+          `;
+        }
+
+        // Renderizar tareas
+        const tasksArea = document.getElementById("tasksArea");
+        if (tasksArea) {
+          if (calendarTasks.length > 0) {
+            console.log("Renderizando tareas en Gantt...");
+            tasksArea.innerHTML = calendarTasks
+              .map((task) => renderTaskInGantt(task, weeks))
+              .join("");
+          } else {
+            console.log("Mostrando estado vacío...");
+            tasksArea.innerHTML = `
+              <div class="empty-state">
+                <i class="mdi mdi-clipboard-check"></i>
+                <h3>No hay tareas</h3>
+                <p>Las tareas aparecerán aquí cuando se agreguen</p>
+              </div>
+            `;
+          }
+        }
+
+        console.log("✅ Calendario renderizado correctamente");
+      }
+
+      // Renderizar tarea en Gantt
+      function renderTaskInGantt(task, weeks) {
+        // Usar fecha de inicio si existe, sino fecha de creación
+        const taskStartDate = parseTaskDate(task.start_date || task.created_at);
+        // Usar fecha de culminación (due_date) como fecha final
+        const taskEndDate = parseTaskDate(task.due_date);
+
+        if (!taskStartDate || !taskEndDate) {
+          console.log("⚠️ Tarea sin fechas válidas:", task.title, {
+            start_date: task.start_date,
+            created_at: task.created_at,
+            due_date: task.due_date,
+          });
+          return "";
+        }
+
+        // Verificar que la fecha de inicio sea anterior a la fecha de culminación
+        if (taskStartDate >= taskEndDate) {
+          console.log(
+            "⚠️ Fecha de inicio posterior a fecha de culminación:",
+            task.title
+          );
+          return "";
+        }
+
+        // Encontrar semanas que intersectan con la tarea
+        const intersectingWeeks = [];
+        for (let i = 0; i < weeks.length; i++) {
+          const weekStart = weeks[i].startDate;
+          const weekEnd = weeks[i].endDate;
+
+          // Verificar si la tarea intersecta con esta semana
+          if (taskStartDate <= weekEnd && taskEndDate >= weekStart) {
+            intersectingWeeks.push({
+              weekIndex: i,
+              startDate: new Date(
+                Math.max(taskStartDate.getTime(), weekStart.getTime())
+              ),
+              endDate: new Date(
+                Math.min(taskEndDate.getTime(), weekEnd.getTime())
+              ),
+            });
+          }
+        }
+
+        if (intersectingWeeks.length === 0) {
+          console.log("⚠️ Tarea no intersecta con ninguna semana:", task.title);
+          return "";
+        }
+
+        const statusClass = getStatusClass(task.status);
+        const progress = calculateTaskProgress(task);
+
+        console.log("📊 Renderizando tarea:", task.title, {
+          start: taskStartDate.toISOString().split("T")[0],
+          end: taskEndDate.toISOString().split("T")[0],
+          weeks: intersectingWeeks.length,
+          progress: progress + "%",
+        });
+
+        // Calcular la posición y ancho de la barra a través de todo el timeline
+        const firstWeek = weeks[0];
+        const lastWeek = weeks[weeks.length - 1];
+        const totalTimelineStart = firstWeek.startDate;
+        const totalTimelineEnd = lastWeek.endDate;
+        const totalTimelineDuration = totalTimelineEnd - totalTimelineStart;
+
+        // Calcular posición y ancho de la barra completa
+        const leftPosition = Math.max(
+          0,
+          ((taskStartDate - totalTimelineStart) / totalTimelineDuration) * 100
+        );
+        const rightPosition = Math.min(
+          100,
+          ((taskEndDate - totalTimelineStart) / totalTimelineDuration) * 100
+        );
+        const width = Math.max(2, rightPosition - leftPosition);
+
+        // Calcular la posición del progreso dentro de la barra
+        const progressPosition = calculateProgressPosition(
+          task,
+          taskStartDate,
+          taskEndDate,
+          totalTimelineStart,
+          totalTimelineEnd
+        );
+
+        const ganttBars = `
+          <div class="gantt-bar ${statusClass}" style="left: ${leftPosition}%; width: ${width}%;">
+            <div class="gantt-bar-progress" style="left: ${progressPosition.left}%; width: ${progressPosition.width}%; background: linear-gradient(90deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.3) 100%);"></div>
+            <div class="gantt-bar-percentage">${progress}%</div>
+          </div>
+        `;
+
+        return `
+          <div class="task-row">
+            <div class="task-info">
+              <div class="task-status-indicator ${statusClass}"></div>
+              <div class="task-name">${task.title}</div>
+              <div class="task-chips">
+                <div class="task-chip status ${statusClass}">${task.status}</div>
+                <div class="task-chip progress">${progress}%</div>
+              </div>
+              <div class="task-progress-bar">
+                <div class="task-progress-fill ${statusClass}" style="width: ${progress}%;"></div>
+              </div>
+            </div>
+            <div class="gantt-bars">
+              ${ganttBars}
+            </div>
+          </div>
+        `;
+      }
+
+      // Obtener clase de estado
+      function getStatusClass(status) {
+        const statusMap = {
+          Pendiente: "status-pendiente",
+          "En progreso": "status-en-progreso",
+          Completada: "status-completada",
+          Crítica: "status-critica",
+        };
+        return statusMap[status] || "status-pendiente";
+      }
+
+      // Calcular progreso de tarea
+      function calculateTaskProgress(task) {
+        // Si la tarea tiene un campo de progreso específico, usarlo
+        if (task.progress !== undefined && task.progress !== null) {
+          return Math.max(0, Math.min(100, parseInt(task.progress)));
+        }
+
+        // Si no, calcular basado en el estado y fechas
+        const progressMap = {
+          Pendiente: 0,
+          "En progreso": 50,
+          Completada: 100,
+        };
+
+        let baseProgress = progressMap[task.status] || 0;
+
+        // Calcular progreso basado en fechas si tenemos start_date y due_date
+        if (task.start_date && task.due_date) {
+          const startDate = parseTaskDate(task.start_date);
+          const dueDate = parseTaskDate(task.due_date);
+          const currentDate = new Date();
+
+          if (startDate && dueDate) {
+            const totalDuration = dueDate - startDate;
+            const elapsed = currentDate - startDate;
+
+            // Calcular progreso temporal (0-100%)
+            const timeProgress = Math.max(
+              0,
+              Math.min(100, (elapsed / totalDuration) * 100)
+            );
+
+            // Ajustar según el estado de la tarea
+            if (task.status === "Pendiente") {
+              // Para tareas pendientes, mostrar progreso temporal pero limitado
+              baseProgress = Math.min(25, timeProgress);
+            } else if (task.status === "En progreso") {
+              // Para tareas en progreso, usar progreso temporal con límites
+              baseProgress = Math.max(25, Math.min(90, timeProgress));
+            } else if (task.status === "Completada") {
+              // Para tareas completadas, siempre 100%
+              baseProgress = 100;
+            }
+
+            // Si la tarea está atrasada (fecha actual > fecha de culminación)
+            if (currentDate > dueDate && task.status !== "Completada") {
+              baseProgress = Math.min(95, timeProgress); // Máximo 95% si está atrasada
+            }
+          }
+        }
+
+        return Math.round(baseProgress);
+      }
+
+      // Calcular la posición del progreso dentro de un segmento de la tarea
+      function calculateProgressPosition(
+        task,
+        taskStartDate,
+        taskEndDate,
+        weekStart,
+        weekEnd
+      ) {
+        const currentDate = new Date();
+
+        if (!taskStartDate || !taskEndDate) {
+          return { left: 0, width: 0 };
+        }
+
+        // Calcular la duración total de la tarea
+        const totalTaskDuration = taskEndDate - taskStartDate;
+
+        // Calcular cuánto tiempo ha pasado desde el inicio de la tarea hasta ahora
+        const elapsedTime = Math.max(0, currentDate - taskStartDate);
+
+        // Calcular el progreso temporal (0-1)
+        const temporalProgress = Math.min(1, elapsedTime / totalTaskDuration);
+
+        // Calcular la duración de la semana
+        const weekDuration = weekEnd - weekStart;
+
+        // Calcular dónde termina el progreso en esta semana específica
+        const progressEndTime =
+          taskStartDate.getTime() + totalTaskDuration * temporalProgress;
+        const weekStartTime = weekStart.getTime();
+        const weekEndTime = weekEnd.getTime();
+
+        // Calcular la posición del progreso dentro de la semana
+        const progressStartInWeek = Math.max(
+          0,
+          taskStartDate.getTime() - weekStartTime
+        );
+        const progressEndInWeek = Math.min(
+          weekDuration,
+          progressEndTime - weekStartTime
+        );
+
+        // Si el progreso no ha llegado a esta semana, no mostrar nada
+        if (progressEndInWeek <= progressStartInWeek) {
+          return { left: 0, width: 0 };
+        }
+
+        // Convertir a porcentajes dentro de la semana
+        const leftPercent = (progressStartInWeek / weekDuration) * 100;
+        const widthPercent =
+          Math.max(
+            0,
+            (progressEndInWeek - progressStartInWeek) / weekDuration
+          ) * 100;
+
+        return {
+          left: Math.max(0, Math.min(100, leftPercent)),
+          width: Math.max(0, Math.min(100, widthPercent)),
+        };
+      }
+
+      function setupFilters() {
+        // Cargar proyectos en el filtro
+        const projectFilter = document.getElementById("projectFilter");
+        const uniqueProjects = [
+          ...new Set(tasks.map((t) => t.project_name).filter(Boolean)),
+        ];
+
+        uniqueProjects.forEach((projectName) => {
+          const option = document.createElement("option");
+          option.value = projectName;
+          option.textContent = projectName;
+          projectFilter.appendChild(option);
+        });
+      }
+
+      // Filtrar tareas
+      function filterTasks() {
+        const statusFilter = document.getElementById("statusFilter").value;
+        const priorityFilter = document.getElementById("priorityFilter").value;
+        const projectFilter = document.getElementById("projectFilter").value;
+
+        filteredTasks = tasks.filter((task) => {
+          const statusMatch =
+            statusFilter === "all" || task.status === statusFilter;
+          const priorityMatch =
+            priorityFilter === "all" || task.priority === priorityFilter;
+          const projectMatch =
+            projectFilter === "all" || task.project_name === projectFilter;
+          return statusMatch && priorityMatch && projectMatch;
+        });
+
+        renderCalendar();
+      }
+
+      // Mostrar solo hoy
+      function showTodayOnly() {
+        const today = new Date();
+        const todayString = today.toISOString().split("T")[0]; // Formato yyyy-mm-dd
+
+        filteredTasks = tasks.filter((task) => {
+          if (!task.due_date) return false;
+          return task.due_date === todayString;
+        });
+
+        renderCalendar();
+      }
+
+      // Limpiar filtros
+      function clearAllFilters() {
+        document.getElementById("statusFilter").value = "all";
+        document.getElementById("priorityFilter").value = "all";
+        document.getElementById("projectFilter").value = "all";
+        filteredTasks = [...tasks];
+        renderCalendar();
+      }
+
+      // Mes anterior
+      function previousMonth() {
+        currentMonthIndex--;
+        if (currentMonthIndex < 0) {
+          currentMonthIndex = 11;
+          currentYear--;
+        }
+        renderCalendar();
+      }
+
+      // Mes siguiente
+      function nextMonth() {
+        currentMonthIndex++;
+        if (currentMonthIndex > 11) {
+          currentMonthIndex = 0;
+          currentYear++;
+        }
+        renderCalendar();
+      }
+
+      function updateTaskCount() {
+        const taskCount = filteredTasks.length;
+        document.getElementById(
+          "taskCount"
+        ).textContent = `${taskCount} de ${tasks.length} tareas`;
+      }
+
+      function refreshCalendar() {
+        initializeCalendar();
+      }
+
+      function showLoading(show) {
+        const spinner = document.getElementById("loadingSpinner");
+
+        if (show) {
+          spinner.style.display = "flex";
+        } else {
+          spinner.style.display = "none";
+        }
+      }
+
+      function showError(message) {
+        console.error(message);
+        // Aquí podrías mostrar un toast o modal de error
+      }
+
+      // Exportar funciones globales
+      window.refreshCalendar = refreshCalendar;
+      window.filterTasks = filterTasks;
+      window.clearAllFilters = clearAllFilters;
+      window.showTodayOnly = showTodayOnly;
+      window.previousMonth = previousMonth;
+      window.nextMonth = nextMonth;
+    </script>
+  </body>
+</html>

@@ -134,7 +134,9 @@
             `;
             }
             // alert(chart.data.datasets[0].backgroundColor);
-            return document.getElementById(legendId).appendChild(ul);
+            const legendEl = document.getElementById(legendId);
+            if (legendEl) { return legendEl.appendChild(ul); }
+            return null;
           },
         },
       ],
@@ -237,7 +239,9 @@
                 </li>
               `;
             }
-            return document.getElementById(legendId).appendChild(ul);
+            const legendEl = document.getElementById(legendId);
+            if (legendEl) { return legendEl.appendChild(ul); }
+            return null;
           },
         },
       ],

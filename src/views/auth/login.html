@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
@@ -7,7 +7,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <title>Purple Admin</title>
+    <title>Iniciar Sesión - GreenTech</title>
     <!-- plugins:css -->
     <link
       rel="stylesheet"
@@ -38,18 +38,25 @@
   <body>
     <div class="container-scroller">
       <div class="container-fluid page-body-wrapper full-page-wrapper">
-        <div class="content-wrapper d-flex align-items-center auth">
+        <div class="content-wrapper d-flex align-items-center auth" style="min-height: 100vh; background: linear-gradient(135deg, #57c785 0%, #62a984 100%);">
           <div class="row flex-grow">
             <div class="col-lg-4 mx-auto">
-              <div class="auth-form-light text-left p-5">
-                <div class="brand-logo">
+              <div class="auth-form-light text-left p-5 shadow" style="border-radius: 16px; background: #ffffff;">
+                <div class="brand-logo mb-4">
                   <img
                     src="../../assets/images/logo.svg"
-                    alt="Logo Purple Admin"
+                    alt="Logo GreenTech"
                   />
                 </div>
-                <h4>Hello! let's get started</h4>
-                <h6 class="font-weight-light">Sign in to continue.</h6>
+                
+                <!-- Avatar centrado -->
+                <div class="text-center mb-4">
+                  <div class="user-avatar-circle mx-auto mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, #57c785 0%, #62a984 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(87, 199, 133, 0.3);">
+                    <i class="mdi mdi-account text-white" style="font-size: 2.5rem;"></i>
+                  </div>
+                  <h4 class="mb-1" style="color:#2c3e50;">¡Bienvenido!</h4>
+                  <h6 class="font-weight-light mb-4" style="color:#6c757d;">Inicia sesión para continuar</h6>
+                </div>
 
                 <!-- Mensaje de error -->
                 <div
@@ -59,54 +66,56 @@
                   role="alert"
                 ></div>
 
-                <form class="pt-3" id="loginForm">
+                <form class="pt-2" id="loginForm">
                   <div class="form-group">
-                    <input
-                      type="text"
-                      class="form-control form-control-lg"
-                      id="username"
-                      name="username"
-                      placeholder="Usuario"
-                      required
-                      autocomplete="username"
-                    />
+                    <div class="input-group">
+                      <span class="input-group-text bg-light border-end-0">
+                        <i class="mdi mdi-account text-muted"></i>
+                      </span>
+                      <input
+                        type="text"
+                        class="form-control form-control-lg border-start-0"
+                        id="username"
+                        name="username"
+                        placeholder="Correo o usuario"
+                        required
+                        autocomplete="username"
+                      />
+                    </div>
                   </div>
                   <div class="form-group">
-                    <input
-                      type="password"
-                      class="form-control form-control-lg"
-                      id="password"
-                      name="password"
-                      placeholder="Contraseña"
-                      required
-                      autocomplete="current-password"
-                    />
+                    <div class="input-group">
+                      <span class="input-group-text bg-light border-end-0">
+                        <i class="mdi mdi-lock text-muted"></i>
+                      </span>
+                      <input
+                        type="password"
+                        class="form-control form-control-lg border-start-0 border-end-0"
+                        id="password"
+                        name="password"
+                        placeholder="Contraseña"
+                        required
+                        autocomplete="current-password"
+                      />
+                      <button
+                        type="button"
+                        class="input-group-text bg-light border-start-0"
+                        id="togglePassword"
+                        style="cursor: pointer;"
+                      >
+                        <i class="mdi mdi-eye text-muted" id="passwordIcon"></i>
+                      </button>
+                    </div>
                   </div>
                   <div class="mt-2 d-grid gap-2 pt-2">
                     <button
                       type="submit"
-                      class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn"
+                      class="btn btn-block btn-success btn-lg font-weight-medium auth-form-btn d-flex align-items-center justify-content-center"
                       id="loginButton"
+                      style="border-radius: 12px;"
                     >
-                      SIGN IN
+                      <i class="mdi mdi-login me-2"></i>Ingresar
                     </button>
-                  </div>
-                  <div
-                    class="my-2 d-flex justify-content-between align-items-center"
-                  >
-                    <div class="form-check">
-                      <label class="form-check-label text-muted">
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          id="rememberMe"
-                        />
-                        Keep me signed in
-                      </label>
-                    </div>
-                    <a href="#" class="auth-link text-black"
-                      >Forgot password?</a
-                    >
                   </div>
                 </form>
               </div>
@@ -164,8 +173,7 @@
 
           // Deshabilitar botón y mostrar loading
           loginButton.disabled = true;
-          loginButton.innerHTML =
-            '<i class="mdi mdi-loading mdi-spin"></i> Ingresando...';
+          loginButton.innerHTML = '<i class="mdi mdi-loading mdi-spin"></i> Ingresando...';
 
           try {
             console.log("🔐 Intentando login con:", username);
@@ -180,11 +188,7 @@
               errorDiv.textContent = "¡Bienvenido! Redirigiendo...";
               errorDiv.style.display = "block";
 
-              // Guardar "Remember me" si está marcado
-              const rememberMe = document.getElementById("rememberMe").checked;
-              if (rememberMe) {
-                localStorage.setItem("rememberMe", "true");
-              }
+              // Remember me removido
 
               // Redirigir al dashboard después de 500ms
               setTimeout(() => {
@@ -200,7 +204,7 @@
 
               // Re-habilitar botón
               loginButton.disabled = false;
-              loginButton.textContent = "SIGN IN";
+              loginButton.textContent = "Ingresar";
             }
           } catch (error) {
             console.error("💥 Error en login:", error);
@@ -211,7 +215,7 @@
 
             // Re-habilitar botón
             loginButton.disabled = false;
-            loginButton.textContent = "SIGN IN";
+            loginButton.textContent = "Ingresar";
           }
         });
 
@@ -222,6 +226,20 @@
 
       document.getElementById("password").addEventListener("input", () => {
         document.getElementById("errorMessage").style.display = "none";
+      });
+
+      // Toggle password visibility
+      document.getElementById("togglePassword").addEventListener("click", function() {
+        const passwordInput = document.getElementById("password");
+        const passwordIcon = document.getElementById("passwordIcon");
+        
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          passwordIcon.className = "mdi mdi-eye-off text-muted";
+        } else {
+          passwordInput.type = "password";
+          passwordIcon.className = "mdi mdi-eye text-muted";
+        }
       });
 
       console.log("🚀 Login page loaded - Ready to authenticate!");

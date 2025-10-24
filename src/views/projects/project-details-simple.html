@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Detalles del Proyecto - GreenTech</title>
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/mdi/css/materialdesignicons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/ti-icons/css/themify-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/css/vendor.bundle.base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendors/font-awesome/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="../../assets/css/style.css" />
+    <link rel="shortcut icon" href="../../assets/images/favicon.png" />
+    <style>
+      /* ESTILOS SIMPLES PARA SCROLLBARS FUNCIONALES */
+      .gantt-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e0e0e0;
+        height: 500px;
+        width: 100%;
+        overflow: scroll; /* SCROLL FORZADO */
+        position: relative;
+      }
+
+      /* SCROLLBARS VISIBLES Y FUNCIONALES */
+      .gantt-container::-webkit-scrollbar {
+        width: 15px;
+        height: 15px;
+      }
+
+      .gantt-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+
+      .gantt-container::-webkit-scrollbar-thumb {
+        background: #007bff;
+        border-radius: 10px;
+        border: 2px solid #f1f1f1;
+      }
+
+      .gantt-container::-webkit-scrollbar-thumb:hover {
+        background: #0056b3;
+      }
+
+      .gantt-container::-webkit-scrollbar-corner {
+        background: #f1f1f1;
+      }
+
+      /* CONTENIDO DEL GANTT */
+      .gantt-content {
+        width: 2000px; /* FORZAR ANCHO PARA ACTIVAR SCROLL */
+        height: 800px; /* FORZAR ALTO PARA ACTIVAR SCROLL */
+        background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
+          linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
+          linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+        background-size: 20px 20px;
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        position: relative;
+      }
+
+      .gantt-timeline {
+        background: #f8f9fa;
+        padding: 10px;
+        border-bottom: 2px solid #dee2e6;
+        font-weight: 600;
+        color: #495057;
+      }
+
+      .gantt-tasks {
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .gantt-task-list {
+        width: 300px;
+        background: white;
+        border-radius: 6px;
+        padding: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .gantt-task-item {
+        padding: 10px;
+        margin-bottom: 10px;
+        background: #f8f9fa;
+        border-radius: 4px;
+        border-left: 4px solid #007bff;
+      }
+
+      .gantt-chart {
+        flex: 1;
+        background: white;
+        border-radius: 6px;
+        padding: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+        min-height: 400px;
+      }
+
+      .gantt-task-bar {
+        position: absolute;
+        height: 30px;
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .gantt-task-bar:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .test-content {
+        position: absolute;
+        top: 50px;
+        left: 50px;
+        background: rgba(0, 123, 255, 0.1);
+        padding: 20px;
+        border-radius: 8px;
+        border: 2px dashed #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <h1>Diagrama Gantt con Scrollbars Funcionales</h1>
+
+            <!-- CONTENEDOR CON SCROLLBARS FORZADOS -->
+            <div class="gantt-container">
+              <div class="gantt-timeline">
+                <h3>📅 Timeline del Proyecto</h3>
+                <p>
+                  Este contenido es más ancho que el contenedor para activar
+                  scroll horizontal
+                </p>
+              </div>
+
+              <div class="gantt-content">
+                <div class="gantt-tasks">
+                  <div class="gantt-task-list">
+                    <h4>📋 Lista de Tareas</h4>
+                    <div class="gantt-task-item">
+                      Tarea 1: Análisis de Requisitos
+                    </div>
+                    <div class="gantt-task-item">
+                      Tarea 2: Diseño del Sistema
+                    </div>
+                    <div class="gantt-task-item">Tarea 3: Implementación</div>
+                    <div class="gantt-task-item">Tarea 4: Pruebas</div>
+                    <div class="gantt-task-item">Tarea 5: Despliegue</div>
+                    <div class="gantt-task-item">Tarea 6: Documentación</div>
+                    <div class="gantt-task-item">Tarea 7: Capacitación</div>
+                    <div class="gantt-task-item">Tarea 8: Mantenimiento</div>
+                  </div>
+
+                  <div class="gantt-chart">
+                    <h4>📊 Diagrama Gantt</h4>
+                    <div
+                      class="gantt-task-bar"
+                      style="top: 50px; left: 100px; width: 200px"
+                    >
+                      Tarea 1
+                    </div>
+                    <div
+                      class="gantt-task-bar"
+                      style="top: 100px; left: 300px; width: 150px"
+                    >
+                      Tarea 2
+                    </div>
+                    <div
+                      class="gantt-task-bar"
+                      style="top: 150px; left: 500px; width: 300px"
+                    >
+                      Tarea 3
+                    </div>
+                    <div
+                      class="gantt-task-bar"
+                      style="top: 200px; left: 800px; width: 100px"
+                    >
+                      Tarea 4
+                    </div>
+                    <div
+                      class="gantt-task-bar"
+                      style="top: 250px; left: 1000px; width: 120px"
+                    >
+                      Tarea 5
+                    </div>
+                    <div
+                      class="gantt-task-bar"
+                      style="top: 300px; left: 1200px; width: 180px"
+                    >
+                      Tarea 6
+                    </div>
+                    <div
+                      class="gantt-task-bar"
+                      style="top: 350px; left: 1400px; width: 200px"
+                    >
+                      Tarea 7
+                    </div>
+                    <div
+                      class="gantt-task-bar"
+                      style="top: 400px; left: 1600px; width: 150px"
+                    >
+                      Tarea 8
+                    </div>
+
+                    <!-- CONTENIDO DE PRUEBA PARA FORZAR SCROLL -->
+                    <div class="test-content">
+                      <h5>🎯 Área de Prueba</h5>
+                      <p>
+                        Este contenido está posicionado para demostrar que los
+                        scrollbars funcionan correctamente.
+                      </p>
+                      <p>
+                        Puedes hacer scroll horizontal y vertical para ver todo
+                        el contenido.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <h3>✅ Scrollbars Funcionales</h3>
+              <ul>
+                <li>
+                  <strong>Scroll Horizontal:</strong> El contenido tiene 2000px
+                  de ancho, el contenedor es más pequeño
+                </li>
+                <li>
+                  <strong>Scroll Vertical:</strong> El contenido tiene 800px de
+                  alto, el contenedor es de 500px
+                </li>
+                <li>
+                  <strong>Scrollbars Visibles:</strong> 15px de ancho/alto,
+                  color azul (#007bff)
+                </li>
+                <li>
+                  <strong>Hover Effect:</strong> Los scrollbars cambian de color
+                  al pasar el mouse
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

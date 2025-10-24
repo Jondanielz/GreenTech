@@ -103,7 +103,8 @@ export class AuthService {
       localStorage.removeItem("userData");
 
       // Redirigir al login
-      window.location.href = "/src/views/auth/login.html";
+      window.location.href =
+        "http://localhost/eco-app/GreenTech/src/views/auth/login.html";
     }
   }
 

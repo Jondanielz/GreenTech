@@ -657,6 +657,137 @@ try {
         }
     }
     
+    // ========== RUTAS DE CALENDARIO ==========
+    else if (isset($uri_parts[0]) && $uri_parts[0] === 'calendar') {
+        require_once 'config/database.php';
+        $database = new Database();
+        $db = $database->getConnection();
+        
+        $userData = getUserFromToken();
+        $action = $uri_parts[1] ?? '';
+        
+        switch ($action) {
+            // GET /api/calendar - Obtener datos del calendario
+            case '':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                // Obtener tareas y proyectos según el rol
+                $tasks = [];
+                $projects = [];
+                
+                if ($userData['role_id'] == 1) {
+                    // Administrador: todas las tareas y proyectos
+                    require_once 'controllers/TaskController.php';
+                    require_once 'controllers/ProjectController.php';
+                    
+                    $taskController = new TaskController($db);
+                    $projectController = new ProjectController($db);
+                    
+                    $tasksResponse = $taskController->getAllTasks($userData);
+                    $projectsResponse = $projectController->getAllProjects($userData);
+                    
+                    if ($tasksResponse['success']) {
+                        $tasks = $tasksResponse['data'];
+                    }
+                    if ($projectsResponse['success']) {
+                        $projects = $projectsResponse['data'];
+                    }
+                } else {
+                    // Coordinador/Participante: tareas y proyectos asignados
+                    require_once 'controllers/TaskController.php';
+                    require_once 'controllers/ProjectController.php';
+                    
+                    $taskController = new TaskController($db);
+                    $projectController = new ProjectController($db);
+                    
+                    $tasksResponse = $taskController->getMyTasks($userData);
+                    $projectsResponse = $projectController->getUserProjects($userData);
+                    
+                    if ($tasksResponse['success']) {
+                        $tasks = $tasksResponse['data'];
+                    }
+                    if ($projectsResponse['success']) {
+                        $projects = $projectsResponse['data'];
+                    }
+                }
+                
+                sendResponse([
+                    'success' => true,
+                    'data' => [
+                        'tasks' => $tasks,
+                        'projects' => $projects,
+                        'total' => count($tasks) + count($projects)
+                    ]
+                ], 200);
+                break;
+            
+            // GET /api/calendar/stats - Obtener estadísticas del calendario
+            case 'stats':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                // Calcular estadísticas básicas
+                $stats = [
+                    'total_tasks' => 0,
+                    'completed_tasks' => 0,
+                    'in_progress_tasks' => 0,
+                    'pending_tasks' => 0,
+                    'total_projects' => 0,
+                    'active_projects' => 0,
+                    'completed_projects' => 0
+                ];
+                
+                sendResponse([
+                    'success' => true,
+                    'data' => $stats
+                ], 200);
+                break;
+            
+            default:
+                sendResponse([
+                    'error' => 'Ruta no encontrada',
+                    'path' => '/calendar/' . $action
+                ], 404);
+                break;
+        }
+    }
+    
+    // ========== RUTAS DE INDICADORES/UNIDADES ==========
+    else if (isset($uri_parts[0]) && in_array($uri_parts[0], ['units','indicators'])) {
+        require_once 'controllers/IndicatorController.php';
+        $controller = new IndicatorController();
+        $resource = $uri_parts[0];
+        $id = $uri_parts[1] ?? null;
+
+        if ($resource === 'units') {
+            if ($id === null) {
+                if ($method === 'GET') { sendResponse($controller->listUnits(), 200); }
+                else if ($method === 'POST') { sendResponse($controller->createUnit($input), 201); }
+                else { sendResponse(['error' => 'Método no permitido'], 405); }
+            } else {
+                if ($method === 'GET') { sendResponse($controller->getUnit($id), 200); }
+                else if ($method === 'PUT') { sendResponse($controller->updateUnit($id, $input), 200); }
+                else if ($method === 'DELETE') { sendResponse($controller->deleteUnit($id), 200); }
+                else { sendResponse(['error' => 'Método no permitido'], 405); }
+            }
+        }
+        else if ($resource === 'indicators') {
+            if ($id === null) {
+                if ($method === 'GET') { sendResponse($controller->listIndicators(), 200); }
+                else if ($method === 'POST') { sendResponse($controller->createIndicator($input), 201); }
+                else { sendResponse(['error' => 'Método no permitido'], 405); }
+            } else {
+                if ($method === 'GET') { sendResponse($controller->getIndicator($id), 200); }
+                else if ($method === 'PUT') { sendResponse($controller->updateIndicator($id, $input), 200); }
+                else if ($method === 'DELETE') { sendResponse($controller->deleteIndicator($id), 200); }
+                else { sendResponse(['error' => 'Método no permitido'], 405); }
+            }
+        }
+    }
+
     // ========== RUTA RAÍZ ==========
     else if (empty($uri_parts[0])) {
         sendResponse([

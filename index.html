@@ -187,67 +187,49 @@
                 </div>
               </div>
 
-              <!-- Presupuesto Disponible -->
+              <!-- Presupuesto Disponible (oculto) -->
+              <!--
               <div class="col-md-3 stretch-card grid-margin">
-                <div
-                  class="card bg-gradient-warning card-img-holder text-white"
-                >
+                <div class="card bg-gradient-warning card-img-holder text-white">
                   <div class="card-body">
-                    <img
-                      src="src/assets/images/dashboard/circle.svg"
-                      class="card-img-absolute"
-                      alt="circle-image"
-                    />
-                    <h4 class="font-weight-normal mb-3">
-                      Presupuesto Disponible
-                      <i class="mdi mdi-cash-multiple mdi-24px float-end"></i>
-                    </h4>
-                    <h2 class="mb-5" id="remainingBudget">
-                      <span
-                        class="spinner-border spinner-border-sm"
-                        role="status"
-                      ></span>
-                    </h2>
-                    <h6 class="card-text" id="remainingBudgetPercent">
-                      Cargando...
-                    </h6>
+                    <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                    <h4 class="font-weight-normal mb-3">Presupuesto Disponible <i class="mdi mdi-cash-multiple mdi-24px float-end"></i></h4>
+                    <h2 class="mb-5" id="remainingBudget"><span class="spinner-border spinner-border-sm" role="status"></span></h2>
+                    <h6 class="card-text" id="remainingBudgetPercent">Cargando...</h6>
                   </div>
                 </div>
               </div>
+              -->
             </div>
             <div class="row">
+              <!-- Visit And Sales Statistics (oculto) -->
+              <!--
               <div class="col-md-7 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
                     <div class="clearfix">
-                      <h4 class="card-title float-start">
-                        Visit And Sales Statistics
-                      </h4>
-                      <div
-                        id="visit-sale-chart-legend"
-                        class="rounded-legend legend-horizontal legend-top-right float-end"
-                      ></div>
+                      <h4 class="card-title float-start">Visit And Sales Statistics</h4>
+                      <div id="visit-sale-chart-legend" class="rounded-legend legend-horizontal legend-top-right float-end"></div>
                     </div>
                     <canvas id="visit-sale-chart" class="mt-4"></canvas>
                   </div>
                 </div>
               </div>
+              -->
+              <!-- Traffic Sources (oculto) -->
+              <!--
               <div class="col-md-5 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">Traffic Sources</h4>
-                    <div
-                      class="doughnutjs-wrapper d-flex justify-content-center"
-                    >
+                    <div class="doughnutjs-wrapper d-flex justify-content-center">
                       <canvas id="traffic-chart"></canvas>
                     </div>
-                    <div
-                      id="traffic-chart-legend"
-                      class="rounded-legend legend-vertical legend-bottom-left pt-4"
-                    ></div>
+                    <div id="traffic-chart-legend" class="rounded-legend legend-vertical legend-bottom-left pt-4"></div>
                   </div>
                 </div>
               </div>
+              -->
             </div>
             <div class="row">
               <div class="col-12 grid-margin">
@@ -557,8 +539,19 @@
           await loadDynamicFooter();
           await loadDynamicSidebar();
 
-          // Actualizar UI con datos del usuario
+          // Actualizar UI con datos del usuario e iniciales
           if (userData) {
+            try {
+              const { ComponentsLoader } = await import('/src/utils/components-loader.js');
+              if (ComponentsLoader && ComponentsLoader.updateNavbar) {
+                ComponentsLoader.updateNavbar(userData);
+              }
+              if (ComponentsLoader && ComponentsLoader.updateSidebar) {
+                ComponentsLoader.updateSidebar(userData);
+              }
+            } catch (e) {
+              console.warn('No se pudo inicializar ComponentsLoader en index:', e);
+            }
             // Actualizar nombre en navbar
             const profileNameElements = document.querySelectorAll(
               ".nav-profile-text p"
@@ -692,11 +685,17 @@
               totalBudget
             );
 
-            document.getElementById("remainingBudget").textContent =
-              DashboardService.formatCurrency(remainingBudget);
-            document.getElementById(
+            const remainingBudgetEl = document.getElementById("remainingBudget");
+            const remainingBudgetPercentEl = document.getElementById(
               "remainingBudgetPercent"
-            ).textContent = `${budgetPercent}% disponible`;
+            );
+            if (remainingBudgetEl) {
+              remainingBudgetEl.textContent =
+                DashboardService.formatCurrency(remainingBudget);
+            }
+            if (remainingBudgetPercentEl) {
+              remainingBudgetPercentEl.textContent = `${budgetPercent}% disponible`;
+            }
           }
 
           // Actualizar tareas recientes en la tabla
