@@ -132,13 +132,33 @@
         width: 28px;
         height: 28px;
         border-radius: 50%;
-        background: #667eea;
+        background: linear-gradient(135deg, #57c785 0%, #62a984 100%);
         color: white;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 0.75rem;
         font-weight: 600;
+      }
+      
+      /* Estilos para avatares con iniciales */
+      .task-avatar-initials {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #57c785 0%, #62a984 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 0.75rem;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .task-avatar-initials:not(:first-child) {
+        margin-left: -8px;
       }
       .kanban-task-due {
         font-size: 0.75rem;
@@ -535,9 +555,7 @@
               <nav aria-label="breadcrumb">
                 <ul class="breadcrumb">
                   <li class="breadcrumb-item active" aria-current="page">
-                    <span id="taskCount" class="badge bg-success"
-                      >0 tareas</span
-                    >
+                    <span id="taskCount" class="badge bg-success">0 tareas</span>
                     <button
                       class="btn btn-success btn-sm ms-2"
                       data-bs-toggle="modal"
@@ -807,37 +825,18 @@
             <form id="createTaskForm">
               <div class="row">
                 <div class="col-md-8 mb-3">
-                  <label for="taskTitle" class="form-label"
-                    >Título <span class="text-danger">*</span></label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="taskTitle"
-                    required
-                  />
+                  <label for="taskTitle" class="form-label">Título <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="taskTitle" required />
                 </div>
                 <div class="col-md-4 mb-3">
-                  <label for="taskProject" class="form-label"
-                    >Proyecto <span class="text-danger">*</span></label
-                  >
-                  <select
-                    id="taskProject"
-                    class="form-select"
-                    required
-                  ></select>
+                  <label for="taskProject" class="form-label">Proyecto <span class="text-danger">*</span></label>
+                  <select id="taskProject" class="form-select" required></select>
                 </div>
               </div>
 
               <div class="mb-3">
-                <label for="taskDescription" class="form-label"
-                  >Descripción</label
-                >
-                <textarea
-                  class="form-control"
-                  id="taskDescription"
-                  rows="3"
-                ></textarea>
+                <label for="taskDescription" class="form-label">Descripción</label>
+                <textarea class="form-control" id="taskDescription" rows="3"></textarea>
               </div>
 
               <div class="row">
@@ -858,18 +857,14 @@
                   </select>
                 </div>
                 <div class="col-md-4 mb-3">
-                  <label for="taskDueDate" class="form-label"
-                    >Fecha de Vencimiento</label
-                  >
+                  <label for="taskDueDate" class="form-label">Fecha de Vencimiento</label>
                   <input type="date" class="form-control" id="taskDueDate" />
                 </div>
               </div>
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-              Cancelar
-            </button>
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
             <button type="button" class="btn btn-success" id="saveTaskBtn">
               <i class="mdi mdi-content-save"></i> Guardar Tarea
             </button>
@@ -939,8 +934,7 @@
 
       // Verificar autenticación
       if (!AuthService.isAuthenticated()) {
-        window.location.href =
-          "http://localhost/eco-app/GreenTech/src/views/auth/login.html";
+        window.location.href = "/src/views/auth/login.html";
       } else {
         const userData = AuthService.getCurrentUser();
 
@@ -1097,11 +1091,7 @@
                   </span>
                 </div>
                 <div class="kanban-task-assignees">
-                  <div class="kanban-task-assignee">${
-                    task.created_by_name
-                      ? task.created_by_name.charAt(0).toUpperCase()
-                      : "?"
-                  }</div>
+                  ${getTaskAssigneesAvatars(task)}
                 </div>
               </div>
               ${
@@ -1300,6 +1290,41 @@
             default:
               return "#6c757d";
           }
+        }
+
+        // Función para generar avatares de usuarios asignados a la tarea
+        function getTaskAssigneesAvatars(task) {
+          const assignees = [];
+          
+          // Agregar el creador si existe
+          if (task.created_by_name) {
+            const initials = (task.created_by_name || "?")
+              .split(" ")
+              .filter(Boolean)
+              .slice(0, 2)
+              .map((w) => w.charAt(0).toUpperCase())
+              .join("");
+            
+            assignees.push(`
+              <div class="task-avatar-initials" title="${task.created_by_name}">
+                ${initials}
+              </div>
+            `);
+          }
+          
+          // Si hay usuarios asignados adicionales, se pueden agregar aquí
+          // Por ejemplo: task.assigned_users?.forEach(user => { ... })
+          
+          // Si no hay ningún usuario asignado, mostrar N/A
+          if (assignees.length === 0) {
+            return `
+              <div class="task-avatar-initials" title="Sin usuarios asignados">
+                N/A
+              </div>
+            `;
+          }
+          
+          return assignees.join("");
         }
 
         // Inicializar Sortable.js para drag & drop
@@ -1619,51 +1644,45 @@
         loadInitialData();
 
         // Guardar nueva tarea
-        document
-          .getElementById("saveTaskBtn")
-          .addEventListener("click", async () => {
-            const form = document.getElementById("createTaskForm");
-            if (!form.checkValidity()) {
-              form.reportValidity();
-              return;
-            }
+        document.getElementById("saveTaskBtn").addEventListener("click", async () => {
+          const form = document.getElementById("createTaskForm");
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
 
-            // Validar fecha
-            const dueDate = document.getElementById("taskDueDate").value;
-            const today = new Date().toISOString().split("T")[0];
-            if (dueDate && dueDate < today) {
-              showErrorMessage(
-                "La fecha de vencimiento no puede ser anterior a la fecha actual"
-              );
-              return;
-            }
+          // Validar fecha
+          const dueDate = document.getElementById("taskDueDate").value;
+          const today = new Date().toISOString().split("T")[0];
+          if (dueDate && dueDate < today) {
+            showErrorMessage("La fecha de vencimiento no puede ser anterior a la fecha actual");
+            return;
+          }
 
-            const taskData = {
-              project_id: document.getElementById("taskProject").value,
-              title: document.getElementById("taskTitle").value,
-              description: document.getElementById("taskDescription").value,
-              status: document.getElementById("taskStatus").value,
-              priority: document.getElementById("taskPriority").value,
-              due_date: dueDate,
-            };
+          const taskData = {
+            project_id: document.getElementById("taskProject").value,
+            title: document.getElementById("taskTitle").value,
+            description: document.getElementById("taskDescription").value,
+            status: document.getElementById("taskStatus").value,
+            priority: document.getElementById("taskPriority").value,
+            due_date: dueDate,
+          };
 
-            try {
-              const response = await TaskService.createTask(taskData);
-              if (response.success) {
-                showSuccessMessage("Tarea creada exitosamente");
-                bootstrap.Modal.getInstance(
-                  document.getElementById("createTaskModal")
-                ).hide();
-                form.reset();
-                await loadMyTasks();
-              } else {
-                showErrorMessage(response.message || "Error al crear tarea");
-              }
-            } catch (error) {
-              console.error("Error:", error);
-              showErrorMessage("Error al crear tarea");
+          try {
+            const response = await TaskService.createTask(taskData);
+            if (response.success) {
+              showSuccessMessage("Tarea creada exitosamente");
+              bootstrap.Modal.getInstance(document.getElementById("createTaskModal")).hide();
+              form.reset();
+              await loadMyTasks();
+            } else {
+              showErrorMessage(response.message || "Error al crear tarea");
             }
-          });
+          } catch (error) {
+            console.error("Error:", error);
+            showErrorMessage("Error al crear tarea");
+          }
+        });
 
         // Cargar sistema de notificaciones después de que todo esté listo
         const notificationScript = document.createElement("script");

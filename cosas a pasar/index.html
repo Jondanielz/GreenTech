@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>GreenTech</title>
+    <!-- plugins:css -->
+    <link
+      rel="stylesheet"
+      href="src/assets/vendors/mdi/css/materialdesignicons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="src/assets/vendors/ti-icons/css/themify-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="src/assets/vendors/css/vendor.bundle.base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="src/assets/vendors/font-awesome/css/font-awesome.min.css"
+    />
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link
+      rel="stylesheet"
+      href="src/assets/vendors/font-awesome/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="src/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css"
+    />
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="src/assets/css/style.css" />
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="src/assets/images/favicon.png" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      <div class="row p-0 m-0 proBanner" id="proBanner">
+        <div class="col-md-12 p-0 m-0">
+          <div
+            class="card-body card-body-padding d-flex align-items-center justify-content-between"
+          >
+            <div class="d-flex align-items-center justify-content-between">
+              <a
+                href="https://www.bootstrapdash.com/product/purple-bootstrap-admin-template/"
+                title="BootstrapDash Home"
+                ><i class="mdi mdi-home me-3 text-white"></i
+              ></a>
+              <button
+                id="bannerClose"
+                class="btn border-0 p-0"
+                title="Cerrar banner"
+              >
+                <i class="mdi mdi-close text-white mr-0"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- partial:partials/_navbar.html -->
+      <!-- El navbar se cargará dinámicamente aquí -->
+      <nav
+        id="navbar-container"
+        class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row"
+      >
+        <!-- Cargando navbar... -->
+      </nav>
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <!-- El sidebar se cargará dinámicamente aquí según el rol del usuario -->
+        <div id="sidebar-container">
+          <!-- Cargando sidebar... -->
+        </div>
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">
+                <span
+                  class="page-title-icon bg-gradient-primary text-white me-2"
+                >
+                  <i class="mdi mdi-home"></i>
+                </span>
+                Dashboard
+              </h3>
+              <nav aria-label="breadcrumb">
+                <ul class="breadcrumb">
+                  
+                </ul>
+              </nav>
+            </div>
+            <!-- Dashboard dinámico según el rol del usuario -->
+            <div id="dashboard-content">
+              <!-- El contenido se cargará dinámicamente según el rol -->
+              <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Cargando dashboard...</span>
+                  </div>
+                <p class="mt-2">Cargando dashboard personalizado...</p>
+                </div>
+<<<<<<< HEAD
+=======
+              </div>
+
+              <!-- Tareas Completadas -->
+              <div class="col-md-3 stretch-card grid-margin">
+                <div class="card bg-gradient-info card-img-holder text-white">
+                  <div class="card-body">
+                    <img
+                      src="src/assets/images/dashboard/circle.svg"
+                      class="card-img-absolute"
+                      alt="circle-image"
+                    />
+                    <h4 class="font-weight-normal mb-3">
+                      Tareas Completadas
+                      <i class="mdi mdi-check-circle mdi-24px float-end"></i>
+                    </h4>
+                    <h2 class="mb-5" id="completedTasks">
+                      <span
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                      ></span>
+                    </h2>
+                    <h6 class="card-text" id="completedTasksPercent">
+                      Cargando...
+                    </h6>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Usuarios Activos -->
+              <div class="col-md-3 stretch-card grid-margin">
+                <div
+                  class="card bg-gradient-success card-img-holder text-white"
+                >
+                  <div class="card-body">
+                    <img
+                      src="src/assets/images/dashboard/circle.svg"
+                      class="card-img-absolute"
+                      alt="circle-image"
+                    />
+                    <h4 class="font-weight-normal mb-3">
+                      Usuarios Activos
+                      <i
+                        class="mdi mdi-account-multiple mdi-24px float-end"
+                      ></i>
+                    </h4>
+                    <h2 class="mb-5" id="activeUsers">
+                      <span
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                      ></span>
+                    </h2>
+                    <h6 class="card-text" id="activeUsersPercent">
+                      Cargando...
+                    </h6>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Presupuesto Disponible (oculto) -->
+              <!--
+              <div class="col-md-3 stretch-card grid-margin">
+                <div class="card bg-gradient-warning card-img-holder text-white">
+                  <div class="card-body">
+                    <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                    <h4 class="font-weight-normal mb-3">Presupuesto Disponible <i class="mdi mdi-cash-multiple mdi-24px float-end"></i></h4>
+                    <h2 class="mb-5" id="remainingBudget"><span class="spinner-border spinner-border-sm" role="status"></span></h2>
+                    <h6 class="card-text" id="remainingBudgetPercent">Cargando...</h6>
+                  </div>
+                </div>
+              </div>
+              -->
+>>>>>>> e7d0f62e719ceaa0c79208b32b5954189cce2e77
+            </div>
+            <div class="row">
+              <!-- Visit And Sales Statistics (oculto) -->
+              <!--
+              <div class="col-md-7 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="clearfix">
+                      <h4 class="card-title float-start">Visit And Sales Statistics</h4>
+                      <div id="visit-sale-chart-legend" class="rounded-legend legend-horizontal legend-top-right float-end"></div>
+                    </div>
+                    <canvas id="visit-sale-chart" class="mt-4"></canvas>
+                  </div>
+                </div>
+              </div>
+              -->
+              <!-- Traffic Sources (oculto) -->
+              <!--
+              <div class="col-md-5 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Traffic Sources</h4>
+                    <div class="doughnutjs-wrapper d-flex justify-content-center">
+                      <canvas id="traffic-chart"></canvas>
+                    </div>
+                    <div id="traffic-chart-legend" class="rounded-legend legend-vertical legend-bottom-left pt-4"></div>
+<<<<<<< HEAD
+=======
+                  </div>
+                </div>
+              </div>
+              -->
+            </div>
+            <div class="row">
+              <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Tareas Recientes</h4>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Asignado a</th>
+                            <th>Tarea</th>
+                            <th>Estado</th>
+                            <th>Fecha de Vencimiento</th>
+                            <th>Proyecto</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td colspan="5" class="text-center">
+                              <div
+                                class="spinner-border text-primary"
+                                role="status"
+                              >
+                                <span class="visually-hidden">Cargando...</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+>>>>>>> e7d0f62e719ceaa0c79208b32b5954189cce2e77
+                  </div>
+                </div>
+              </div>
+              -->
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:partials/_footer.html -->
+          <!-- El footer se cargará dinámicamente aquí -->
+          <div id="footer-container"></div>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="src/assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="src/assets/vendors/chart.js/chart.umd.js"></script>
+    <script src="src/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="src/assets/js/off-canvas.js"></script>
+    <script src="src/assets/js/misc.js"></script>
+    <script src="src/assets/js/settings.js"></script>
+    <script src="src/assets/js/todolist.js"></script>
+    <script src="src/assets/js/jquery.cookie.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="src/assets/js/dashboard.js"></script>
+    <!-- End custom js for this page -->
+
+    <!-- Logout Confirmation Modal -->
+    <style>
+      #logoutModal .modal-content {
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      #logoutModal .logout-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: scaleIn 0.3s ease-out;
+      }
+
+      #logoutModal .logout-icon-wrapper i {
+        color: white !important;
+        font-size: 40px;
+      }
+
+      @keyframes scaleIn {
+        from {
+          transform: scale(0);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      #logoutModal .modal-title {
+        font-weight: 600;
+        color: #2c2c2c;
+      }
+
+      #logoutModal .modal-footer {
+        gap: 10px;
+      }
+
+      #logoutModal .btn {
+        min-width: 120px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: 500;
+      }
+    </style>
+
+    <div
+      class="modal fade"
+      id="logoutModal"
+      tabindex="-1"
+      aria-labelledby="logoutModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body text-center pt-0 px-4">
+            <div class="logout-icon-wrapper">
+              <i class="mdi mdi-logout"></i>
+            </div>
+            <h5 class="modal-title mb-2">Cerrar Sesión</h5>
+            <p class="text-muted mb-0">¿Estás seguro de que deseas salir?</p>
+          </div>
+          <div class="modal-footer border-0 justify-content-center pb-4 px-4">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-gradient-primary"
+              id="confirmLogoutBtn"
+            >
+              <i class="mdi mdi-check-circle me-1"></i>
+              Sí, salir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Data Loader & Auth Guard -->
+    <script type="module">
+      import AuthService from "./src/services/auth.js";
+      import DashboardService from "./src/services/dashboard.js";
+      import SidebarLoader from "./src/utils/sidebar-loader.js";
+
+      // Verificar autenticación
+      if (!AuthService.isAuthenticated()) {
+        console.log("⚠️ Usuario no autenticado, redirigiendo al login...");
+        window.location.href = "/src/views/auth/login.html";
+      } else {
+        // Función principal async para cargar todo
+        (async function initDashboard() {
+          const userData = AuthService.getCurrentUser();
+          console.log("✅ Usuario autenticado:", userData);
+
+          // Mostrar información del rol
+          const roleInfo = SidebarLoader.getRoleInfo();
+          console.log("🎭 Información del rol:", roleInfo);
+
+          // Inicializar modal de Bootstrap
+          const logoutModal = new bootstrap.Modal(
+            document.getElementById("logoutModal")
+          );
+
+          // Función para mostrar modal de logout
+          function showLogoutModal(e) {
+            e.preventDefault();
+            logoutModal.show();
+          }
+
+          // ========== CARGAR NAVBAR DINÁMICAMENTE ==========
+          async function loadDynamicNavbar() {
+            try {
+              console.log("📂 Cargando navbar dinámicamente...");
+              const response = await fetch("/src/components/_navbar.html");
+              let navbarHTML = await response.text();
+
+              // Remover la etiqueta <nav> y sus clases para evitar duplicación
+              navbarHTML = navbarHTML.replace(
+                /<nav[^>]*class="navbar default-layout-navbar[^"]*"[^>]*>/,
+                ""
+              );
+              navbarHTML = navbarHTML.replace("</nav>", "");
+
+              // Asegurar que el contenedor tenga las clases correctas
+              const navbarContainer =
+                document.getElementById("navbar-container");
+              navbarContainer.innerHTML = navbarHTML;
+              console.log("✅ Navbar cargado correctamente");
+
+              // Ajustar rutas de imágenes para el index.html raíz
+              const navbarLogo = document.querySelector(".navbar-logo");
+              const navbarLogoMini =
+                document.querySelector(".navbar-logo-mini");
+              const navbarProfileImg = document.querySelector(
+                ".navbar-profile-img"
+              );
+
+              if (navbarLogo) navbarLogo.src = "src/assets/images/logo.svg";
+              if (navbarLogoMini)
+                navbarLogoMini.src = "src/assets/images/logo-mini.svg";
+              if (navbarProfileImg)
+                navbarProfileImg.src = "src/assets/images/faces/face1.jpg";
+
+              // Ajustar enlaces del logo para que apunten a la raíz
+              const brandLinks = document.querySelectorAll(".navbar-brand");
+              brandLinks.forEach((link) => {
+                if (link.getAttribute("href") === "index.html") {
+                  link.setAttribute("href", "/");
+                }
+              });
+
+              // Actualizar nombre de usuario en el navbar
+              const navbarUserName = document.getElementById("navbarUserName");
+              if (navbarUserName && userData) {
+                navbarUserName.textContent = userData.name || userData.username;
+              }
+
+              // Configurar evento de logout en navbar
+              const navbarLogoutBtn =
+                document.getElementById("navbarLogoutBtn");
+              if (navbarLogoutBtn) {
+                navbarLogoutBtn.addEventListener("click", (e) => {
+                  e.preventDefault();
+                  showLogoutModal(e);
+                });
+              }
+            } catch (error) {
+              console.error("💥 Error crítico al cargar navbar:", error);
+            }
+          }
+
+          // ========== CARGAR FOOTER DINÁMICAMENTE ==========
+          async function loadDynamicFooter() {
+            try {
+              console.log("📂 Cargando footer dinámicamente...");
+              const response = await fetch("/src/components/_footer.html");
+              let footerHTML = await response.text();
+
+              // Ajustar rutas de imágenes para el index.html raíz
+              footerHTML = footerHTML.replace("../assets/", "src/assets/");
+
+              document.getElementById("footer-container").innerHTML =
+                footerHTML;
+              console.log("✅ Footer cargado correctamente");
+            } catch (error) {
+              console.error("💥 Error crítico al cargar footer:", error);
+            }
+          }
+
+          // ========== CARGAR SIDEBAR DINÁMICAMENTE ==========
+          async function loadDynamicSidebar() {
+            try {
+              console.log("📂 Cargando sidebar dinámicamente...");
+              const loaded = await SidebarLoader.loadSidebar(
+                "/src/components/",
+                "#sidebar-container"
+              );
+
+              if (loaded) {
+                console.log("✅ Sidebar dinámico cargado correctamente");
+                // Actualizar información del usuario en el sidebar después de cargarlo
+                updateSidebarUserInfo();
+              } else {
+                console.error("❌ Error al cargar sidebar dinámico");
+              }
+            } catch (error) {
+              console.error("💥 Error crítico al cargar sidebar:", error);
+            }
+          }
+
+          // Función para actualizar info del usuario en el sidebar
+          function updateSidebarUserInfo() {
+            const sidebarUserName = document.getElementById("sidebarUserName");
+            if (sidebarUserName) {
+              sidebarUserName.textContent = userData.name || userData.username;
+            }
+
+            const sidebarUserRole = document.getElementById("sidebarUserRole");
+            if (sidebarUserRole) {
+              const roleName = userData.role_name || userData.role || "Usuario";
+              sidebarUserRole.textContent = roleName;
+            }
+          }
+
+          // Cargar componentes dinámicos
+          await loadDynamicNavbar();
+          await loadDynamicFooter();
+          await loadDynamicSidebar();
+
+          // Actualizar UI con datos del usuario e iniciales
+          if (userData) {
+            try {
+              const { ComponentsLoader } = await import('/src/utils/components-loader.js');
+              if (ComponentsLoader && ComponentsLoader.updateNavbar) {
+                ComponentsLoader.updateNavbar(userData);
+              }
+              if (ComponentsLoader && ComponentsLoader.updateSidebar) {
+                ComponentsLoader.updateSidebar(userData);
+              }
+            } catch (e) {
+              console.warn('No se pudo inicializar ComponentsLoader en index:', e);
+            }
+            // Actualizar nombre en navbar
+            const profileNameElements = document.querySelectorAll(
+              ".nav-profile-text p"
+            );
+            profileNameElements.forEach((el) => {
+              if (el.textContent.includes("David Greymaax")) {
+                el.textContent = userData.name || userData.username;
+              }
+            });
+
+            // Actualizar nombre en sidebar
+            const sidebarNameElements = document.querySelectorAll(
+              ".nav-profile-text span"
+            );
+            sidebarNameElements.forEach((el) => {
+              if (el.classList.contains("font-weight-bold")) {
+                el.textContent = userData.name || userData.username;
+              }
+            });
+
+            // Actualizar rol en sidebar
+            const roleElements = document.querySelectorAll(
+              ".nav-profile-text .text-secondary"
+            );
+            roleElements.forEach((el) => {
+              // Usar role_name de la base de datos
+              const roleName = userData.role_name || userData.role || "Usuario";
+              el.textContent = roleName;
+            });
+
+            // Actualizar rol específico en sidebar si existe
+            const sidebarUserRole2 = document.getElementById("sidebarUserRole");
+            if (sidebarUserRole2) {
+              const roleName = userData.role_name || userData.role || "Usuario";
+              sidebarUserRole2.textContent = roleName;
+            }
+          }
+
+          // ========== CARGAR DASHBOARD DINÁMICO SEGÚN ROL ==========
+          async function loadDashboardData() {
+            console.log("📊 Cargando dashboard personalizado...");
+
+            try {
+              const userRole = userData.role_name || userData.role || "Participante";
+              console.log("🎭 Rol del usuario:", userRole);
+
+              // Cargar dashboard según el rol
+              switch (userRole.toLowerCase()) {
+                case "administrador":
+                case "admin":
+                  await loadAdminDashboard();
+                  break;
+                case "coordinador":
+                  await loadCoordinatorDashboard();
+                  break;
+                case "participante":
+                default:
+                  await loadParticipantDashboard();
+                  break;
+              }
+            } catch (error) {
+              console.error("💥 Error crítico en dashboard:", error);
+              showDashboardError("Error de conexión con el servidor");
+            }
+          }
+
+          // ========== DASHBOARD PARA ADMINISTRADOR ==========
+          async function loadAdminDashboard() {
+            console.log("👑 Cargando dashboard de Administrador...");
+            
+            try {
+              const response = await DashboardService.getAdminDashboardData();
+              if (!response.success) {
+                throw new Error(response.message);
+              }
+
+                const data = response.data;
+              
+              // Crear HTML del dashboard de admin
+              const adminHTML = `
+                <!-- Estadísticas Generales -->
+                <div class="row">
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-primary card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Total de Proyectos
+                          <i class="mdi mdi-briefcase mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.general_stats?.total_projects || 0}</h2>
+                        <h6 class="card-text">Proyectos en el sistema</h6>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-info card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Total de Tareas
+                          <i class="mdi mdi-check-circle mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.general_stats?.total_tasks || 0}</h2>
+                        <h6 class="card-text">Tareas en el sistema</h6>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-success card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Total de Usuarios
+                          <i class="mdi mdi-account-multiple mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.general_stats?.total_users || 0}</h2>
+                        <h6 class="card-text">Usuarios registrados</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Separador de Sección: Estadísticas de Proyectos -->
+                <div class="row">
+                  <div class="col-12">
+                    <h3 class="page-title mb-4">
+                      <span class="page-title-icon bg-gradient-primary text-white me-2">
+                        <i class="mdi mdi-briefcase"></i>
+                      </span>
+                      Estadísticas de Proyectos
+                    </h3>
+                  </div>
+                </div>
+
+                <!-- Estadísticas de Proyectos por Estado -->
+                <div class="row">
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-clock-outline mdi-36px text-warning"></i>
+                        </div>
+                        <h3 class="text-warning mb-2">${data.project_stats?.planificacion || 0}</h3>
+                        <h6 class="text-muted">Planificación</h6>
+                        <p class="text-muted small">Proyectos en planificación</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-play-circle mdi-36px text-info"></i>
+                        </div>
+                        <h3 class="text-info mb-2">${data.project_stats?.en_progreso || 0}</h3>
+                        <h6 class="text-muted">En Progreso</h6>
+                        <p class="text-muted small">Proyectos activos</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-check-circle mdi-36px text-success"></i>
+                        </div>
+                        <h3 class="text-success mb-2">${data.project_stats?.completado || 0}</h3>
+                        <h6 class="text-muted">Completado</h6>
+                        <p class="text-muted small">Proyectos finalizados</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-close-circle mdi-36px text-danger"></i>
+                        </div>
+                        <h3 class="text-danger mb-2">${data.project_stats?.cancelado || 0}</h3>
+                        <h6 class="text-muted">Cancelado</h6>
+                        <p class="text-muted small">Proyectos cancelados</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-pause-circle mdi-36px text-secondary"></i>
+                        </div>
+                        <h3 class="text-secondary mb-2">${data.project_stats?.en_espera || 0}</h3>
+                        <h6 class="text-muted">En Pausa</h6>
+                        <p class="text-muted small">Proyectos pausados</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Top 5 Proyectos Recientes -->
+                <div class="row">
+                  <div class="col-12 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Últimos 5 Proyectos Creados</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+                                <th>Progreso</th>
+                                <th>Fecha de Creación</th>
+                                <th>Creado por</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.recent_projects?.map(project => `
+                                <tr>
+                                  <td>${project.name || 'Sin nombre'}</td>
+                                  <td>
+                                    ${project.status === 'Planificación' ? '<span class="badge badge-warning">Planificación</span>' : ''}
+                                    ${project.status === 'En progreso' ? '<span class="badge badge-info">En progreso</span>' : ''}
+                                    ${project.status === 'Completado' ? '<span class="badge badge-success">Completado</span>' : ''}
+                                    ${project.status === 'Cancelado' ? '<span class="badge badge-danger">Cancelado</span>' : ''}
+                                    ${project.status === 'En espera' ? '<span class="badge badge-secondary">En espera</span>' : ''}
+                                    ${!['Planificación', 'En progreso', 'Completado', 'Cancelado', 'En espera'].includes(project.status) ? `<span class="badge badge-dark">${project.status}</span>` : ''}
+                                  </td>
+                                  <td>
+                                    <div class="progress">
+                                      <div class="progress-bar" role="progressbar" style="width: ${project.progress || 0}%"></div>
+                                    </div>
+                                    <small>${project.progress || 0}%</small>
+                                  </td>
+                                  <td>${DashboardService.formatDate(project.created_at)}</td>
+                                  <td>${project.creator_name || 'N/A'}</td>
+                                </tr>
+                              `).join('') || '<tr><td colspan="5" class="text-center">No hay proyectos recientes</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Separador de Sección: Estadísticas de Tareas -->
+                <div class="row">
+                  <div class="col-12">
+                    <h3 class="page-title mb-4">
+                      <span class="page-title-icon bg-gradient-primary text-white me-2">
+                        <i class="mdi mdi-check-circle"></i>
+                      </span>
+                      Estadísticas de Tareas
+                    </h3>
+                  </div>
+                </div>
+
+                <!-- Estadísticas de Tareas por Estado -->
+                <div class="row">
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-clock-outline mdi-36px text-warning"></i>
+                        </div>
+                        <h3 class="text-warning mb-2">${data.task_stats?.pendiente || 0}</h3>
+                        <h6 class="text-muted">Pendientes</h6>
+                        <p class="text-muted small">Tareas pendientes</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-play-circle mdi-36px text-info"></i>
+                        </div>
+                        <h3 class="text-info mb-2">${data.task_stats?.en_progreso || 0}</h3>
+                        <h6 class="text-muted">En Progreso</h6>
+                        <p class="text-muted small">Tareas en ejecución</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-check-circle mdi-36px text-success"></i>
+                        </div>
+                        <h3 class="text-success mb-2">${data.task_stats?.completada || 0}</h3>
+                        <h6 class="text-muted">Completadas</h6>
+                        <p class="text-muted small">Tareas finalizadas</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Top 5 Tareas Recientes -->
+                <div class="row">
+                  <div class="col-12 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Últimas 5 Tareas Creadas</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Título</th>
+                                <th>Estado</th>
+                                <th>Prioridad</th>
+                                <th>Fecha de Vencimiento</th>
+                                <th>Proyecto</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.recent_tasks?.map(task => `
+                                <tr>
+                                  <td>${task.title || 'Sin título'}</td>
+                                  <td>
+                                    ${task.status === 'Pendiente' ? '<span class="badge badge-warning">Pendiente</span>' : ''}
+                                    ${task.status === 'En progreso' ? '<span class="badge badge-info">En progreso</span>' : ''}
+                                    ${task.status === 'Completada' ? '<span class="badge badge-success">Completada</span>' : ''}
+                                    ${!['Pendiente', 'En progreso', 'Completada'].includes(task.status) ? `<span class="badge badge-dark">${task.status}</span>` : ''}
+                                  </td>
+                                  <td>
+                                    ${task.priority === 'Alta' ? '<span class="badge badge-danger">Alta</span>' : ''}
+                                    ${task.priority === 'Media' ? '<span class="badge badge-warning">Media</span>' : ''}
+                                    ${task.priority === 'Baja' ? '<span class="badge badge-success">Baja</span>' : ''}
+                                    ${!['Alta', 'Media', 'Baja'].includes(task.priority) ? `<span class="badge badge-secondary">${task.priority}</span>` : ''}
+                                  </td>
+                                  <td>${task.due_date ? DashboardService.formatDate(task.due_date) : 'Sin fecha'}</td>
+                                  <td>${task.project_name || 'Sin proyecto'}</td>
+                                </tr>
+                              `).join('') || '<tr><td colspan="5" class="text-center">No hay tareas recientes</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+
+              document.getElementById('dashboard-content').innerHTML = adminHTML;
+              console.log("✅ Dashboard de Administrador cargado");
+            } catch (error) {
+              console.error("❌ Error al cargar dashboard de admin:", error);
+              showDashboardError("Error al cargar datos del administrador");
+            }
+          }
+
+          // ========== DASHBOARD PARA COORDINADOR ==========
+          async function loadCoordinatorDashboard() {
+            console.log("👨‍💼 Cargando dashboard de Coordinador...");
+            
+            try {
+              const response = await DashboardService.getCoordinatorDashboardData();
+              if (!response.success) {
+                throw new Error(response.message);
+              }
+
+              const data = response.data;
+              
+              // Crear HTML del dashboard de coordinador
+              const coordinatorHTML = `
+                <!-- Estadísticas Generales -->
+                <div class="row">
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-primary card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Total de Proyectos
+                          <i class="mdi mdi-briefcase mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.general_stats?.total_projects || 0}</h2>
+                        <h6 class="card-text">Proyectos en el sistema</h6>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-info card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Total de Tareas
+                          <i class="mdi mdi-check-circle mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.general_stats?.total_tasks || 0}</h2>
+                        <h6 class="card-text">Tareas en el sistema</h6>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-success card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Total de Usuarios
+                          <i class="mdi mdi-account-multiple mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.general_stats?.total_users || 0}</h2>
+                        <h6 class="card-text">Usuarios registrados</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+<<<<<<< HEAD
+                <!-- Separador de Sección: Estadísticas de Proyectos -->
+                <div class="row">
+                  <div class="col-12">
+                    <h3 class="page-title mb-4">
+                      <span class="page-title-icon bg-gradient-primary text-white me-2">
+                        <i class="mdi mdi-briefcase"></i>
+                      </span>
+                      Estadísticas de Proyectos
+                    </h3>
+                  </div>
+                </div>
+
+                <!-- Estadísticas de Proyectos por Estado -->
+                <div class="row">
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-clock-outline mdi-36px text-warning"></i>
+                        </div>
+                        <h3 class="text-warning mb-2">${data.project_stats?.planificacion || 0}</h3>
+                        <h6 class="text-muted">Planificación</h6>
+                        <p class="text-muted small">Proyectos en planificación</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-play-circle mdi-36px text-info"></i>
+                        </div>
+                        <h3 class="text-info mb-2">${data.project_stats?.en_progreso || 0}</h3>
+                        <h6 class="text-muted">En Progreso</h6>
+                        <p class="text-muted small">Proyectos activos</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-check-circle mdi-36px text-success"></i>
+                        </div>
+                        <h3 class="text-success mb-2">${data.project_stats?.completado || 0}</h3>
+                        <h6 class="text-muted">Completado</h6>
+                        <p class="text-muted small">Proyectos finalizados</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-close-circle mdi-36px text-danger"></i>
+                        </div>
+                        <h3 class="text-danger mb-2">${data.project_stats?.cancelado || 0}</h3>
+                        <h6 class="text-muted">Cancelado</h6>
+                        <p class="text-muted small">Proyectos cancelados</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-pause-circle mdi-36px text-secondary"></i>
+                        </div>
+                        <h3 class="text-secondary mb-2">${data.project_stats?.en_espera || 0}</h3>
+                        <h6 class="text-muted">En Pausa</h6>
+                        <p class="text-muted small">Proyectos pausados</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-account mdi-36px text-primary"></i>
+                        </div>
+                        <h3 class="text-primary mb-2">${data.assigned_projects?.length || 0}</h3>
+                        <h6 class="text-muted">Asignados a mí</h6>
+                        <p class="text-muted small">Mis proyectos</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Proyectos Recientes y Asignados -->
+                <div class="row">
+                  <div class="col-md-6 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Últimos 5 Proyectos Creados</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+                                <th>Progreso</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.recent_projects?.map(project => `
+                                <tr>
+                                  <td>${project.name || 'Sin nombre'}</td>
+                                  <td>
+                                    ${project.status === 'Planificación' ? '<span class="badge badge-warning">Planificación</span>' : ''}
+                                    ${project.status === 'En progreso' ? '<span class="badge badge-info">En progreso</span>' : ''}
+                                    ${project.status === 'Completado' ? '<span class="badge badge-success">Completado</span>' : ''}
+                                    ${project.status === 'Cancelado' ? '<span class="badge badge-danger">Cancelado</span>' : ''}
+                                    ${project.status === 'En espera' ? '<span class="badge badge-secondary">En espera</span>' : ''}
+                                    ${!['Planificación', 'En progreso', 'Completado', 'Cancelado', 'En espera'].includes(project.status) ? `<span class="badge badge-dark">${project.status}</span>` : ''}
+                                  </td>
+                                  <td>
+                                    <div class="progress">
+                                      <div class="progress-bar" role="progressbar" style="width: ${project.progress || 0}%"></div>
+                                    </div>
+                                    <small>${project.progress || 0}%</small>
+                                  </td>
+                                </tr>
+                              `).join('') || '<tr><td colspan="3" class="text-center">No hay proyectos recientes</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Mis Proyectos Asignados</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+                                <th>Progreso</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.assigned_projects?.map(project => `
+                                <tr>
+                                  <td>${project.name || 'Sin nombre'}</td>
+                                  <td>
+                                    ${project.status === 'Planificación' ? '<span class="badge badge-warning">Planificación</span>' : ''}
+                                    ${project.status === 'En progreso' ? '<span class="badge badge-info">En progreso</span>' : ''}
+                                    ${project.status === 'Completado' ? '<span class="badge badge-success">Completado</span>' : ''}
+                                    ${project.status === 'Cancelado' ? '<span class="badge badge-danger">Cancelado</span>' : ''}
+                                    ${project.status === 'En espera' ? '<span class="badge badge-secondary">En espera</span>' : ''}
+                                    ${!['Planificación', 'En progreso', 'Completado', 'Cancelado', 'En espera'].includes(project.status) ? `<span class="badge badge-dark">${project.status}</span>` : ''}
+                                  </td>
+                                  <td>
+                                    <div class="progress">
+                                      <div class="progress-bar" role="progressbar" style="width: ${project.progress || 0}%"></div>
+                                    </div>
+                                    <small>${project.progress || 0}%</small>
+                                  </td>
+                                </tr>
+                              `).join('') || '<tr><td colspan="3" class="text-center">No tienes proyectos asignados</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Separador de Sección: Estadísticas de Tareas -->
+                <div class="row">
+                  <div class="col-12">
+                    <h3 class="page-title mb-4">
+                      <span class="page-title-icon bg-gradient-primary text-white me-2">
+                        <i class="mdi mdi-check-circle"></i>
+                      </span>
+                      Estadísticas de Tareas
+                    </h3>
+                  </div>
+                </div>
+
+                <!-- Estadísticas de Tareas por Estado -->
+                <div class="row">
+                  <div class="col-md-3 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-clock-outline mdi-36px text-warning"></i>
+                        </div>
+                        <h3 class="text-warning mb-2">${data.task_stats?.pendiente || 0}</h3>
+                        <h6 class="text-muted">Pendientes</h6>
+                        <p class="text-muted small">Tareas pendientes</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-play-circle mdi-36px text-info"></i>
+                        </div>
+                        <h3 class="text-info mb-2">${data.task_stats?.en_progreso || 0}</h3>
+                        <h6 class="text-muted">En Progreso</h6>
+                        <p class="text-muted small">Tareas en ejecución</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-check-circle mdi-36px text-success"></i>
+                        </div>
+                        <h3 class="text-success mb-2">${data.task_stats?.completada || 0}</h3>
+                        <h6 class="text-muted">Completadas</h6>
+                        <p class="text-muted small">Tareas finalizadas</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-account mdi-36px text-primary"></i>
+                        </div>
+                        <h3 class="text-primary mb-2">${data.assigned_tasks?.length || 0}</h3>
+                        <h6 class="text-muted">Asignadas a mí</h6>
+                        <p class="text-muted small">Mis tareas</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Tareas Recientes y Asignadas -->
+                <div class="row">
+                  <div class="col-md-6 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Últimas 5 Tareas Creadas</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Título</th>
+                                <th>Estado</th>
+                                <th>Prioridad</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.recent_tasks?.map(task => `
+                                <tr>
+                                  <td>${task.title || 'Sin título'}</td>
+                                  <td>
+                                    ${task.status === 'Pendiente' ? '<span class="badge badge-warning">Pendiente</span>' : ''}
+                                    ${task.status === 'En progreso' ? '<span class="badge badge-info">En progreso</span>' : ''}
+                                    ${task.status === 'Completada' ? '<span class="badge badge-success">Completada</span>' : ''}
+                                    ${!['Pendiente', 'En progreso', 'Completada'].includes(task.status) ? `<span class="badge badge-dark">${task.status}</span>` : ''}
+                                  </td>
+                                  <td>
+                                    ${task.priority === 'Alta' ? '<span class="badge badge-danger">Alta</span>' : ''}
+                                    ${task.priority === 'Media' ? '<span class="badge badge-warning">Media</span>' : ''}
+                                    ${task.priority === 'Baja' ? '<span class="badge badge-success">Baja</span>' : ''}
+                                    ${!['Alta', 'Media', 'Baja'].includes(task.priority) ? `<span class="badge badge-secondary">${task.priority}</span>` : ''}
+                                  </td>
+                                </tr>
+                              `).join('') || '<tr><td colspan="3" class="text-center">No hay tareas recientes</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Mis Tareas Asignadas</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Título</th>
+                                <th>Estado</th>
+                                <th>Prioridad</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.assigned_tasks?.map(task => `
+                                <tr>
+                                  <td>${task.title || 'Sin título'}</td>
+                                  <td>
+                                    ${task.status === 'Pendiente' ? '<span class="badge badge-warning">Pendiente</span>' : ''}
+                                    ${task.status === 'En progreso' ? '<span class="badge badge-info">En progreso</span>' : ''}
+                                    ${task.status === 'Completada' ? '<span class="badge badge-success">Completada</span>' : ''}
+                                    ${!['Pendiente', 'En progreso', 'Completada'].includes(task.status) ? `<span class="badge badge-dark">${task.status}</span>` : ''}
+                                  </td>
+                                  <td>
+                                    ${task.priority === 'Alta' ? '<span class="badge badge-danger">Alta</span>' : ''}
+                                    ${task.priority === 'Media' ? '<span class="badge badge-warning">Media</span>' : ''}
+                                    ${task.priority === 'Baja' ? '<span class="badge badge-success">Baja</span>' : ''}
+                                    ${!['Alta', 'Media', 'Baja'].includes(task.priority) ? `<span class="badge badge-secondary">${task.priority}</span>` : ''}
+                                  </td>
+                                </tr>
+                              `).join('') || '<tr><td colspan="3" class="text-center">No tienes tareas asignadas</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+
+              document.getElementById('dashboard-content').innerHTML = coordinatorHTML;
+              console.log("✅ Dashboard de Coordinador cargado");
+            } catch (error) {
+              console.error("❌ Error al cargar dashboard de coordinador:", error);
+              showDashboardError("Error al cargar datos del coordinador");
+=======
+            const remainingBudgetEl = document.getElementById("remainingBudget");
+            const remainingBudgetPercentEl = document.getElementById(
+              "remainingBudgetPercent"
+            );
+            if (remainingBudgetEl) {
+              remainingBudgetEl.textContent =
+                DashboardService.formatCurrency(remainingBudget);
+            }
+            if (remainingBudgetPercentEl) {
+              remainingBudgetPercentEl.textContent = `${budgetPercent}% disponible`;
+>>>>>>> e7d0f62e719ceaa0c79208b32b5954189cce2e77
+            }
+          }
+
+          // ========== DASHBOARD PARA PARTICIPANTE ==========
+          async function loadParticipantDashboard() {
+            console.log("👤 Cargando dashboard de Participante...");
+            
+            try {
+              const response = await DashboardService.getParticipantDashboardData();
+              if (!response.success) {
+                throw new Error(response.message);
+              }
+
+              const data = response.data;
+              
+              // Crear HTML del dashboard de participante
+              const participantHTML = `
+                <!-- Estadísticas Personales -->
+                <div class="row">
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-primary card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Mis Proyectos
+                          <i class="mdi mdi-briefcase mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.my_projects?.length || 0}</h2>
+                        <h6 class="card-text">Proyectos asignados</h6>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-info card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Mis Tareas
+                          <i class="mdi mdi-check-circle mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.my_tasks?.length || 0}</h2>
+                        <h6 class="card-text">Tareas asignadas</h6>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-success card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Tareas Completadas
+                          <i class="mdi mdi-check-all mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.completed_tasks?.length || 0}</h2>
+                        <h6 class="card-text">Tareas finalizadas</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mis Proyectos -->
+                <div class="row">
+                  <div class="col-12 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Mis Proyectos</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Nombre del Proyecto</th>
+                                <th>Estado</th>
+                                <th>Progreso</th>
+                                <th>Fecha de Inicio</th>
+                                <th>Fecha de Fin</th>
+                                <th>Prioridad</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.my_projects?.map(project => `
+                                <tr>
+                                  <td>${project.name || 'Sin nombre'}</td>
+                                  <td><label class="badge badge-gradient-${DashboardService.getStatusClass(project.status)}">${project.status}</label></td>
+                                  <td>
+                                    <div class="progress">
+                                      <div class="progress-bar" role="progressbar" style="width: ${project.progress || 0}%"></div>
+                                    </div>
+                                    <small>${project.progress || 0}%</small>
+                </td>
+                                  <td>${project.start_date ? DashboardService.formatDate(project.start_date) : 'Sin fecha'}</td>
+                                  <td>${project.end_date ? DashboardService.formatDate(project.end_date) : 'Sin fecha'}</td>
+                                  <td><label class="badge badge-gradient-${DashboardService.getPriorityClass(project.priority)}">${project.priority}</label></td>
+                                </tr>
+                              `).join('') || '<tr><td colspan="6" class="text-center">No tienes proyectos asignados</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mis Tareas -->
+                <div class="row">
+                  <div class="col-12 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Mis Tareas</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Título de la Tarea</th>
+                                <th>Estado</th>
+                                <th>Prioridad</th>
+                                <th>Fecha de Vencimiento</th>
+                                <th>Progreso</th>
+                                <th>Proyecto</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.my_tasks?.map(task => `
+                                <tr>
+                                  <td>${task.title || 'Sin título'}</td>
+                                  <td><label class="badge badge-gradient-${DashboardService.getStatusClass(task.status)}">${task.status}</label></td>
+                                  <td><label class="badge badge-gradient-${DashboardService.getPriorityClass(task.priority)}">${task.priority}</label></td>
+                                  <td>${task.due_date ? DashboardService.formatDate(task.due_date) : 'Sin fecha'}</td>
+                                  <td>
+                                    <div class="progress">
+                                      <div class="progress-bar" role="progressbar" style="width: ${task.progress || 0}%"></div>
+                                    </div>
+                                    <small>${task.progress || 0}%</small>
+                </td>
+                                  <td>${task.project_name || 'Sin proyecto'}</td>
+              </tr>
+                              `).join('') || '<tr><td colspan="6" class="text-center">No tienes tareas asignadas</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+
+              document.getElementById('dashboard-content').innerHTML = participantHTML;
+              console.log("✅ Dashboard de Participante cargado");
+            } catch (error) {
+              console.error("❌ Error al cargar dashboard de participante:", error);
+              showDashboardError("Error al cargar datos del participante");
+            }
+          }
+
+          // Mostrar error en el dashboard
+          function showDashboardError(message) {
+            const errorHtml = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Error:</strong> ${message}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          `;
+
+            const contentWrapper = document.querySelector(".content-wrapper");
+            if (contentWrapper) {
+              contentWrapper.insertAdjacentHTML("afterbegin", errorHtml);
+            }
+          }
+
+          // Cargar datos al iniciar
+          loadDashboardData();
+
+          // Configurar botón de logout en navbar
+          const logoutButtons = document.querySelectorAll(
+            '.nav-logout a, a[href="#"]:has(i.mdi-power)'
+          );
+          logoutButtons.forEach((btn) => {
+            btn.addEventListener("click", showLogoutModal);
+          });
+
+          // Configurar logout en dropdown
+          const dropdownLogout = document.querySelector(
+            ".dropdown-item:has(i.mdi-logout)"
+          );
+          if (dropdownLogout) {
+            dropdownLogout.addEventListener("click", showLogoutModal);
+          }
+
+          // Confirmar logout
+          document
+            .getElementById("confirmLogoutBtn")
+            .addEventListener("click", () => {
+              logoutModal.hide();
+
+              // Mostrar mensaje de despedida
+              const btn = document.getElementById("confirmLogoutBtn");
+              btn.innerHTML =
+                '<i class="mdi mdi-loading mdi-spin"></i> Cerrando...';
+              btn.disabled = true;
+
+              // Cerrar sesión después de un breve delay
+              setTimeout(() => {
+                AuthService.logout();
+              }, 300);
+            });
+        })(); // Ejecutar función async inmediatamente
+      }
+    </script>
+  </body>
+</html>

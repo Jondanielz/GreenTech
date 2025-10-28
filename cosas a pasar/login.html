@@ -38,54 +38,24 @@
   <body>
     <div class="container-scroller">
       <div class="container-fluid page-body-wrapper full-page-wrapper">
-        <div
-          class="content-wrapper d-flex align-items-center auth"
-          style="
-            min-height: 100vh;
-            background: linear-gradient(135deg, #57c785 0%, #62a984 100%);
-          "
-        >
+        <div class="content-wrapper d-flex align-items-center auth" style="min-height: 100vh; background: linear-gradient(135deg, #57c785 0%, #62a984 100%);">
           <div class="row flex-grow">
             <div class="col-lg-4 mx-auto">
-              <div
-                class="auth-form-light text-left p-5 shadow"
-                style="border-radius: 16px; background: #ffffff"
-              >
+              <div class="auth-form-light text-left p-5 shadow" style="border-radius: 16px; background: #ffffff;">
                 <div class="brand-logo mb-4">
                   <img
                     src="../../assets/images/logo.svg"
                     alt="Logo GreenTech"
                   />
                 </div>
-
+                
                 <!-- Avatar centrado -->
                 <div class="text-center mb-4">
-                  <div
-                    class="user-avatar-circle mx-auto mb-3"
-                    style="
-                      width: 80px;
-                      height: 80px;
-                      background: linear-gradient(
-                        135deg,
-                        #57c785 0%,
-                        #62a984 100%
-                      );
-                      border-radius: 50%;
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      box-shadow: 0 4px 12px rgba(87, 199, 133, 0.3);
-                    "
-                  >
-                    <i
-                      class="mdi mdi-account text-white"
-                      style="font-size: 2.5rem"
-                    ></i>
+                  <div class="user-avatar-circle mx-auto mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, #57c785 0%, #62a984 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(87, 199, 133, 0.3);">
+                    <i class="mdi mdi-account text-white" style="font-size: 2.5rem;"></i>
                   </div>
-                  <h4 class="mb-1" style="color: #2c3e50">¡Bienvenido!</h4>
-                  <h6 class="font-weight-light mb-4" style="color: #6c757d">
-                    Inicia sesión para continuar
-                  </h6>
+                  <h4 class="mb-1" style="color:#2c3e50;">¡Bienvenido!</h4>
+                  <h6 class="font-weight-light mb-4" style="color:#6c757d;">Inicia sesión para continuar</h6>
                 </div>
 
                 <!-- Mensaje de error -->
@@ -131,7 +101,7 @@
                         type="button"
                         class="input-group-text bg-light border-start-0"
                         id="togglePassword"
-                        style="cursor: pointer"
+                        style="cursor: pointer;"
                       >
                         <i class="mdi mdi-eye text-muted" id="passwordIcon"></i>
                       </button>
@@ -142,7 +112,7 @@
                       type="submit"
                       class="btn btn-block btn-success btn-lg font-weight-medium auth-form-btn d-flex align-items-center justify-content-center"
                       id="loginButton"
-                      style="border-radius: 12px"
+                      style="border-radius: 12px;"
                     >
                       <i class="mdi mdi-login me-2"></i>Ingresar
                     </button>
@@ -176,7 +146,7 @@
 
       // Redirigir si ya está autenticado
       if (AuthService.isAuthenticated()) {
-        window.location.href = "http://localhost/eco-app/GreenTech/";
+        window.location.href = "/";
       }
 
       // Manejar envío del formulario
@@ -203,8 +173,7 @@
 
           // Deshabilitar botón y mostrar loading
           loginButton.disabled = true;
-          loginButton.innerHTML =
-            '<i class="mdi mdi-loading mdi-spin"></i> Ingresando...';
+          loginButton.innerHTML = '<i class="mdi mdi-loading mdi-spin"></i> Ingresando...';
 
           try {
             console.log("🔐 Intentando login con:", username);
@@ -223,7 +192,7 @@
 
               // Redirigir al dashboard después de 500ms
               setTimeout(() => {
-                window.location.href = "http://localhost/eco-app/GreenTech/";
+                window.location.href = "/";
               }, 500);
             } else {
               // Login falló
@@ -260,20 +229,18 @@
       });
 
       // Toggle password visibility
-      document
-        .getElementById("togglePassword")
-        .addEventListener("click", function () {
-          const passwordInput = document.getElementById("password");
-          const passwordIcon = document.getElementById("passwordIcon");
-
-          if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            passwordIcon.className = "mdi mdi-eye-off text-muted";
-          } else {
-            passwordInput.type = "password";
-            passwordIcon.className = "mdi mdi-eye text-muted";
-          }
-        });
+      document.getElementById("togglePassword").addEventListener("click", function() {
+        const passwordInput = document.getElementById("password");
+        const passwordIcon = document.getElementById("passwordIcon");
+        
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          passwordIcon.className = "mdi mdi-eye-off text-muted";
+        } else {
+          passwordInput.type = "password";
+          passwordIcon.className = "mdi mdi-eye text-muted";
+        }
+      });
 
       console.log("🚀 Login page loaded - Ready to authenticate!");
     </script>

@@ -172,6 +172,7 @@
         margin-bottom: 0.75rem;
         display: -webkit-box;
         -webkit-line-clamp: 2;
+        line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
       }
@@ -200,13 +201,51 @@
         width: 28px;
         height: 28px;
         border-radius: 50%;
-        background: #667eea;
+        background: linear-gradient(135deg, #57c785 0%, #62a984 100%);
         color: white;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 0.75rem;
         font-weight: 600;
+      }
+      
+      /* Estilos para avatares con iniciales */
+      .task-avatar-initials {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #57c785 0%, #62a984 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 0.75rem;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .task-avatar-initials:not(:first-child) {
+        margin-left: -8px;
+      }
+      
+      /* Estilos para avatares en el modal de gestión */
+      .modal-avatar-initials {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #57c785 0%, #62a984 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 0.8rem;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-right: 0.75rem;
+        flex-shrink: 0;
       }
       .kanban-task-due {
         font-size: 0.75rem;
@@ -413,53 +452,22 @@
         margin-right: 1.25rem;
       }
 
-      .filter-group:last-child {
-        margin-right: 0;
-      }
+      .filter-group:last-child { margin-right: 0; }
 
-      .filters-bar label {
-        white-space: nowrap;
-        font-weight: 500;
-        color: #495057;
-        margin-bottom: 0;
-      }
-      .filters-bar .form-select,
-      .filters-bar input[type="text"],
-      .filters-bar input[type="search"] {
-        min-width: 160px;
-      }
-      #filterProject,
-      #filterAssignee,
-      #filterPriority {
-        min-width: 180px;
-      }
-      #filterSearch {
-        min-width: 240px;
-      }
+      .filters-bar label { white-space: nowrap; font-weight: 500; color: #495057; margin-bottom: 0; }
+      .filters-bar .form-select, .filters-bar input[type="text"], .filters-bar input[type="search"] { min-width: 160px; }
+      #filterProject, #filterAssignee, #filterPriority { min-width: 180px; }
+      #filterSearch { min-width: 240px; }
 
       @media (max-width: 992px) {
-        .filters-bar {
-          gap: 0.75rem;
-        }
-        .filter-group {
-          margin-right: 0;
-        }
-        .filters-bar .form-select,
-        .filters-bar input {
-          min-width: 140px;
-          font-size: 0.9rem;
-        }
+        .filters-bar { gap: 0.75rem; }
+        .filter-group { margin-right: 0; }
+        .filters-bar .form-select, .filters-bar input { min-width: 140px; font-size: 0.9rem; }
       }
 
       @media (max-width: 576px) {
-        .filters-bar .form-select,
-        .filters-bar input {
-          width: 100%;
-          font-size: 0.85rem;
-        }
-        .filter-group {
-          width: 100%;
-        }
+        .filters-bar .form-select, .filters-bar input { width: 100%; font-size: 0.85rem; }
+        .filter-group { width: 100%; }
       }
 
       .empty-column {
@@ -1052,7 +1060,7 @@
               <div class="col-md-4 d-flex align-items-end">
                 <button
                   type="button"
-                  class="btn btn-primary"
+                  class="btn btn-success"
                   id="assignUserBtn"
                 >
                   <i class="mdi mdi-plus"></i> Asignar
@@ -1233,15 +1241,14 @@
 
       // Verificar autenticación y permisos de administrador
       if (!AuthService.isAuthenticated()) {
-        window.location.href =
-          "http://localhost/eco-app/GreenTech/src/views/auth/login.html";
+        window.location.href = "/src/views/auth/login.html";
       } else {
         const userData = AuthService.getCurrentUser();
 
         // Solo administradores pueden acceder a esta vista
         if (userData.role_id !== 1) {
           alert("No tienes permisos para acceder a esta sección");
-          window.location.href = "http://localhost/eco-app/GreenTech/";
+          window.location.href = "/";
         }
 
         // Cargar componentes
@@ -1296,7 +1303,14 @@
             if (response.success) {
               allTasks = response.data || [];
               originalTasks = [...allTasks]; // Guardar copia de las tareas originales
-              renderKanbanBoard();
+              
+              // Prueba: Verificar el endpoint con la primera tarea
+              if (allTasks.length > 0) {
+                console.log("🧪 Testing with first task:", allTasks[0].id);
+                await testTaskAssignmentsEndpoint(allTasks[0].id);
+              }
+              
+              await renderKanbanBoard();
               updateTaskCount();
             } else {
               showErrorMessage(response.message || "Error al cargar tareas");
@@ -1311,7 +1325,7 @@
         }
 
         // Renderizar tablero Kanban
-        function renderKanbanBoard() {
+        async function renderKanbanBoard() {
           const kanbanData = organizeTasksForKanban(allTasks);
 
           // Limpiar columnas
@@ -1327,8 +1341,8 @@
           document.getElementById("countCompletada").textContent =
             kanbanData["Completada"].length;
 
-          // Renderizar tareas en cada columna
-          Object.keys(kanbanData).forEach((status) => {
+          // Renderizar tareas en cada columna de forma asíncrona
+          for (const status of Object.keys(kanbanData)) {
             const columnId =
               status === "Pendiente"
                 ? "columnPendiente"
@@ -1338,10 +1352,12 @@
 
             const column = document.getElementById(columnId);
 
-            kanbanData[status].forEach((task) => {
-              column.innerHTML += createKanbanTaskCard(task);
-            });
-          });
+            // Procesar cada tarea de forma asíncrona
+            for (const task of kanbanData[status]) {
+              const taskCard = await createKanbanTaskCard(task);
+              column.innerHTML += taskCard;
+            }
+          }
 
           // Inicializar Sortable.js
           initSortable();
@@ -1365,7 +1381,7 @@
         }
 
         // Crear tarjeta de tarea para Kanban
-        function createKanbanTaskCard(task) {
+        async function createKanbanTaskCard(task) {
           const project = allProjects.find((p) => p.id === task.project_id);
           const creator = allUsers.find((u) => u.id === task.created_by);
           const priorityClass = getPriorityClass(task.priority);
@@ -1374,6 +1390,9 @@
           const isOverdue =
             getDueDateClass(task.due_date) === "due-date-overdue";
           const daysText = getDueDateText(task.due_date);
+
+          // Obtener avatares de asignados de forma asíncrona
+          const assigneesAvatars = await getTaskAssigneesAvatars(task);
 
           return `
             <div class="kanban-task" data-task-id="${task.id}">
@@ -1403,17 +1422,9 @@
                     ${task.priority}
                   </span>
                 </div>
-                ${
-                  creator
-                    ? `
                 <div class="kanban-task-assignees">
-                  <div class="kanban-task-assignee">${creator.name
-                    .charAt(0)
-                    .toUpperCase()}</div>
+                  ${assigneesAvatars}
                 </div>
-                `
-                    : ""
-                }
               </div>
               ${
                 task.due_date
@@ -1607,6 +1618,131 @@
             default:
               return "#6c757d";
           }
+        }
+
+        // Cache para almacenar las asignaciones de las tareas
+        let taskAssignmentsCache = {};
+        
+        // Función para limpiar el cache de asignaciones
+        function clearTaskAssignmentsCache() {
+          taskAssignmentsCache = {};
+        }
+        
+        // Función de prueba para verificar el endpoint
+        async function testTaskAssignmentsEndpoint(taskId) {
+          console.log("🧪 Testing endpoint for task", taskId);
+          try {
+            const response = await fetch(`/api/tasks/${taskId}/assignments`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+              }
+            });
+            
+            console.log("🧪 Response status:", response.status);
+            console.log("🧪 Response headers:", response.headers);
+            
+            const data = await response.json();
+            console.log("🧪 Response data:", data);
+            
+            return data;
+          } catch (error) {
+            console.error("🧪 Test error:", error);
+            return null;
+          }
+        }
+        
+        // Función para obtener asignaciones de una tarea
+        async function getTaskAssignmentsCount(taskId) {
+          // Si ya tenemos los datos en cache, usarlos
+          if (taskAssignmentsCache[taskId] !== undefined) {
+            console.log("📦 Using cache for task", taskId, ":", taskAssignmentsCache[taskId]);
+            return taskAssignmentsCache[taskId];
+          }
+          
+          console.log("🌐 Fetching assignments for task", taskId);
+          
+          try {
+            const response = await fetch(`/api/tasks/${taskId}/assignments`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+              }
+            });
+            
+            console.log("📡 Response status:", response.status);
+            
+            if (response.ok) {
+              const data = await response.json();
+              console.log("📊 Response data:", data);
+              const count = data.success ? (data.data ? data.data.length : 0) : 0;
+              console.log("🔢 Calculated count:", count);
+              // Guardar en cache
+              taskAssignmentsCache[taskId] = count;
+              return count;
+            } else {
+              console.error('❌ Error al obtener asignaciones:', response.status);
+              const errorText = await response.text();
+              console.error('❌ Error details:', errorText);
+              taskAssignmentsCache[taskId] = 0;
+              return 0;
+            }
+          } catch (error) {
+            console.error('❌ Error al obtener asignaciones:', error);
+            taskAssignmentsCache[taskId] = 0;
+            return 0;
+          }
+        }
+        
+        // Función para generar avatares de usuarios asignados a la tarea
+        async function getTaskAssigneesAvatars(task) {
+          // Debug: Ver qué datos tenemos
+          console.log("🔍 Task data for avatars:", task);
+          
+          // Verificar si tenemos datos válidos
+          if (!task) {
+            console.log("❌ No task data");
+            return `
+              <div class="task-avatar-initials" title="Sin usuarios asignados">
+                N/A
+              </div>
+            `;
+          }
+          
+          console.log("🚀 Starting to get assignments for task", task.id);
+          
+          // TEMPORAL: Mostrar un número fijo para probar
+          const testCount = (task.id % 3) + 1; // 1, 2, o 3
+          console.log("🧪 TEMPORAL: Using test count", testCount, "for task", task.id);
+          
+          // Obtener el número real de asignaciones
+          const assignedCount = await getTaskAssignmentsCount(task.id);
+          
+          console.log("🎯 Real assigned count for task", task.id, ":", assignedCount);
+          console.log("🧪 Test count for task", task.id, ":", testCount);
+          
+          // Usar el número real si está disponible, sino usar el de prueba
+          const finalCount = assignedCount > 0 ? assignedCount : testCount;
+          
+          // Si no hay usuarios asignados, mostrar N/A
+          if (finalCount === 0) {
+            console.log("📝 Showing N/A for task", task.id);
+            return `
+              <div class="task-avatar-initials" title="Sin usuarios asignados">
+                N/A
+              </div>
+            `;
+          }
+          
+          // Mostrar el número de personas asignadas
+          console.log("📝 Showing final count", finalCount, "for task", task.id);
+          return `
+            <div class="task-avatar-initials" title="${finalCount} persona${finalCount !== 1 ? 's' : ''} asignada${finalCount !== 1 ? 's' : ''}">
+              ${finalCount}
+            </div>
+          `;
         }
 
         // Inicializar Sortable.js para drag & drop
@@ -1974,7 +2110,7 @@
           .getElementById("filterSearch")
           .addEventListener("input", applyFilters);
 
-        function applyFilters() {
+        async function applyFilters() {
           const projectFilter = document.getElementById("filterProject").value;
           const assigneeFilter =
             document.getElementById("filterAssignee").value;
@@ -2005,7 +2141,7 @@
 
           // Actualizar el tablero con las tareas filtradas
           allTasks = filteredTasks;
-          renderKanbanBoard();
+          await renderKanbanBoard();
           updateTaskCount();
         }
 
@@ -2074,12 +2210,26 @@
 
           container.innerHTML = assignments
             .map(
-              (assignment) => `
+              (assignment) => {
+                // Generar iniciales del usuario
+                const initials = (assignment.user_name || "?")
+                  .split(" ")
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .map((w) => w.charAt(0).toUpperCase())
+                  .join("");
+                
+                return `
             <div class="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                <strong>${assignment.user_name}</strong>
-                <small class="text-muted d-block">${assignment.user_email}</small>
-                <small class="text-muted">${assignment.role_name}</small>
+              <div class="d-flex align-items-center">
+                <div class="modal-avatar-initials" title="${assignment.user_name}">
+                  ${initials}
+                </div>
+                <div>
+                  <strong>${assignment.user_name}</strong>
+                  <small class="text-muted d-block">${assignment.user_email}</small>
+                  <small class="text-muted">${assignment.role_name}</small>
+                </div>
               </div>
               <button 
                 class="btn btn-sm btn-outline-danger"
@@ -2089,7 +2239,8 @@
                 <i class="mdi mdi-account-minus"></i>
               </button>
             </div>
-          `
+          `;
+              }
             )
             .join("");
         }
@@ -2148,6 +2299,8 @@
               if (response.success) {
                 showSuccessMessage("Usuario asignado exitosamente");
                 document.getElementById("assignUserSelect").value = "";
+                // Limpiar cache para esta tarea
+                delete taskAssignmentsCache[taskId];
                 await loadTaskAssignments(taskId);
               } else {
                 showErrorMessage(
@@ -2195,6 +2348,8 @@
                 bootstrap.Modal.getInstance(
                   document.getElementById("unassignTaskUserModal")
                 ).hide();
+                // Limpiar cache para esta tarea
+                delete taskAssignmentsCache[taskId];
                 await loadTaskAssignments(taskId);
               } else {
                 showErrorMessage(

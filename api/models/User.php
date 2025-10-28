@@ -255,8 +255,14 @@ class User {
      * @return array|false - Datos del usuario si el token es válido, false si no
      */
     public function verifyToken($token) {
-        $query = "SELECT u.* 
+        $query = "SELECT 
+                    u.id, u.name, u.email, u.user, 
+                    u.role_id, u.position, u.avatar, u.active, u.last_login,
+                    r.name as role_name, 
+                    r.permissions,
+                    r.description as role_description
                   FROM " . $this->table_name . " u
+                  LEFT JOIN roles r ON u.role_id = r.id
                   INNER JOIN user_sessions s ON u.id = s.user_id
                   WHERE s.token = :token 
                   AND s.expires_at > NOW() 

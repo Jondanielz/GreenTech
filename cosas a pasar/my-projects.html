@@ -7,7 +7,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <title>Gestión de Proyectos - GreenTech</title>
+    <title>Mis Proyectos - GreenTech</title>
     <!-- plugins:css -->
     <link
       rel="stylesheet"
@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="../../assets/css/style.css" />
     <!-- Favicon -->
     <link rel="shortcut icon" href="../../assets/images/favicon.png" />
-    <!-- Estilos personalizados para proyectos -->
+    <!-- Estilos personalizados -->
     <style>
       /* Estilos para modales de confirmación */
       .unassign-icon-wrapper {
@@ -151,25 +151,10 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
-      .btn-outline-success {
-        background-color: #62a984;
-        color: #ffffff;
-        --bs-btn-color: #62a984;
-        --bs-btn-border-color: #62a984;
-        --bs-btn-hover-color: #000;
-        --bs-btn-hover-bg: #62a984;
-        --bs-btn-hover-border-color: #62a984;
-        --bs-btn-focus-shadow-rgb: 27, 207, 180;
-        --bs-btn-active-color: #000;
-        --bs-btn-active-bg: #62a984;
-        --bs-btn-active-border-color: #62a984;
-        --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-        --bs-btn-disabled-color: #62a984;
-        --bs-btn-disabled-bg: transparent;
-        --bs-btn-disabled-border-color: #62a984;
-        --bs-gradient: none;
+      .btn-view {
+        background: #4e73df;
+        color: white;
       }
-
       .btn-outline-info {
         background-color: #198ae3;
         color: #ffffff;
@@ -188,27 +173,23 @@
         --bs-btn-disabled-border-color: #198ae3;
         --bs-gradient: none;
       }
-      .btn-outline-danger {
-        background-color: #e74a3b;
+      .btn-outline-success {
+        background-color: #62a984;
         color: #ffffff;
-        --bs-btn-color: #e74a3b;
-        --bs-btn-border-color: #e74a3b;
+        --bs-btn-color: #62a984;
+        --bs-btn-border-color: #62a984;
         --bs-btn-hover-color: #000;
-        --bs-btn-hover-bg: #e74a3b;
-        --bs-btn-hover-border-color: #e74a3b;
-        --bs-btn-focus-shadow-rgb: 216, 70, 96;
+        --bs-btn-hover-bg: #62a984;
+        --bs-btn-hover-border-color: #62a984;
+        --bs-btn-focus-shadow-rgb: 27, 207, 180;
         --bs-btn-active-color: #000;
-        --bs-btn-active-bg: #e74a3b;
-        --bs-btn-active-border-color: #e74a3b;
+        --bs-btn-active-bg: #62a984;
+        --bs-btn-active-border-color: #62a984;
         --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-        --bs-btn-disabled-color: #e74a3b;
+        --bs-btn-disabled-color: #62a984;
         --bs-btn-disabled-bg: transparent;
-        --bs-btn-disabled-border-color: #e74a3b;
+        --bs-btn-disabled-border-color: #62a984;
         --bs-gradient: none;
-      }
-      .btn-view {
-        background: #4e73df;
-        color: white;
       }
       .btn-edit {
         background: #f6c23e;
@@ -253,6 +234,32 @@
         font-weight: 500;
         margin-bottom: 0.5rem;
       }
+      
+      /* Estilos para avatares con iniciales */
+      .member-avatar-initials {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #57c785 0%, #62a984 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 0.9rem;
+      }
+      .user-avatar-initials {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #57c785 0%, #62a984 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 0.9rem;
+      }
     </style>
   </head>
   <body>
@@ -278,19 +285,24 @@
             <div class="page-header">
               <h3 class="page-title">
                 <span
-                  class="page-title-icon bg-gradient-primary text-white me-2"
+                  class="page-title-icon bg-gradient-success text-white me-2"
                 >
-                  <i class="mdi mdi-folder-multiple"></i>
+                  <i class="mdi mdi-folder-account"></i>
                 </span>
-                Gestión de Proyectos
+                Mis Proyectos
               </h3>
               <nav aria-label="breadcrumb">
                 <ul class="breadcrumb">
                   <li class="breadcrumb-item active" aria-current="page">
+                    <span id="projectCount" class="badge bg-success"
+                      >0 proyectos</span
+                    >
+
                     <button
-                      class="btn btn-gradient-primary btn-sm"
+                      class="btn btn-gradient-primary btn-sm ms-2"
                       data-bs-toggle="modal"
                       data-bs-target="#createProjectModal"
+                      id="openCreateProjectBtn"
                     >
                       <i class="mdi mdi-plus"></i> Nuevo Proyecto
                     </button>
@@ -308,7 +320,6 @@
                   <option value="Planificación">Planificación</option>
                   <option value="En progreso">En Progreso</option>
                   <option value="Completado">Completado</option>
-                  <option value="Cancelado">Cancelado</option>
                   <option value="En espera">En Espera</option>
                 </select>
               </div>
@@ -321,17 +332,14 @@
                   placeholder="Nombre del proyecto..."
                 />
               </div>
-              <div class="filter-group ms-auto">
-                <span id="projectCount" class="badge bg-info">0 proyectos</span>
-              </div>
             </div>
 
             <!-- Loading Spinner -->
             <div id="loadingSpinner" style="display: none">
-              <div class="spinner-border text-info" role="status">
+              <div class="spinner-border text-success" role="status">
                 <span class="visually-hidden">Cargando...</span>
               </div>
-              <p class="mt-2">Cargando proyectos...</p>
+              <p class="mt-2">Cargando tus proyectos...</p>
             </div>
 
             <!-- Projects Grid -->
@@ -342,10 +350,10 @@
             <!-- Empty State -->
             <div id="emptyState" class="empty-state" style="display: none">
               <i class="mdi mdi-folder-open"></i>
-              <h4>No hay proyectos</h4>
+              <h4>No estás asignado a ningún proyecto</h4>
               <p class="text-muted">
-                Aún no hay proyectos creados. Haz clic en "Nuevo Proyecto" para
-                comenzar.
+                Aún no has sido asignado a ningún proyecto. Contacta con tu
+                coordinador o administrador.
               </p>
             </div>
           </div>
@@ -395,7 +403,7 @@
                 <div class="col-md-4 mb-3">
                   <label for="projectStatus" class="form-label">Estado</label>
                   <select class="form-select" id="projectStatus">
-                    <option value="Planificación">Planificación</option>
+                    <option value="Planificacion">Planificación</option>
                     <option value="En progreso">En Progreso</option>
                     <option value="En espera">En Espera</option>
                   </select>
@@ -433,27 +441,31 @@
                 </div>
               </div>
 
-              <!-- Campos ocultos: Presupuesto, Ubicación, Objetivos -->
-              <!--
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="projectBudget" class="form-label">Presupuesto</label>
-                  <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="number" class="form-control" id="projectBudget" min="0" step="0.01" />
+<<<<<<< HEAD
+              <!-- Sección de Indicadores -->
+              <div class="mb-3">
+                <label class="form-label">Indicadores del Proyecto</label>
+                <div class="border rounded p-3" style="background-color: #f8f9fa;">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0">Seleccionar Indicadores</h6>
+                    <button type="button" class="btn btn-outline-success btn-sm" id="addIndicatorBtn">
+                      <i class="mdi mdi-plus"></i> Agregar Indicador
+                    </button>
                   </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label for="projectLocation" class="form-label">Ubicación</label>
-                  <input type="text" class="form-control" id="projectLocation" />
+                  
+                  <!-- Lista de indicadores seleccionados -->
+                  <div id="selectedIndicatorsList">
+                    <div class="text-muted text-center py-2">
+                      <i class="mdi mdi-information-outline"></i>
+                      No hay indicadores seleccionados
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div class="mb-3">
-                <label for="projectObjectives" class="form-label">Objetivos</label>
-                <textarea class="form-control" id="projectObjectives" rows="2"></textarea>
-              </div>
-              -->
+=======
+>>>>>>> e7d0f62e719ceaa0c79208b32b5954189cce2e77
+              <!-- Campos ocultos: Presupuesto, Ubicación, Objetivos (crear) -->
             </form>
           </div>
           <div class="modal-footer">
@@ -462,6 +474,55 @@
             </button>
             <button type="button" class="btn btn-success" id="saveProjectBtn">
               <i class="mdi mdi-content-save"></i> Guardar Proyecto
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Seleccionar Indicadores -->
+    <div class="modal fade" id="selectIndicatorsModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title">
+              <i class="mdi mdi-chart-line mr-2"></i>
+              Seleccionar Indicadores
+            </h5>
+            <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="indicatorSearch" class="form-label">Buscar Indicador</label>
+              <input type="text" class="form-control" id="indicatorSearch" placeholder="Escriba para filtrar indicadores...">
+            </div>
+            
+            <div class="mb-3">
+              <label for="indicatorCategory" class="form-label">Filtrar por Categoría</label>
+              <select class="form-select" id="indicatorCategory">
+                <option value="">Todas las categorías</option>
+                <option value="Ambiental">Ambiental</option>
+                <option value="Social">Social</option>
+                <option value="Económico">Económico</option>
+                <option value="General">General</option>
+              </select>
+            </div>
+
+            <div id="indicatorsList" style="max-height: 400px; overflow-y: auto;">
+              <div class="text-center py-4">
+                <div class="spinner-border text-success" role="status">
+                  <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-2 text-muted">Cargando indicadores...</p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-success" id="confirmIndicatorsBtn">
+              <i class="mdi mdi-check"></i> Confirmar Selección
             </button>
           </div>
         </div>
@@ -495,7 +556,7 @@
 
             <!-- Miembros actuales -->
             <div class="mb-4">
-              <h6 class="text-primary">
+              <h6 class="text-info">
                 <i class="mdi mdi-account-check mr-2"></i>
                 Miembros Asignados
               </h6>
@@ -589,56 +650,50 @@
 
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="editProjectStartDate" class="form-label"
-                    >Fecha de Inicio</label
-                  >
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="editProjectStartDate"
-                  />
+                  <label for="editProjectStartDate" class="form-label">Fecha de Inicio</label>
+                  <input type="date" class="form-control" id="editProjectStartDate" />
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label for="editProjectEndDate" class="form-label"
-                    >Fecha de Finalización</label
-                  >
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="editProjectEndDate"
-                  />
+                  <label for="editProjectEndDate" class="form-label">Fecha de Fin</label>
+                  <input type="date" class="form-control" id="editProjectEndDate" />
                 </div>
               </div>
 
-              <!-- Campos ocultos: Presupuesto, Ubicación, Objetivos (editar) -->
-              <!--
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="editProjectBudget" class="form-label">Presupuesto</label>
-                  <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="number" class="form-control" id="editProjectBudget" min="0" step="0.01" />
-                  </div>
+                  <label for="editProjectPriority" class="form-label"
+                    >Prioridad</label
+                  >
+                  <select class="form-select" id="editProjectPriority">
+                    <option value="Baja">Baja</option>
+                    <option value="Media">Media</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Crítica">Crítica</option>
+                  </select>
                 </div>
+                <!-- Campo de Progreso oculto para coordinador
                 <div class="col-md-6 mb-3">
-                  <label for="editProjectLocation" class="form-label">Ubicación</label>
-                  <input type="text" class="form-control" id="editProjectLocation" />
+                  <label for="editProjectProgress" class="form-label">Progreso (%)</label>
+                  <input type="number" class="form-control" id="editProjectProgress" min="0" max="100" />
                 </div>
+                -->
               </div>
-
-              <div class="mb-3">
-                <label for="editProjectObjectives" class="form-label">Objetivos</label>
-                <textarea class="form-control" id="editProjectObjectives" rows="2"></textarea>
-              </div>
-              -->
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+            <button
+              type="button"
+              class="btn btn-light"
+              data-bs-dismiss="modal"
+            >
               Cancelar
             </button>
-            <button type="button" class="btn btn-success" id="updateProjectBtn">
-              <i class="mdi mdi-content-save"></i> Actualizar Proyecto
+            <button
+              type="button"
+              class="btn btn-success"
+              id="saveEditProjectBtn"
+            >
+              <i class="mdi mdi-content-save"></i> Guardar Cambios
             </button>
           </div>
         </div>
@@ -769,18 +824,11 @@
       import ProjectService from "../../services/projects.js";
       import ComponentsLoader from "../../utils/components-loader.js";
 
-      // Verificar autenticación y permisos de administrador
+      // Verificar autenticación
       if (!AuthService.isAuthenticated()) {
-        window.location.href =
-          "http://localhost/eco-app/GreenTech/src/views/auth/login.html";
+        window.location.href = "/src/views/auth/login.html";
       } else {
         const userData = AuthService.getCurrentUser();
-
-        // Solo administradores pueden acceder a esta vista
-        if (userData.role_id !== 1) {
-          alert("No tienes permisos para acceder a esta sección");
-          window.location.href = "http://localhost/eco-app/GreenTech/";
-        }
 
         // Cargar componentes
         ComponentsLoader.loadCommonComponents({
@@ -790,11 +838,17 @@
           basePath: "../../components/",
         });
 
+        // Ocultar botón "Nuevo Proyecto" para participantes (rol 3)
+        const newProjectBtn = document.getElementById("openCreateProjectBtn");
+        if (newProjectBtn && userData.role_id === 3) {
+          newProjectBtn.style.display = "none";
+        }
+
         let allProjects = [];
         let filteredProjects = [];
 
-        // Cargar proyectos
-        async function loadProjects() {
+        // Cargar proyectos del usuario
+        async function loadMyProjects() {
           const spinner = document.getElementById("loadingSpinner");
           const grid = document.getElementById("projectsGrid");
           const emptyState = document.getElementById("emptyState");
@@ -804,7 +858,7 @@
             grid.innerHTML = "";
             emptyState.style.display = "none";
 
-            const response = await ProjectService.getProjects();
+            const response = await ProjectService.getMyProjects();
 
             if (response.success) {
               allProjects = response.data || [];
@@ -852,6 +906,9 @@
             project.status
           );
 
+          // Mostrar rol del usuario en el proyecto (si está disponible)
+          const userRole = project.user_role_in_project || "";
+
           return `
             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
               <div class="card project-card">
@@ -859,19 +916,24 @@
                   <span class="project-status-badge bg-${statusClass}">
                     ${project.status}
                   </span>
-                  ${
-                    userData.role_id === 1 || userData.role_id === 2
-                      ? `
+                   ${
+                     userData.role_id === 1 || userData.role_id === 2
+                       ? `
                    <div class="project-manage-icon" onclick="manageMembers(${project.id}, '${project.name}')" title="Gestionar Participantes">
                      <i class="mdi mdi-account-multiple-plus"></i>
                    </div>
                    `
-                      : ""
-                  }
+                       : ""
+                   }
                   <h5 class="mb-2">${project.name}</h5>
                   <small>Creado: ${ProjectService.formatDate(
                     project.created_at
                   )}</small>
+                  ${
+                    userRole
+                      ? `<div class="project-role-badge">${userRole}</div>`
+                      : ""
+                  }
                 </div>
                 <div class="project-body">
                   <p class="text-muted mb-3" style="font-size: 0.875rem;">
@@ -901,7 +963,7 @@
                     }</span>
                   </div>
                   
-                  <!-- Presupuesto oculto en tarjeta de proyecto -->
+                  <!-- Presupuesto oculto en tarjeta -->
                   
                   <div class="project-progress">
                     <div class="d-flex justify-content-between mb-1">
@@ -941,16 +1003,24 @@
                     })">
                       <i class="mdi mdi-eye"></i> Ver
                     </button>
-                    <button class="project-action-btn btn-outline-success" onclick="editProject(${
-                      project.id
-                    })">
+                    ${
+                      userData.role_id === 2 || userData.role_id === 1
+                        ? `
+                    <button class="project-action-btn btn-outline-success" onclick="editProject(${project.id})">
                       <i class="mdi mdi-pencil"></i> Editar
                     </button>
-                    <button class="project-action-btn btn-outline-danger" onclick="cancelProject(${
-                      project.id
-                    }, '${project.name}')">
+                    `
+                        : ""
+                    }
+                    ${
+                      userData.role_id === 1 && project.status !== 'Cancelado'
+                        ? `
+                    <button class="project-action-btn btn-cancel" onclick="cancelProject(${project.id}, '${project.name}')">
                       <i class="mdi mdi-close"></i> Cancelar
                     </button>
+                    `
+                        : ""
+                    }
                   </div>
                 </div>
               </div>
@@ -960,7 +1030,7 @@
 
         // Ver detalles del proyecto
         window.viewProject = function (id) {
-          window.location.href = `http://localhost/eco-app/GreenTech/src/views/projects/project-details.html?id=${id}`;
+          window.location.href = `/src/views/projects/project-details.html?id=${id}`;
         };
 
         // Editar proyecto
@@ -971,18 +1041,18 @@
             if (response.success) {
               const project = response.data;
 
+              // Llenar el formulario
               document.getElementById("editProjectId").value = project.id;
               document.getElementById("editProjectName").value = project.name;
               document.getElementById("editProjectDescription").value =
-                project.description;
+                project.description || "";
               document.getElementById("editProjectStatus").value =
                 project.status;
-              document.getElementById("editProjectStartDate").value =
-                project.start_date || "";
-              document.getElementById("editProjectEndDate").value =
-                project.end_date || "";
-              // Campos ocultos: presupuesto, ubicación, objetivos
+              document.getElementById("editProjectStartDate").value = project.start_date || "";
+              document.getElementById("editProjectEndDate").value = project.end_date || "";
+              // Campos ocultos/removidos: presupuesto, prioridad, progreso
 
+              // Mostrar modal
               const modal = new bootstrap.Modal(
                 document.getElementById("editProjectModal")
               );
@@ -996,7 +1066,7 @@
           }
         };
 
-        // Cancelar proyecto
+        // Cancelar proyecto (solo admin)
         window.cancelProject = async function (id, name) {
           if (
             !confirm(
@@ -1011,7 +1081,7 @@
 
             if (response.success) {
               showSuccessMessage("Proyecto cancelado exitosamente");
-              loadProjects();
+              loadMyProjects();
             } else {
               showErrorMessage(
                 response.message || "Error al cancelar proyecto"
@@ -1023,63 +1093,9 @@
           }
         };
 
-        // Guardar nuevo proyecto
+        // Guardar cambios del proyecto editado
         document
-          .getElementById("saveProjectBtn")
-          .addEventListener("click", async () => {
-            const form = document.getElementById("createProjectForm");
-
-            if (!form.checkValidity()) {
-              form.reportValidity();
-              return;
-            }
-
-            // Validar fechas
-            const startDate = document.getElementById("projectStartDate").value;
-            const endDate = document.getElementById("projectEndDate").value;
-
-            if (
-              startDate &&
-              endDate &&
-              new Date(endDate) < new Date(startDate)
-            ) {
-              showErrorMessage(
-                "La fecha de finalización no puede ser anterior a la fecha de inicio"
-              );
-              return;
-            }
-
-            const projectData = {
-              name: document.getElementById("projectName").value,
-              description: document.getElementById("projectDescription").value,
-              status: document.getElementById("projectStatus").value,
-              start_date: startDate,
-              end_date: endDate,
-              // Campos removidos: budget, location, objectives
-            };
-
-            try {
-              const response = await ProjectService.createProject(projectData);
-
-              if (response.success) {
-                showSuccessMessage("Proyecto creado exitosamente");
-                bootstrap.Modal.getInstance(
-                  document.getElementById("createProjectModal")
-                ).hide();
-                form.reset();
-                loadProjects();
-              } else {
-                showErrorMessage(response.message || "Error al crear proyecto");
-              }
-            } catch (error) {
-              console.error("Error:", error);
-              showErrorMessage("Error al crear proyecto");
-            }
-          });
-
-        // Actualizar proyecto
-        document
-          .getElementById("updateProjectBtn")
+          .getElementById("saveEditProjectBtn")
           .addEventListener("click", async () => {
             const form = document.getElementById("editProjectForm");
 
@@ -1088,7 +1104,7 @@
               return;
             }
 
-            const id = document.getElementById("editProjectId").value;
+            const projectId = document.getElementById("editProjectId").value;
             const projectData = {
               name: document.getElementById("editProjectName").value,
               description: document.getElementById("editProjectDescription")
@@ -1096,12 +1112,12 @@
               status: document.getElementById("editProjectStatus").value,
               start_date: document.getElementById("editProjectStartDate").value,
               end_date: document.getElementById("editProjectEndDate").value,
-              // Campos removidos: budget, location, objectives
+              // Campos removidos: budget, priority, progress
             };
 
             try {
               const response = await ProjectService.updateProject(
-                id,
+                projectId,
                 projectData
               );
 
@@ -1110,7 +1126,7 @@
                 bootstrap.Modal.getInstance(
                   document.getElementById("editProjectModal")
                 ).hide();
-                loadProjects();
+                loadMyProjects();
               } else {
                 showErrorMessage(
                   response.message || "Error al actualizar proyecto"
@@ -1157,13 +1173,82 @@
         }
 
         // Mostrar mensajes
+        function showErrorMessage(message) {
+          showError(message);
+        }
+
         function showSuccessMessage(message) {
           showSuccess(message);
         }
 
-        function showErrorMessage(message) {
-          showError(message);
-        }
+        // ========== CREAR PROYECTO ==========
+        // Guardar nuevo proyecto
+        document
+          .getElementById("saveProjectBtn")
+          .addEventListener("click", async () => {
+            const form = document.getElementById("createProjectForm");
+
+            if (!form.checkValidity()) {
+              form.reportValidity();
+              return;
+            }
+
+            // Validar fechas
+            const startDate = document.getElementById("projectStartDate").value;
+            const endDate = document.getElementById("projectEndDate").value;
+
+            if (
+              startDate &&
+              endDate &&
+              new Date(endDate) < new Date(startDate)
+            ) {
+              showErrorMessage(
+                "La fecha de finalización no puede ser anterior a la fecha de inicio"
+              );
+              return;
+            }
+
+            const projectData = {
+              name: document.getElementById("projectName").value,
+              description: document.getElementById("projectDescription").value,
+              status: document.getElementById("projectStatus").value,
+              start_date: startDate,
+              end_date: endDate,
+              indicators: selectedIndicators.map(indicator => ({
+                indicator_id: indicator.id,
+                baseline: 0, // Valor por defecto
+                target: 0, // Valor por defecto
+                target_date: endDate || null,
+                method: '', // Método por defecto
+                frequency: indicator.frequency,
+                responsible_user_id: null, // Se asignará después
+                notes: '',
+                active: true
+              }))
+            };
+
+            try {
+              const response = await ProjectService.createProject(projectData);
+
+              if (response.success) {
+                showSuccessMessage("Proyecto creado exitosamente");
+                bootstrap.Modal.getInstance(
+                  document.getElementById("createProjectModal")
+                ).hide();
+                form.reset();
+                // Limpiar indicadores seleccionados
+                selectedIndicators = [];
+                renderSelectedIndicators();
+                loadMyProjects();
+              } else {
+                showErrorMessage(response.message || "Error al crear proyecto");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              showErrorMessage("Error al crear proyecto");
+            }
+          });
+
         // ========== GESTIÓN DE MIEMBROS ==========
         let currentProjectIdForMembers = null;
 
@@ -1198,14 +1283,9 @@
             const availableResponse = await ProjectService.getAvailableUsers(
               projectId
             );
-
-            console.log("Available users response:", availableResponse);
             const availableUsers = availableResponse.data || [];
-            console.log("Available users data:", availableUsers);
 
             // Renderizar miembros actuales
-            console.log("Project data:", project);
-            console.log("Project members:", project.members);
             renderCurrentMembers(project.members || []);
 
             // Renderizar usuarios disponibles
@@ -1221,11 +1301,6 @@
          */
         function renderCurrentMembers(members) {
           const container = document.getElementById("currentMembersList");
-
-          console.log("renderCurrentMembers called with:", members);
-          console.log("Type of members:", typeof members);
-          console.log("Is array:", Array.isArray(members));
-          console.log("Length:", members ? members.length : "undefined");
 
           if (!members || members.length === 0) {
             container.innerHTML = `
@@ -1244,24 +1319,28 @@
                   : member.role_id === 2
                   ? "warning"
                   : "info";
+              const initials = (member.name || "?")
+                .split(" ")
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((w) => w.charAt(0).toUpperCase())
+                .join("") || "?";
               return `
                <div class="list-group-item d-flex justify-content-between align-items-center">
                  <div class="d-flex align-items-center">
                    <div class="mr-3">
-                     ${
-                       member.avatar
-                         ? `<img src="${member.avatar}" class="rounded-circle" width="40" height="40" alt="${member.name}">`
-                         : `<div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
-                         ${member.name.charAt(0).toUpperCase()}
-                       </div>`
-                     }
+<<<<<<< HEAD
+                     <div class="member-avatar-initials">
+=======
+                     <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
+>>>>>>> e7d0f62e719ceaa0c79208b32b5954189cce2e77
+                       ${initials}
+                     </div>
                    </div>
                    <div>
                      <div class="font-weight-bold">${member.name}</div>
                      <small class="text-muted">${member.email}</small>
-                     <span class="badge badge-${roleClass} ml-2">${
-                member.role_name
-              }</span>
+                     <span class="badge badge-${roleClass} ml-2">${member.role_name}</span>
                    </div>
                  </div>
                  <button 
@@ -1283,8 +1362,7 @@
         function renderAvailableUsers(users) {
           const container = document.getElementById("availableUsersList");
 
-          // Verificar que users es un array
-          if (!Array.isArray(users) || users.length === 0) {
+          if (!users || users.length === 0) {
             container.innerHTML = `
                <div class="list-group-item text-center text-muted">
                  No hay más usuarios disponibles para asignar
@@ -1301,24 +1379,28 @@
                   : user.role_id === 2
                   ? "warning"
                   : "info";
+              const initials = (user.name || "?")
+                .split(" ")
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((w) => w.charAt(0).toUpperCase())
+                .join("") || "?";
               return `
                <div class="list-group-item d-flex justify-content-between align-items-center">
                  <div class="d-flex align-items-center">
                    <div class="mr-3">
-                     ${
-                       user.avatar
-                         ? `<img src="${user.avatar}" class="rounded-circle" width="40" height="40" alt="${user.name}">`
-                         : `<div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
-                         ${user.name.charAt(0).toUpperCase()}
-                       </div>`
-                     }
+<<<<<<< HEAD
+                     <div class="user-avatar-initials">
+=======
+                     <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
+>>>>>>> e7d0f62e719ceaa0c79208b32b5954189cce2e77
+                       ${initials}
+                     </div>
                    </div>
                    <div>
                      <div class="font-weight-bold">${user.name}</div>
                      <small class="text-muted">${user.email}</small>
-                     <span class="badge badge-${roleClass} ml-2">${
-                user.role_name
-              }</span>
+                     <span class="badge badge-${roleClass} ml-2">${user.role_name}</span>
                    </div>
                  </div>
                  <button 
@@ -1349,7 +1431,7 @@
             if (response.success) {
               showSuccessMessage("Usuario asignado exitosamente");
               await loadProjectMembers(currentProjectIdForMembers);
-              loadProjects(); // Recargar la lista principal
+              loadMyProjects(); // Recargar la lista principal
             }
           } catch (error) {
             console.error("Error al asignar usuario:", error);
@@ -1423,7 +1505,7 @@
                   document.getElementById("unassignMemberModal")
                 ).hide();
                 await loadProjectMembers(currentProjectIdForMembers);
-                loadProjects(); // Recargar la lista principal
+                loadMyProjects(); // Recargar la lista principal
               } else {
                 showErrorMessage(
                   response.message || "Error al desasignar usuario"
@@ -1438,7 +1520,7 @@
           });
 
         // Cargar proyectos al iniciar
-        loadProjects();
+        loadMyProjects();
 
         // Configurar logout
         const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
@@ -1487,6 +1569,170 @@
             endDateField.classList.remove("is-invalid");
           }
         }
+
+        // ========== FUNCIONALIDAD DE INDICADORES ==========
+        let availableIndicators = [];
+        let selectedIndicators = [];
+        let filteredIndicators = [];
+
+        // Cargar indicadores disponibles
+        async function loadAvailableIndicators() {
+          try {
+            const response = await fetch('/api/indicators', {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                'Content-Type': 'application/json'
+              }
+            });
+            
+            if (!response.ok) {
+              throw new Error('Error al cargar indicadores');
+            }
+            
+            const data = await response.json();
+            availableIndicators = data.data || [];
+            filteredIndicators = [...availableIndicators];
+            renderIndicatorsList();
+          } catch (error) {
+            console.error('Error cargando indicadores:', error);
+            showError('Error al cargar los indicadores disponibles');
+          }
+        }
+
+        // Renderizar lista de indicadores
+        function renderIndicatorsList() {
+          const container = document.getElementById('indicatorsList');
+          
+          if (filteredIndicators.length === 0) {
+            container.innerHTML = `
+              <div class="text-center py-4">
+                <i class="mdi mdi-information-outline text-muted" style="font-size: 2rem;"></i>
+                <p class="mt-2 text-muted">No se encontraron indicadores</p>
+              </div>
+            `;
+            return;
+          }
+
+          container.innerHTML = filteredIndicators.map(indicator => `
+            <div class="card mb-2">
+              <div class="card-body py-2">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    value="${indicator.id}" 
+                    id="indicator_${indicator.id}"
+                    ${selectedIndicators.find(si => si.id === indicator.id) ? 'checked' : ''}
+                  >
+                  <label class="form-check-label w-100" for="indicator_${indicator.id}">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <strong>${indicator.name}</strong>
+                        <br>
+                        <small class="text-muted">${indicator.description}</small>
+                        <br>
+                        <span class="badge bg-secondary">${indicator.category}</span>
+                        <span class="badge bg-info">${indicator.direction}</span>
+                        <span class="badge bg-warning">${indicator.frequency}</span>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        // Renderizar indicadores seleccionados
+        function renderSelectedIndicators() {
+          const container = document.getElementById('selectedIndicatorsList');
+          
+          if (selectedIndicators.length === 0) {
+            container.innerHTML = `
+              <div class="text-muted text-center py-2">
+                <i class="mdi mdi-information-outline"></i>
+                No hay indicadores seleccionados
+              </div>
+            `;
+            return;
+          }
+
+          container.innerHTML = selectedIndicators.map(indicator => `
+            <div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2">
+              <div>
+                <strong>${indicator.name}</strong>
+                <br>
+                <small class="text-muted">${indicator.category} • ${indicator.direction} • ${indicator.frequency}</small>
+              </div>
+              <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeIndicator(${indicator.id})">
+                <i class="mdi mdi-close"></i>
+              </button>
+            </div>
+          `).join('');
+        }
+
+        // Filtrar indicadores
+        function filterIndicators() {
+          const searchTerm = document.getElementById('indicatorSearch').value.toLowerCase();
+          const category = document.getElementById('indicatorCategory').value;
+          
+          filteredIndicators = availableIndicators.filter(indicator => {
+            const matchesSearch = indicator.name.toLowerCase().includes(searchTerm) || 
+                                indicator.description.toLowerCase().includes(searchTerm);
+            const matchesCategory = !category || indicator.category === category;
+            return matchesSearch && matchesCategory;
+          });
+          
+          renderIndicatorsList();
+        }
+
+        // Agregar indicador a la selección
+        function addIndicator(indicatorId) {
+          const indicator = availableIndicators.find(i => i.id === indicatorId);
+          if (indicator && !selectedIndicators.find(si => si.id === indicatorId)) {
+            selectedIndicators.push(indicator);
+            renderSelectedIndicators();
+          }
+        }
+
+        // Remover indicador de la selección
+        function removeIndicator(indicatorId) {
+          selectedIndicators = selectedIndicators.filter(si => si.id !== indicatorId);
+          renderSelectedIndicators();
+        }
+
+        // Confirmar selección de indicadores
+        function confirmIndicatorsSelection() {
+          const checkboxes = document.querySelectorAll('#indicatorsList input[type="checkbox"]:checked');
+          selectedIndicators = [];
+          
+          checkboxes.forEach(checkbox => {
+            const indicator = availableIndicators.find(i => i.id === parseInt(checkbox.value));
+            if (indicator) {
+              selectedIndicators.push(indicator);
+            }
+          });
+          
+          renderSelectedIndicators();
+          
+          // Cerrar modal
+          const modal = bootstrap.Modal.getInstance(document.getElementById('selectIndicatorsModal'));
+          modal.hide();
+        }
+
+        // Event listeners
+        document.getElementById('addIndicatorBtn').addEventListener('click', () => {
+          loadAvailableIndicators();
+          const modal = new bootstrap.Modal(document.getElementById('selectIndicatorsModal'));
+          modal.show();
+        });
+
+        document.getElementById('indicatorSearch').addEventListener('input', filterIndicators);
+        document.getElementById('indicatorCategory').addEventListener('change', filterIndicators);
+        document.getElementById('confirmIndicatorsBtn').addEventListener('click', confirmIndicatorsSelection);
+
+        // Hacer funciones globales para los onclick
+        window.removeIndicator = removeIndicator;
       }
     </script>
   </body>

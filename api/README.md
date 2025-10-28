@@ -15,7 +15,7 @@ api/
 │
 ├── models/
 │   └── User.php          # Modelo de usuario
-│
+│a
 ├── logs/
 │   └── .gitkeep          # Directorio de logs
 │

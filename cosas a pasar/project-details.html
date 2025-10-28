@@ -390,10 +390,12 @@
         border: 1px solid #ddd;
       }
 
-      /* Forzar visibilidad de scrollbars */
+      /* Forzar visibilidad de scrollbars - Compatible con todos los navegadores */
       .gantt-container {
         scrollbar-width: thick;
         scrollbar-color: #007bff #f1f1f1;
+        /* Fallback para navegadores que no soportan scrollbar-color */
+        scrollbar-width: auto;
       }
 
       /* Wrapper para asegurar espacio para scrollbars */
@@ -411,17 +413,7 @@
       }
 
       /* Forzar visibilidad de scrollbars en todos los tamaños */
-      .gantt-container {
-        scrollbar-gutter: stable;
-      }
-
-      .gantt-tasks {
-        scrollbar-gutter: stable;
-      }
-
-      .gantt-chart {
-        scrollbar-gutter: stable;
-      }
+      /* scrollbar-gutter no es compatible con Safari, se omite */
 
       /* Asegurar que los scrollbars sean visibles en pantallas pequeñas */
       @media (max-width: 768px) {
@@ -455,6 +447,8 @@
         overflow-x: hidden;
         scrollbar-width: thin;
         scrollbar-color: #6c757d #f8f9fa;
+        /* Fallback para navegadores que no soportan scrollbar-color */
+        scrollbar-width: auto;
       }
 
       .gantt-content::-webkit-scrollbar {
@@ -498,7 +492,7 @@
       .gantt-timeline-dates {
         display: flex;
         background: #e0e0e0;
-        min-width: -webkit-fill-available;
+        min-width: -webkit-fill-available; /* Fallback para Samsung Internet */
         min-width: -moz-available;
         min-width: fit-content;
         overflow: hidden;
@@ -934,6 +928,15 @@
                 <li class="nav-item" role="presentation">
                   <button
                     class="nav-link"
+<<<<<<< HEAD
+                    id="indicators-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#indicators"
+                    type="button"
+                    role="tab"
+                  >
+                    <i class="mdi mdi-chart-line"></i> Indicadores
+=======
                     id="gantt-tab"
                     data-bs-toggle="tab"
                     data-bs-target="#gantt"
@@ -942,6 +945,7 @@
                   >
                     <i class="mdi mdi-chart-timeline-variant"></i> Diagrama
                     Gantt
+>>>>>>> e7d0f62e719ceaa0c79208b32b5954189cce2e77
                   </button>
                 </li>
               </ul>
@@ -1095,16 +1099,44 @@
                   </div>
                 </div>
 
+<<<<<<< HEAD
+                <!-- Pestaña de Indicadores -->
+                <div
+                  class="tab-pane fade"
+                  id="indicators"
+                  role="tabpanel"
+                  aria-labelledby="indicators-tab"
+=======
                 <!-- Pestaña del Diagrama Gantt -->
                 <div
                   class="tab-pane fade"
                   id="gantt"
                   role="tabpanel"
                   aria-labelledby="gantt-tab"
+>>>>>>> e7d0f62e719ceaa0c79208b32b5954189cce2e77
                 >
                   <div
                     class="d-flex justify-content-between align-items-center mb-3"
                   >
+<<<<<<< HEAD
+                    <h4>Indicadores del Proyecto</h4>
+                    <button
+                      class="btn btn-success btn-sm"
+                      id="addIndicatorBtn"
+                      style="display: none"
+                    >
+                      <i class="mdi mdi-plus"></i> Asignar Indicador
+                    </button>
+                  </div>
+
+                  <!-- Lista de Indicadores -->
+                  <div id="indicatorsList">
+                    <div class="text-center py-4">
+                      <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                      </div>
+                      <p class="mt-2 text-muted">Cargando indicadores...</p>
+=======
                     <h4>Diagrama Gantt del Proyecto</h4>
                     <div class="btn-group" role="group">
                       <button
@@ -1182,6 +1214,7 @@
                       <div class="gantt-content" id="ganttContent">
                         <!-- Se llenará dinámicamente -->
                       </div>
+>>>>>>> e7d0f62e719ceaa0c79208b32b5954189cce2e77
                     </div>
                   </div>
                 </div>
@@ -1390,6 +1423,222 @@
       </div>
     </div>
 
+    <!-- Modal: Asignar Indicador -->
+    <div
+      class="modal fade"
+      id="assignIndicatorModal"
+      tabindex="-1"
+      aria-labelledby="assignIndicatorModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title" id="assignIndicatorModalLabel">
+              <i class="mdi mdi-chart-line"></i>
+              Asignar Indicador al Proyecto
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="assignIndicatorForm">
+              <div class="mb-3">
+                <label for="indicatorSelect" class="form-label">
+                  Indicador <span class="text-danger">*</span>
+                </label>
+                <select class="form-select" id="indicatorSelect" required>
+                  <option value="">Seleccionar indicador...</option>
+                </select>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="baseline" class="form-label">Línea Base</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="baseline"
+                      step="0.01"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="target" class="form-label">Meta</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="target"
+                      step="0.01"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="targetDate" class="form-label">Fecha Meta</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="targetDate"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="frequency" class="form-label">Frecuencia</label>
+                    <select class="form-select" id="frequency">
+                      <option value="Mensual">Mensual</option>
+                      <option value="Trimestral">Trimestral</option>
+                      <option value="Anual">Anual</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="responsibleUser" class="form-label">Usuario Responsable</label>
+                <select class="form-select" id="responsibleUser">
+                  <option value="">Seleccionar responsable...</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="method" class="form-label">Método de Medición</label>
+                <textarea
+                  class="form-control"
+                  id="method"
+                  rows="2"
+                  placeholder="Describe cómo se medirá este indicador..."
+                ></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="notes" class="form-label">Notas</label>
+                <textarea
+                  class="form-control"
+                  id="notes"
+                  rows="2"
+                  placeholder="Notas adicionales..."
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-light"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-success" id="saveIndicatorBtn">
+              <i class="mdi mdi-content-save"></i>
+              Asignar Indicador
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Registrar Lectura -->
+    <div
+      class="modal fade"
+      id="readingModal"
+      tabindex="-1"
+      aria-labelledby="readingModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-info text-white">
+            <h5 class="modal-title" id="readingModalLabel">
+              <i class="mdi mdi-chart-bar"></i>
+              Registrar Lectura de Indicador
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="readingForm">
+              <input type="hidden" id="readingProjectIndicatorId" />
+              <input type="hidden" id="readingId" />
+
+              <div class="mb-3">
+                <label for="periodDate" class="form-label">
+                  Fecha del Período <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="periodDate"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="value" class="form-label">
+                  Valor <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="value"
+                  step="0.01"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="source" class="form-label">Fuente</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="source"
+                  placeholder="Ej: Medición directa, Sistema de monitoreo..."
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="readingComments" class="form-label">Comentarios</label>
+                <textarea
+                  class="form-control"
+                  id="readingComments"
+                  rows="3"
+                  placeholder="Observaciones sobre esta lectura..."
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-light"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-info" id="saveReadingBtn">
+              <i class="mdi mdi-content-save"></i>
+              <span id="saveReadingBtnText">Registrar Lectura</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- plugins:js -->
     <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
@@ -1424,8 +1673,7 @@
 
       // Verificar autenticación
       if (!AuthService.isAuthenticated()) {
-        window.location.href =
-          "http://localhost/eco-app/GreenTech/src/views/auth/login.html";
+        window.location.href = "/src/views/auth/login.html";
       } else {
         const userData = AuthService.getCurrentUser();
         const canEditTasks = userData.role_id === 1 || userData.role_id === 2; // Admin o Coordinador
@@ -1444,7 +1692,7 @@
 
         if (!projectId) {
           showError("ID de proyecto no especificado");
-          window.location.href = "http://localhost/eco-app/GreenTech/";
+          window.location.href = "/";
         }
 
         let currentProject = null;
@@ -1476,14 +1724,14 @@
               // Ocultar spinner en caso de error
               document.getElementById("loadingSpinner").style.display = "none";
               showError(response.message || "Error al cargar proyecto");
-              window.location.href = "http://localhost/eco-app/GreenTech/";
+              window.location.href = "/";
             }
           } catch (error) {
             console.error("Error:", error);
             // Ocultar spinner en caso de error
             document.getElementById("loadingSpinner").style.display = "none";
             showError("Error al cargar proyecto");
-            window.location.href = "http://localhost/eco-app/GreenTech/";
+            window.location.href = "/";
           }
         }
 
@@ -2054,13 +2302,48 @@
             }
           });
 
-        // Cargar sistema de notificaciones después de que todo esté listo
-        const notificationScript = document.createElement("script");
-        notificationScript.src = "../../utils/notifications.js";
-        notificationScript.onload = function () {
-          console.log("📦 Script de notificaciones cargado en project-details");
+        // Función showErrorMessage local (fallback)
+        function showErrorMessage(message) {
+          console.error("Error:", message);
+          // Usar alert como fallback si las notificaciones no están disponibles
+          if (typeof showError === "function") {
+            showError(message);
+          } else {
+            alert("Error: " + message);
+          }
+        }
+
+        // Cargar sistema de notificaciones de forma síncrona para evitar errores
+        const loadNotifications = () => {
+          return new Promise((resolve) => {
+            if (typeof window.showError === "function") {
+              // Las notificaciones ya están cargadas
+              window.showErrorMessage = window.showError;
+              resolve();
+            } else {
+              // Cargar el script de notificaciones
+              const notificationScript = document.createElement("script");
+              notificationScript.src = "../../utils/notifications.js";
+              notificationScript.onload = function () {
+                console.log(
+                  "📦 Script de notificaciones cargado en project-details"
+                );
+                // Sobrescribir showErrorMessage con la versión del sistema de notificaciones
+                if (typeof window.showError === "function") {
+                  window.showErrorMessage = window.showError;
+                }
+                resolve();
+              };
+              notificationScript.onerror = function () {
+                console.warn(
+                  "⚠️ No se pudo cargar el sistema de notificaciones, usando fallback"
+                );
+                resolve();
+              };
+              document.head.appendChild(notificationScript);
+            }
+          });
         };
-        document.head.appendChild(notificationScript);
 
         // Cargar cuando se cambia a la pestaña de tareas
         document
@@ -2071,6 +2354,15 @@
             }
           });
 
+<<<<<<< HEAD
+        // Cargar cuando se cambia a la pestaña de indicadores
+        document
+          .getElementById("indicators-tab")
+          .addEventListener("shown.bs.tab", () => {
+            loadProjectIndicators();
+          });
+
+=======
         // Cargar cuando se cambia a la pestaña de Gantt
         document
           .getElementById("gantt-tab")
@@ -2120,21 +2412,7 @@
           const timelineStart = new Date(currentProject.start_date);
           const timelineEnd = new Date(currentProject.end_date);
 
-          console.log("📅 Timeline del Gantt basado en fechas del proyecto:");
-          console.log("- Inicio del proyecto:", currentProject.start_date);
-          console.log("- Fin del proyecto:", currentProject.end_date);
-          console.log(
-            "- Inicio del timeline:",
-            timelineStart.toISOString().split("T")[0]
-          );
-          console.log(
-            "- Fin del timeline:",
-            timelineEnd.toISOString().split("T")[0]
-          );
-          console.log(
-            "- Tareas encontradas:",
-            ganttTasks ? ganttTasks.length : 0
-          );
+          // Timeline del Gantt basado en fechas del proyecto
 
           ganttTimeline = [];
           const currentDate = new Date(timelineStart);
@@ -2154,7 +2432,7 @@
             currentDate.setDate(currentDate.getDate() + 1);
           }
 
-          console.log("- Días en el timeline:", ganttTimeline.length);
+          // Días en el timeline calculados
         }
 
         // Formatear fecha para el Gantt
@@ -2204,12 +2482,7 @@
           const forceWidth = 3000; // 3000px de ancho para forzar scroll
           const forceHeight = 800; // 800px de alto para forzar scroll vertical
 
-          console.log(
-            "📏 Forzando dimensiones del Gantt:",
-            forceWidth,
-            "x",
-            forceHeight
-          );
+          // Forzando dimensiones del Gantt para scroll
 
           // Renderizar contenido del Gantt con dimensiones forzadas
           ganttContent.innerHTML = `
@@ -2229,7 +2502,6 @@
           `;
 
           // CONFIGURACIÓN SIMPLE - Los scrollbars ya están configurados en CSS
-          console.log("✅ Gantt renderizado con scrollbars automáticos");
 
           // Forzar visibilidad de scrollbars después de renderizar
           setTimeout(() => {
@@ -2255,13 +2527,7 @@
                 ganttContent.style.minWidth = "3000px";
               }
 
-              console.log("📊 Scrollbars forzados:");
-              console.log("- OverflowX:", ganttContainer.style.overflowX);
-              console.log("- OverflowY:", ganttContainer.style.overflowY);
-              console.log("- ScrollWidth:", ganttContainer.scrollWidth);
-              console.log("- ClientWidth:", ganttContainer.clientWidth);
-              console.log("- ScrollHeight:", ganttContainer.scrollHeight);
-              console.log("- ClientHeight:", ganttContainer.clientHeight);
+              // Scrollbars configurados
             }
           }, 100);
 
@@ -2274,11 +2540,8 @@
           const ganttContainer = document.querySelector(".gantt-container");
 
           if (!ganttContainer) {
-            console.log("❌ Gantt container no encontrado");
             return;
           }
-
-          console.log("✅ Configurando arrastre BÁSICO para:", ganttContainer);
 
           // Solo configurar el cursor
           ganttContainer.style.cursor = "grab";
@@ -2288,10 +2551,7 @@
             if (e.shiftKey) {
               e.preventDefault();
               ganttContainer.scrollLeft += e.deltaY;
-              console.log(
-                "🎡 Wheel scroll horizontal:",
-                ganttContainer.scrollLeft
-              );
+              // Wheel scroll horizontal configurado
             }
           });
 
@@ -2330,8 +2590,7 @@
             ganttContainer.style.cursor = "grab";
           });
 
-          console.log("✅ Configuración BÁSICA completada");
-          console.log("✅ Cursor:", ganttContainer.style.cursor);
+          // Configuración de arrastre completada
         }
 
         // Renderizar item de tarea en la lista
@@ -2375,20 +2634,7 @@
           const timelineStart = ganttTimeline[0].date;
           const timelineEnd = ganttTimeline[ganttTimeline.length - 1].date;
 
-          console.log(`📊 Renderizando tarea "${task.title}":`);
-          console.log(
-            "- Fecha de inicio:",
-            startDate.toISOString().split("T")[0]
-          );
-          console.log("- Fecha de fin:", endDate.toISOString().split("T")[0]);
-          console.log(
-            "- Timeline inicio:",
-            timelineStart.toISOString().split("T")[0]
-          );
-          console.log(
-            "- Timeline fin:",
-            timelineEnd.toISOString().split("T")[0]
-          );
+          // Renderizando tarea en Gantt
 
           // Calcular posición relativa al timeline
           const daysFromTimelineStart = Math.floor(
@@ -2404,10 +2650,7 @@
           const width = Math.max(taskDuration * columnWidth, 20);
           const topPosition = index * 60 + 18; // Ajustar para centrar en la fila
 
-          console.log("- Días desde inicio:", daysFromTimelineStart);
-          console.log("- Duración de tarea:", taskDuration);
-          console.log("- Posición izquierda:", leftPosition);
-          console.log("- Ancho:", width);
+          // Cálculos de posición completados
 
           const statusClass = getTaskStatusClass(task.status);
           const priorityClass = getTaskPriorityClass(task.priority);
@@ -2548,15 +2791,18 @@
         function changeGanttView() {
           const viewMode = document.getElementById("ganttViewMode").value;
           // Aquí se podría implementar lógica para cambiar entre días, semanas, meses
-          console.log("Cambiando vista a:", viewMode);
+          // Cambiando vista del Gantt
           renderGanttChart();
         }
 
         // La sincronización de scroll ya no es necesaria
         // El scroll es manejado por el contenedor principal del Gantt
 
+>>>>>>> e7d0f62e719ceaa0c79208b32b5954189cce2e77
         // Inicializar
-        loadProjectDetails();
+        loadNotifications().then(() => {
+          loadProjectDetails();
+        });
 
         // Configurar logout
         const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
@@ -2602,6 +2848,316 @@
             dueDateField.classList.remove("is-invalid");
           }
         }
+      }
+
+      // ========== FUNCIONES PARA INDICADORES ==========
+      
+      // Variables globales para indicadores
+      let currentIndicators = [];
+      let availableIndicators = [];
+      let projectMembers = [];
+
+      // Función para obtener el ID del proyecto desde la URL
+      function getProjectIdFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('id');
+      }
+
+      // Cargar indicadores del proyecto
+      async function loadProjectIndicators() {
+        try {
+          const projectId = getProjectIdFromUrl();
+          const token = localStorage.getItem('authToken');
+          
+          const headers = {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          };
+          
+          const response = await fetch(`/api/projects/${projectId}/indicators`, {
+            headers: headers
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ Error en API:', response.status, errorText);
+            throw new Error('Error al cargar indicadores: ' + response.status);
+          }
+
+          const data = await response.json();
+          
+          // Verificar si la respuesta contiene indicadores
+          if (data.success && Array.isArray(data.data)) {
+            currentIndicators = data.data;
+          } else {
+            currentIndicators = [];
+          }
+          
+          renderIndicators();
+        } catch (error) {
+          console.error('Error cargando indicadores:', error);
+          document.getElementById('indicatorsList').innerHTML = `
+            <div class="alert alert-danger">
+              <i class="mdi mdi-alert-circle"></i>
+              Error al cargar los indicadores: ${error.message}
+            </div>
+          `;
+        }
+      }
+
+      // Renderizar lista de indicadores
+      function renderIndicators() {
+        const container = document.getElementById('indicatorsList');
+        
+        if (currentIndicators.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-5">
+              <i class="mdi mdi-chart-line text-muted" style="font-size: 3rem;"></i>
+              <h5 class="mt-3 text-muted">No hay indicadores asignados</h5>
+              <p class="text-muted">Asigna indicadores para monitorear el progreso del proyecto</p>
+              <button class="btn btn-success" onclick="openAssignIndicatorModal()">
+                <i class="mdi mdi-plus"></i> Asignar Primer Indicador
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        let html = '<div class="row">';
+        
+        currentIndicators.forEach(indicator => {
+          const statusClass = indicator.active ? 'success' : 'secondary';
+          const statusText = indicator.active ? 'Activo' : 'Inactivo';
+          
+          html += `
+            <div class="col-md-6 col-lg-4 mb-3">
+              <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">${indicator.indicator_name}</h6>
+                  <span class="badge bg-${statusClass}">${statusText}</span>
+                </div>
+                <div class="card-body">
+                  <div class="mb-2">
+                    <small class="text-muted">Categoría:</small>
+                    <span class="badge bg-light text-dark">${indicator.category}</span>
+                  </div>
+                  <div class="mb-2">
+                    <small class="text-muted">Unidad:</small>
+                    <span>${indicator.unit_name} (${indicator.unit_symbol})</span>
+                  </div>
+                  <div class="mb-2">
+                    <small class="text-muted">Dirección:</small>
+                    <span class="badge ${indicator.direction === 'Sube' ? 'bg-success' : 'bg-warning'}">
+                      ${indicator.direction}
+                    </span>
+                  </div>
+                  ${indicator.baseline ? `
+                    <div class="mb-2">
+                      <small class="text-muted">Línea Base:</small>
+                      <span>${indicator.baseline}</span>
+                    </div>
+                  ` : ''}
+                  ${indicator.target ? `
+                    <div class="mb-2">
+                      <small class="text-muted">Meta:</small>
+                      <span>${indicator.target}</span>
+                    </div>
+                  ` : ''}
+                  ${indicator.responsible_name ? `
+                    <div class="mb-2">
+                      <small class="text-muted">Responsable:</small>
+                      <span>${indicator.responsible_name}</span>
+                    </div>
+                  ` : ''}
+                </div>
+                <div class="card-footer">
+                  <div class="btn-group w-100" role="group">
+                    <button class="btn btn-outline-info btn-sm" onclick="openReadingModal(${indicator.project_indicator_id})">
+                      <i class="mdi mdi-chart-bar"></i> Registrar
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="viewIndicatorReadings(${indicator.project_indicator_id})">
+                      <i class="mdi mdi-eye"></i> Ver
+                    </button>
+                    <button class="btn btn-outline-warning btn-sm" onclick="editProjectIndicator(${indicator.project_indicator_id})">
+                      <i class="mdi mdi-pencil"></i> Editar
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="removeProjectIndicator(${indicator.project_indicator_id})">
+                      <i class="mdi mdi-delete"></i> Quitar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        
+        html += '</div>';
+        container.innerHTML = html;
+      }
+
+      // Abrir modal para asignar indicador
+      async function openAssignIndicatorModal() {
+        try {
+          // Cargar indicadores disponibles
+          const indicatorsResponse = await fetch('/api/indicators', {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          if (indicatorsResponse.ok) {
+            const indicatorsData = await indicatorsResponse.json();
+            availableIndicators = indicatorsData.data || [];
+          }
+
+          // Cargar miembros del proyecto
+          const projectId = getProjectIdFromUrl();
+          const membersResponse = await fetch(`/api/projects/${projectId}/available-users`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          if (membersResponse.ok) {
+            const membersData = await membersResponse.json();
+            projectMembers = membersData.data || [];
+          }
+
+          // Llenar select de indicadores
+          const indicatorSelect = document.getElementById('indicatorSelect');
+          indicatorSelect.innerHTML = '<option value="">Seleccionar indicador...</option>';
+          availableIndicators.forEach(indicator => {
+            indicatorSelect.innerHTML += `
+              <option value="${indicator.id}">${indicator.name} (${indicator.unit_symbol})</option>
+            `;
+          });
+
+          // Llenar select de responsables
+          const responsibleSelect = document.getElementById('responsibleUser');
+          responsibleSelect.innerHTML = '<option value="">Seleccionar responsable...</option>';
+          projectMembers.forEach(member => {
+            responsibleSelect.innerHTML += `
+              <option value="${member.id}">${member.name}</option>
+            `;
+          });
+
+          // Mostrar modal
+          const modal = new bootstrap.Modal(document.getElementById('assignIndicatorModal'));
+          modal.show();
+        } catch (error) {
+          console.error('Error abriendo modal:', error);
+          showNotification('Error al cargar datos del modal', 'error');
+        }
+      }
+
+      // Guardar indicador asignado
+      async function saveIndicator() {
+        try {
+          const form = document.getElementById('assignIndicatorForm');
+          const formData = new FormData(form);
+          
+          const projectId = getProjectIdFromUrl();
+          const data = {
+            indicator_id: document.getElementById('indicatorSelect').value,
+            baseline: document.getElementById('baseline').value || null,
+            target: document.getElementById('target').value || null,
+            target_date: document.getElementById('targetDate').value || null,
+            frequency: document.getElementById('frequency').value,
+            responsible_user_id: document.getElementById('responsibleUser').value || null,
+            method: document.getElementById('method').value || null,
+            notes: document.getElementById('notes').value || null,
+            active: 1
+          };
+
+          const response = await fetch(`/api/projects/${projectId}/indicators`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          });
+
+          const result = await response.json();
+          
+          if (result.success) {
+            showNotification('Indicador asignado exitosamente', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('assignIndicatorModal')).hide();
+            form.reset();
+            loadProjectIndicators();
+          } else {
+            showNotification(result.message || 'Error al asignar indicador', 'error');
+          }
+        } catch (error) {
+          console.error('Error guardando indicador:', error);
+          showNotification('Error al asignar indicador', 'error');
+        }
+      }
+
+      // Abrir modal para registrar lectura
+      function openReadingModal(projectIndicatorId) {
+        document.getElementById('readingProjectIndicatorId').value = projectIndicatorId;
+        document.getElementById('readingId').value = '';
+        document.getElementById('readingForm').reset();
+        
+        const modal = new bootstrap.Modal(document.getElementById('readingModal'));
+        modal.show();
+      }
+
+      // Guardar lectura
+      async function saveReading() {
+        try {
+          const projectIndicatorId = document.getElementById('readingProjectIndicatorId').value;
+          const readingId = document.getElementById('readingId').value;
+          
+          const data = {
+            period_date: document.getElementById('periodDate').value,
+            value: document.getElementById('value').value,
+            source: document.getElementById('source').value || null,
+            comments: document.getElementById('readingComments').value || null
+          };
+
+          const url = readingId ? 
+            `/api/projects/${getProjectIdFromUrl()}/indicators/${projectIndicatorId}/readings/${readingId}` :
+            `/api/projects/${getProjectIdFromUrl()}/indicators/${projectIndicatorId}/readings`;
+          
+          const method = readingId ? 'PUT' : 'POST';
+
+          const response = await fetch(url, {
+            method: method,
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          });
+
+          const result = await response.json();
+          
+          if (result.success) {
+            showNotification('Lectura registrada exitosamente', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('readingModal')).hide();
+            document.getElementById('readingForm').reset();
+          } else {
+            showNotification(result.message || 'Error al registrar lectura', 'error');
+          }
+        } catch (error) {
+          console.error('Error guardando lectura:', error);
+          showNotification('Error al registrar lectura', 'error');
+        }
+      }
+
+      // Configurar eventos
+      document.getElementById('addIndicatorBtn')?.addEventListener('click', openAssignIndicatorModal);
+      document.getElementById('saveIndicatorBtn')?.addEventListener('click', saveIndicator);
+      document.getElementById('saveReadingBtn')?.addEventListener('click', saveReading);
+
+      // Mostrar botón de asignar indicador solo para admin y coordinador
+      const userRole = JSON.parse(localStorage.getItem('userData') || '{}').role_id;
+      if (userRole === 1 || userRole === 2) {
+        document.getElementById('addIndicatorBtn').style.display = 'inline-block';
       }
     </script>
   </body>

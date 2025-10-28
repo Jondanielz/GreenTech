@@ -35,9 +35,24 @@ function sendResponse($data, $statusCode = 200) {
 function getBearerToken() {
     $headers = getallheaders();
     
+    // Alternative method if getallheaders() doesn't work
+    if (function_exists('apache_request_headers')) {
+        $headers = apache_request_headers();
+    }
+    
+    // Check Authorization header
+    $authHeader = null;
     if (isset($headers['Authorization'])) {
+        $authHeader = $headers['Authorization'];
+    } elseif (isset($headers['authorization'])) {
+        $authHeader = $headers['authorization'];
+    } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+        $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+    }
+    
+    if ($authHeader) {
         $matches = [];
-        if (preg_match('/Bearer\s+(.*)$/i', $headers['Authorization'], $matches)) {
+        if (preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
             return $matches[1];
         }
     }
@@ -52,7 +67,6 @@ function getUserFromToken() {
     $token = getBearerToken();
     
     if (!$token) {
-        error_log("No token provided in request");
         sendResponse([
             'success' => false,
             'message' => 'Token no proporcionado'
@@ -63,14 +77,12 @@ function getUserFromToken() {
     $result = $authController->verifySession($token);
     
     if (!$result['success']) {
-        error_log("Token verification failed: " . ($result['message'] ?? 'Unknown error'));
         sendResponse([
             'success' => false,
             'message' => 'Token inválido o expirado'
         ], 401);
     }
     
-    error_log("User authenticated successfully: " . $result['user']['name'] . " (Role: " . $result['user']['role_name'] . ")");
     return $result['user'];
 }
 
@@ -82,11 +94,13 @@ try {
     $request_uri = $_SERVER['REQUEST_URI'];
     $request_uri = parse_url($request_uri, PHP_URL_PATH);
     
+    
     // Remover el prefijo de la ruta base (ajustar según tu estructura)
     $base_path = '/eco-app/GreenTech/api';
     if (strpos($request_uri, $base_path) === 0) {
         $request_uri = substr($request_uri, strlen($base_path));
     }
+    
     
     // Parsear la URI en partes
     $uri_parts = explode('/', trim($request_uri, '/'));
@@ -239,7 +253,14 @@ try {
                         // GET /api/projects/{id}/available-users
                         $response = $projectController->getAvailableUsers($action, $userData);
                         sendResponse($response, 200);
-                    } else {
+                    } 
+                    // Verificar si es para obtener indicadores del proyecto
+                    else if (isset($uri_parts[2]) && $uri_parts[2] === 'indicators') {
+                        // GET /api/projects/{id}/indicators
+                        $response = $projectController->getProjectIndicators($action, $userData);
+                        sendResponse($response, 200);
+                    } 
+                    else {
                         // GET /api/projects/{id}
                         $response = $projectController->getProjectById($action, $userData);
                         sendResponse($response, 200);
@@ -286,6 +307,7 @@ try {
                     sendResponse(['error' => 'Método no permitido'], 405);
                 }
                 break;
+            
             
             // Ruta no encontrada
             default:
@@ -422,6 +444,12 @@ try {
         $dashboardController = new DashboardController();
         $action = $uri_parts[1] ?? 'all';
         
+        // Obtener datos del usuario autenticado para dashboards específicos por rol
+        $userData = null;
+        if (in_array($action, ['admin', 'coordinator', 'participant', 'my-projects', 'my-tasks', 'my-completed-tasks'])) {
+            $userData = getUserFromToken();
+        }
+        
         switch ($action) {
             // GET /api/dashboard o /api/dashboard/all
             case 'all':
@@ -431,6 +459,82 @@ try {
                 }
                 
                 $response = $dashboardController->getDashboardData();
+                sendResponse($response, 200);
+                break;
+            
+            // GET /api/dashboard/admin - Dashboard para administradores
+            case 'admin':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                // Verificar que el usuario sea administrador
+                if ($userData['role_id'] != 1) {
+                    sendResponse([
+                        'success' => false,
+                        'message' => 'No tienes permisos para acceder al dashboard de administrador'
+                    ], 403);
+                }
+                
+                $response = $dashboardController->getAdminDashboard($userData);
+                sendResponse($response, 200);
+                break;
+            
+            // GET /api/dashboard/coordinator - Dashboard para coordinadores
+            case 'coordinator':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                // Verificar que el usuario sea coordinador o administrador
+                if (!in_array($userData['role_id'], [1, 2])) {
+                    sendResponse([
+                        'success' => false,
+                        'message' => 'No tienes permisos para acceder al dashboard de coordinador'
+                    ], 403);
+                }
+                
+                $response = $dashboardController->getCoordinatorDashboard($userData);
+                sendResponse($response, 200);
+                break;
+            
+            // GET /api/dashboard/participant - Dashboard para participantes
+            case 'participant':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $response = $dashboardController->getParticipantDashboard($userData);
+                sendResponse($response, 200);
+                break;
+            
+            // GET /api/dashboard/my-projects - Proyectos del usuario
+            case 'my-projects':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $response = $dashboardController->getMyProjects($userData);
+                sendResponse($response, 200);
+                break;
+            
+            // GET /api/dashboard/my-tasks - Tareas del usuario
+            case 'my-tasks':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $response = $dashboardController->getMyTasks($userData);
+                sendResponse($response, 200);
+                break;
+            
+            // GET /api/dashboard/my-completed-tasks - Tareas completadas del usuario
+            case 'my-completed-tasks':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $response = $dashboardController->getMyCompletedTasks($userData);
                 sendResponse($response, 200);
                 break;
             
@@ -501,72 +605,6 @@ try {
                 }
                 
                 $response = $dashboardController->getTopUsers($input);
-                sendResponse($response, 200);
-                break;
-            
-            // GET /api/dashboard/admin - Dashboard específico para administradores
-            case 'admin':
-                if ($method !== 'GET') {
-                    sendResponse(['error' => 'Método no permitido'], 405);
-                }
-                
-                $userData = getUserFromToken();
-                $response = $dashboardController->getAdminDashboard($userData);
-                sendResponse($response, 200);
-                break;
-            
-            // GET /api/dashboard/coordinator - Dashboard específico para coordinadores
-            case 'coordinator':
-                if ($method !== 'GET') {
-                    sendResponse(['error' => 'Método no permitido'], 405);
-                }
-                
-                $userData = getUserFromToken();
-                $response = $dashboardController->getCoordinatorDashboard($userData);
-                sendResponse($response, 200);
-                break;
-            
-            // GET /api/dashboard/participant - Dashboard específico para participantes
-            case 'participant':
-                if ($method !== 'GET') {
-                    sendResponse(['error' => 'Método no permitido'], 405);
-                }
-                
-                $userData = getUserFromToken();
-                $response = $dashboardController->getParticipantDashboard($userData);
-                sendResponse($response, 200);
-                break;
-            
-            // GET /api/dashboard/my-projects - Proyectos del usuario actual
-            case 'my-projects':
-                if ($method !== 'GET') {
-                    sendResponse(['error' => 'Método no permitido'], 405);
-                }
-                
-                $userData = getUserFromToken();
-                $response = $dashboardController->getMyProjects($userData);
-                sendResponse($response, 200);
-                break;
-            
-            // GET /api/dashboard/my-tasks - Tareas del usuario actual
-            case 'my-tasks':
-                if ($method !== 'GET') {
-                    sendResponse(['error' => 'Método no permitido'], 405);
-                }
-                
-                $userData = getUserFromToken();
-                $response = $dashboardController->getMyTasks($userData);
-                sendResponse($response, 200);
-                break;
-            
-            // GET /api/dashboard/my-completed-tasks - Tareas completadas del usuario actual
-            case 'my-completed-tasks':
-                if ($method !== 'GET') {
-                    sendResponse(['error' => 'Método no permitido'], 405);
-                }
-                
-                $userData = getUserFromToken();
-                $response = $dashboardController->getMyCompletedTasks($userData);
                 sendResponse($response, 200);
                 break;
             
@@ -889,19 +927,19 @@ try {
                 ],
                 'dashboard' => [
                     'GET /dashboard' => 'Obtener todos los datos del dashboard',
+                    'GET /dashboard/admin' => 'Dashboard para administradores',
+                    'GET /dashboard/coordinator' => 'Dashboard para coordinadores',
+                    'GET /dashboard/participant' => 'Dashboard para participantes',
+                    'GET /dashboard/my-projects' => 'Proyectos del usuario autenticado',
+                    'GET /dashboard/my-tasks' => 'Tareas del usuario autenticado',
+                    'GET /dashboard/my-completed-tasks' => 'Tareas completadas del usuario',
                     'GET /dashboard/stats' => 'Obtener estadísticas generales',
                     'GET /dashboard/financial' => 'Obtener estadísticas financieras',
                     'GET /dashboard/projects' => 'Obtener proyectos recientes',
                     'GET /dashboard/tasks' => 'Obtener tareas recientes',
                     'GET /dashboard/charts' => 'Obtener datos para gráficos',
                     'GET /dashboard/activity' => 'Obtener actividad reciente',
-                    'GET /dashboard/top-users' => 'Obtener usuarios más activos',
-                    'GET /dashboard/admin' => 'Dashboard específico para administradores',
-                    'GET /dashboard/coordinator' => 'Dashboard específico para coordinadores',
-                    'GET /dashboard/participant' => 'Dashboard específico para participantes',
-                    'GET /dashboard/my-projects' => 'Proyectos del usuario actual',
-                    'GET /dashboard/my-tasks' => 'Tareas del usuario actual',
-                    'GET /dashboard/my-completed-tasks' => 'Tareas completadas del usuario actual'
+                    'GET /dashboard/top-users' => 'Obtener usuarios más activos'
                 ],
                 'users' => [
                     'GET /users' => 'Obtener todos los usuarios (solo admin)',

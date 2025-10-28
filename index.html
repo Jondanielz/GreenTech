@@ -542,7 +542,9 @@
           // Actualizar UI con datos del usuario e iniciales
           if (userData) {
             try {
-              const { ComponentsLoader } = await import('/src/utils/components-loader.js');
+              const { ComponentsLoader } = await import(
+                "/src/utils/components-loader.js"
+              );
               if (ComponentsLoader && ComponentsLoader.updateNavbar) {
                 ComponentsLoader.updateNavbar(userData);
               }
@@ -550,7 +552,10 @@
                 ComponentsLoader.updateSidebar(userData);
               }
             } catch (e) {
-              console.warn('No se pudo inicializar ComponentsLoader en index:', e);
+              console.warn(
+                "No se pudo inicializar ComponentsLoader en index:",
+                e
+              );
             }
             // Actualizar nombre en navbar
             const profileNameElements = document.querySelectorAll(
@@ -595,24 +600,63 @@
             console.log("📊 Cargando datos del dashboard...");
 
             try {
-              const response = await DashboardService.getDashboardData();
+              // Obtener rol del usuario para cargar dashboard específico
+              const userRole = userData.role_name || "Participante";
+              console.log("🎭 Cargando dashboard para rol:", userRole);
+              console.log("👤 Datos completos del usuario:", userData);
+
+              let response;
+
+              // Usar métodos específicos por rol si están disponibles
+              if (userRole === "Administrador" || userRole === "admin") {
+                response = await DashboardService.getAdminDashboardData();
+              } else if (userRole === "Coordinador") {
+                response = await DashboardService.getCoordinatorDashboardData();
+              } else {
+                response = await DashboardService.getParticipantDashboardData();
+              }
 
               if (response.success) {
                 const data = response.data;
                 console.log("✅ Datos del dashboard cargados:", data);
 
                 // Actualizar estadísticas generales
-                updateGeneralStats(data.general_stats);
+                if (data.general_stats) {
+                  updateGeneralStats(data.general_stats);
+                }
 
                 // Actualizar estadísticas financieras
-                updateFinancialStats(data.financial_stats);
+                if (data.financial_stats) {
+                  updateFinancialStats(data.financial_stats);
+                }
 
                 // Actualizar tareas recientes
-                updateRecentTasks(data.recent_tasks);
+                if (data.recent_tasks) {
+                  updateRecentTasks(data.recent_tasks);
+                }
+
+                // Si es participante, actualizar widgets y lista usando sus datos
+                if (userRole === "Participante") {
+                  updateParticipantDashboard(data);
+                }
 
                 // Actualizar proyectos recientes (si tienes sección)
                 if (data.recent_projects) {
                   console.log("📁 Proyectos recientes:", data.recent_projects);
+                }
+
+                // Mostrar datos específicos del rol
+                if (data.personal_stats) {
+                  console.log(
+                    "👤 Estadísticas personales:",
+                    data.personal_stats
+                  );
+                }
+                if (data.my_projects) {
+                  console.log("📁 Mis proyectos:", data.my_projects);
+                }
+                if (data.my_tasks) {
+                  console.log("✅ Mis tareas:", data.my_tasks);
                 }
               } else {
                 console.error(
@@ -685,7 +729,8 @@
               totalBudget
             );
 
-            const remainingBudgetEl = document.getElementById("remainingBudget");
+            const remainingBudgetEl =
+              document.getElementById("remainingBudget");
             const remainingBudgetPercentEl = document.getElementById(
               "remainingBudgetPercent"
             );
@@ -736,6 +781,70 @@
 
               tbody.innerHTML += row;
             });
+          }
+
+          // Actualizar widgets cuando el rol es Participante
+          function updateParticipantDashboard(data) {
+            const stats = data?.personal_stats || {};
+
+            // Evitar spinners dejando valores numéricos
+            const myProjects = Number(stats.my_projects || 0);
+            const myTasks = Number(stats.my_tasks || 0);
+            const completed = Number(stats.completed_tasks || 0);
+
+            const activeProjectsEl = document.getElementById("activeProjects");
+            if (activeProjectsEl) {
+              activeProjectsEl.textContent =
+                DashboardService.formatNumber(myProjects);
+            }
+            const activeProjectsPercentEl = document.getElementById(
+              "activeProjectsPercent"
+            );
+            if (activeProjectsPercentEl) {
+              activeProjectsPercentEl.textContent = `Mis proyectos`;
+            }
+
+            const completedTasksEl = document.getElementById("completedTasks");
+            if (completedTasksEl) {
+              completedTasksEl.textContent =
+                DashboardService.formatNumber(completed);
+            }
+            const completedTasksPercentEl = document.getElementById(
+              "completedTasksPercent"
+            );
+            if (completedTasksPercentEl) {
+              completedTasksPercentEl.textContent = `Mis tareas completadas`;
+            }
+
+            const activeUsersEl = document.getElementById("activeUsers");
+            if (activeUsersEl) {
+              activeUsersEl.textContent =
+                DashboardService.formatNumber(myTasks);
+            }
+            const activeUsersPercentEl =
+              document.getElementById("activeUsersPercent");
+            if (activeUsersPercentEl) {
+              activeUsersPercentEl.textContent = `Mis tareas asignadas`;
+            }
+
+            // Si no hay stats financieras para participante, limpiar spinners con valores default
+            const remainingBudgetEl =
+              document.getElementById("remainingBudget");
+            if (remainingBudgetEl && !data.financial_stats) {
+              remainingBudgetEl.textContent =
+                DashboardService.formatCurrency(0);
+            }
+            const remainingBudgetPercentEl = document.getElementById(
+              "remainingBudgetPercent"
+            );
+            if (remainingBudgetPercentEl && !data.financial_stats) {
+              remainingBudgetPercentEl.textContent = `0% disponible`;
+            }
+
+            // Actualizar tabla de tareas con mis tareas
+            if (Array.isArray(data.my_tasks)) {
+              updateRecentTasks(data.my_tasks);
+            }
           }
 
           // Mostrar error en el dashboard

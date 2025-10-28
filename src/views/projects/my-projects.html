@@ -551,12 +551,24 @@
 
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="editProjectStartDate" class="form-label">Fecha de Inicio</label>
-                  <input type="date" class="form-control" id="editProjectStartDate" />
+                  <label for="editProjectStartDate" class="form-label"
+                    >Fecha de Inicio</label
+                  >
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="editProjectStartDate"
+                  />
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label for="editProjectEndDate" class="form-label">Fecha de Fin</label>
-                  <input type="date" class="form-control" id="editProjectEndDate" />
+                  <label for="editProjectEndDate" class="form-label"
+                    >Fecha de Fin</label
+                  >
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="editProjectEndDate"
+                  />
                 </div>
               </div>
 
@@ -582,11 +594,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-light"
-              data-bs-dismiss="modal"
-            >
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
               Cancelar
             </button>
             <button
@@ -727,7 +735,8 @@
 
       // Verificar autenticación
       if (!AuthService.isAuthenticated()) {
-        window.location.href = "/src/views/auth/login.html";
+        window.location.href =
+          "http://localhost/eco-app/GreenTech/src/views/auth/login.html";
       } else {
         const userData = AuthService.getCurrentUser();
 
@@ -931,7 +940,7 @@
 
         // Ver detalles del proyecto
         window.viewProject = function (id) {
-          window.location.href = `/src/views/projects/project-details.html?id=${id}`;
+          window.location.href = `http://localhost/eco-app/GreenTech/src/views/projects/project-details.html?id=${id}`;
         };
 
         // Editar proyecto
@@ -949,8 +958,10 @@
                 project.description || "";
               document.getElementById("editProjectStatus").value =
                 project.status;
-              document.getElementById("editProjectStartDate").value = project.start_date || "";
-              document.getElementById("editProjectEndDate").value = project.end_date || "";
+              document.getElementById("editProjectStartDate").value =
+                project.start_date || "";
+              document.getElementById("editProjectEndDate").value =
+                project.end_date || "";
               // Campos ocultos/removidos: presupuesto, prioridad, progreso
 
               // Mostrar modal
@@ -1209,12 +1220,13 @@
                   : member.role_id === 2
                   ? "warning"
                   : "info";
-              const initials = (member.name || "?")
-                .split(" ")
-                .filter(Boolean)
-                .slice(0, 2)
-                .map((w) => w.charAt(0).toUpperCase())
-                .join("") || "?";
+              const initials =
+                (member.name || "?")
+                  .split(" ")
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .map((w) => w.charAt(0).toUpperCase())
+                  .join("") || "?";
               return `
                <div class="list-group-item d-flex justify-content-between align-items-center">
                  <div class="d-flex align-items-center">
@@ -1265,12 +1277,13 @@
                   : user.role_id === 2
                   ? "warning"
                   : "info";
-              const initials = (user.name || "?")
-                .split(" ")
-                .filter(Boolean)
-                .slice(0, 2)
-                .map((w) => w.charAt(0).toUpperCase())
-                .join("") || "?";
+              const initials =
+                (user.name || "?")
+                  .split(" ")
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .map((w) => w.charAt(0).toUpperCase())
+                  .join("") || "?";
               return `
                <div class="list-group-item d-flex justify-content-between align-items-center">
                  <div class="d-flex align-items-center">

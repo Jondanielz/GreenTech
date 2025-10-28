@@ -682,15 +682,14 @@
 
       // Verificar autenticación y permisos de administrador
       if (!AuthService.isAuthenticated()) {
-        window.location.href =
-          "http://localhost/eco-app/GreenTech/src/views/auth/login.html";
+        window.location.href = "/src/views/auth/login.html";
       } else {
         const userData = AuthService.getCurrentUser();
 
         // Solo administradores pueden acceder a esta vista
         if (userData.role_id !== 1) {
           alert("No tienes permisos para acceder a esta sección");
-          window.location.href = "http://localhost/eco-app/GreenTech/";
+          window.location.href = "/";
         }
 
         // Cargar componentes

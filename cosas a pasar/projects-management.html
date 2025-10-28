@@ -253,6 +253,32 @@
         font-weight: 500;
         margin-bottom: 0.5rem;
       }
+      
+      /* Estilos para avatares con iniciales */
+      .member-avatar-initials {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #57c785 0%, #62a984 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 0.9rem;
+      }
+      .user-avatar-initials {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #57c785 0%, #62a984 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 0.9rem;
+      }
     </style>
   </head>
   <body>
@@ -433,6 +459,30 @@
                 </div>
               </div>
 
+<<<<<<< HEAD
+              <!-- Sección de Indicadores -->
+              <div class="mb-3">
+                <label class="form-label">Indicadores del Proyecto</label>
+                <div class="border rounded p-3" style="background-color: #f8f9fa;">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0">Seleccionar Indicadores</h6>
+                    <button type="button" class="btn btn-outline-success btn-sm" id="addIndicatorBtn">
+                      <i class="mdi mdi-plus"></i> Agregar Indicador
+                    </button>
+                  </div>
+                  
+                  <!-- Lista de indicadores seleccionados -->
+                  <div id="selectedIndicatorsList">
+                    <div class="text-muted text-center py-2">
+                      <i class="mdi mdi-information-outline"></i>
+                      No hay indicadores seleccionados
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+=======
+>>>>>>> e7d0f62e719ceaa0c79208b32b5954189cce2e77
               <!-- Campos ocultos: Presupuesto, Ubicación, Objetivos -->
               <!--
               <div class="row">
@@ -462,6 +512,55 @@
             </button>
             <button type="button" class="btn btn-success" id="saveProjectBtn">
               <i class="mdi mdi-content-save"></i> Guardar Proyecto
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Seleccionar Indicadores -->
+    <div class="modal fade" id="selectIndicatorsModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title">
+              <i class="mdi mdi-chart-line mr-2"></i>
+              Seleccionar Indicadores
+            </h5>
+            <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="indicatorSearch" class="form-label">Buscar Indicador</label>
+              <input type="text" class="form-control" id="indicatorSearch" placeholder="Escriba para filtrar indicadores...">
+            </div>
+            
+            <div class="mb-3">
+              <label for="indicatorCategory" class="form-label">Filtrar por Categoría</label>
+              <select class="form-select" id="indicatorCategory">
+                <option value="">Todas las categorías</option>
+                <option value="Ambiental">Ambiental</option>
+                <option value="Social">Social</option>
+                <option value="Económico">Económico</option>
+                <option value="General">General</option>
+              </select>
+            </div>
+
+            <div id="indicatorsList" style="max-height: 400px; overflow-y: auto;">
+              <div class="text-center py-4">
+                <div class="spinner-border text-success" role="status">
+                  <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-2 text-muted">Cargando indicadores...</p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-success" id="confirmIndicatorsBtn">
+              <i class="mdi mdi-check"></i> Confirmar Selección
             </button>
           </div>
         </div>
@@ -771,15 +870,14 @@
 
       // Verificar autenticación y permisos de administrador
       if (!AuthService.isAuthenticated()) {
-        window.location.href =
-          "http://localhost/eco-app/GreenTech/src/views/auth/login.html";
+        window.location.href = "/src/views/auth/login.html";
       } else {
         const userData = AuthService.getCurrentUser();
 
         // Solo administradores pueden acceder a esta vista
         if (userData.role_id !== 1) {
           alert("No tienes permisos para acceder a esta sección");
-          window.location.href = "http://localhost/eco-app/GreenTech/";
+          window.location.href = "/";
         }
 
         // Cargar componentes
@@ -946,11 +1044,13 @@
                     })">
                       <i class="mdi mdi-pencil"></i> Editar
                     </button>
+                    ${project.status !== 'Cancelado' ? `
                     <button class="project-action-btn btn-outline-danger" onclick="cancelProject(${
                       project.id
                     }, '${project.name}')">
                       <i class="mdi mdi-close"></i> Cancelar
                     </button>
+                    ` : ''}
                   </div>
                 </div>
               </div>
@@ -960,7 +1060,7 @@
 
         // Ver detalles del proyecto
         window.viewProject = function (id) {
-          window.location.href = `http://localhost/eco-app/GreenTech/src/views/projects/project-details.html?id=${id}`;
+          window.location.href = `/src/views/projects/project-details.html?id=${id}`;
         };
 
         // Editar proyecto
@@ -1055,7 +1155,21 @@
               status: document.getElementById("projectStatus").value,
               start_date: startDate,
               end_date: endDate,
+<<<<<<< HEAD
+              indicators: selectedIndicators.map(indicator => ({
+                indicator_id: indicator.id,
+                baseline: 0, // Valor por defecto
+                target: 0, // Valor por defecto
+                target_date: endDate || null,
+                method: '', // Método por defecto
+                frequency: indicator.frequency,
+                responsible_user_id: null, // Se asignará después
+                notes: '',
+                active: true
+              }))
+=======
               // Campos removidos: budget, location, objectives
+>>>>>>> e7d0f62e719ceaa0c79208b32b5954189cce2e77
             };
 
             try {
@@ -1067,6 +1181,9 @@
                   document.getElementById("createProjectModal")
                 ).hide();
                 form.reset();
+                // Limpiar indicadores seleccionados
+                selectedIndicators = [];
+                renderSelectedIndicators();
                 loadProjects();
               } else {
                 showErrorMessage(response.message || "Error al crear proyecto");
@@ -1248,13 +1365,14 @@
                <div class="list-group-item d-flex justify-content-between align-items-center">
                  <div class="d-flex align-items-center">
                    <div class="mr-3">
-                     ${
-                       member.avatar
-                         ? `<img src="${member.avatar}" class="rounded-circle" width="40" height="40" alt="${member.name}">`
-                         : `<div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
-                         ${member.name.charAt(0).toUpperCase()}
-                       </div>`
-                     }
+                     <div class="member-avatar-initials">
+                       ${(member.name || "?")
+                         .split(" ")
+                         .filter(Boolean)
+                         .slice(0, 2)
+                         .map((w) => w.charAt(0).toUpperCase())
+                         .join("") || "?"}
+                     </div>
                    </div>
                    <div>
                      <div class="font-weight-bold">${member.name}</div>
@@ -1305,13 +1423,14 @@
                <div class="list-group-item d-flex justify-content-between align-items-center">
                  <div class="d-flex align-items-center">
                    <div class="mr-3">
-                     ${
-                       user.avatar
-                         ? `<img src="${user.avatar}" class="rounded-circle" width="40" height="40" alt="${user.name}">`
-                         : `<div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
-                         ${user.name.charAt(0).toUpperCase()}
-                       </div>`
-                     }
+                     <div class="user-avatar-initials">
+                       ${(user.name || "?")
+                         .split(" ")
+                         .filter(Boolean)
+                         .slice(0, 2)
+                         .map((w) => w.charAt(0).toUpperCase())
+                         .join("") || "?"}
+                     </div>
                    </div>
                    <div>
                      <div class="font-weight-bold">${user.name}</div>
@@ -1487,6 +1606,170 @@
             endDateField.classList.remove("is-invalid");
           }
         }
+
+        // ========== FUNCIONALIDAD DE INDICADORES ==========
+        let availableIndicators = [];
+        let selectedIndicators = [];
+        let filteredIndicators = [];
+
+        // Cargar indicadores disponibles
+        async function loadAvailableIndicators() {
+          try {
+            const response = await fetch('/api/indicators', {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                'Content-Type': 'application/json'
+              }
+            });
+            
+            if (!response.ok) {
+              throw new Error('Error al cargar indicadores');
+            }
+            
+            const data = await response.json();
+            availableIndicators = data.data || [];
+            filteredIndicators = [...availableIndicators];
+            renderIndicatorsList();
+          } catch (error) {
+            console.error('Error cargando indicadores:', error);
+            showError('Error al cargar los indicadores disponibles');
+          }
+        }
+
+        // Renderizar lista de indicadores
+        function renderIndicatorsList() {
+          const container = document.getElementById('indicatorsList');
+          
+          if (filteredIndicators.length === 0) {
+            container.innerHTML = `
+              <div class="text-center py-4">
+                <i class="mdi mdi-information-outline text-muted" style="font-size: 2rem;"></i>
+                <p class="mt-2 text-muted">No se encontraron indicadores</p>
+              </div>
+            `;
+            return;
+          }
+
+          container.innerHTML = filteredIndicators.map(indicator => `
+            <div class="card mb-2">
+              <div class="card-body py-2">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    value="${indicator.id}" 
+                    id="indicator_${indicator.id}"
+                    ${selectedIndicators.find(si => si.id === indicator.id) ? 'checked' : ''}
+                  >
+                  <label class="form-check-label w-100" for="indicator_${indicator.id}">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <strong>${indicator.name}</strong>
+                        <br>
+                        <small class="text-muted">${indicator.description}</small>
+                        <br>
+                        <span class="badge bg-secondary">${indicator.category}</span>
+                        <span class="badge bg-info">${indicator.direction}</span>
+                        <span class="badge bg-warning">${indicator.frequency}</span>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        // Renderizar indicadores seleccionados
+        function renderSelectedIndicators() {
+          const container = document.getElementById('selectedIndicatorsList');
+          
+          if (selectedIndicators.length === 0) {
+            container.innerHTML = `
+              <div class="text-muted text-center py-2">
+                <i class="mdi mdi-information-outline"></i>
+                No hay indicadores seleccionados
+              </div>
+            `;
+            return;
+          }
+
+          container.innerHTML = selectedIndicators.map(indicator => `
+            <div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2">
+              <div>
+                <strong>${indicator.name}</strong>
+                <br>
+                <small class="text-muted">${indicator.category} • ${indicator.direction} • ${indicator.frequency}</small>
+              </div>
+              <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeIndicator(${indicator.id})">
+                <i class="mdi mdi-close"></i>
+              </button>
+            </div>
+          `).join('');
+        }
+
+        // Filtrar indicadores
+        function filterIndicators() {
+          const searchTerm = document.getElementById('indicatorSearch').value.toLowerCase();
+          const category = document.getElementById('indicatorCategory').value;
+          
+          filteredIndicators = availableIndicators.filter(indicator => {
+            const matchesSearch = indicator.name.toLowerCase().includes(searchTerm) || 
+                                indicator.description.toLowerCase().includes(searchTerm);
+            const matchesCategory = !category || indicator.category === category;
+            return matchesSearch && matchesCategory;
+          });
+          
+          renderIndicatorsList();
+        }
+
+        // Agregar indicador a la selección
+        function addIndicator(indicatorId) {
+          const indicator = availableIndicators.find(i => i.id === indicatorId);
+          if (indicator && !selectedIndicators.find(si => si.id === indicatorId)) {
+            selectedIndicators.push(indicator);
+            renderSelectedIndicators();
+          }
+        }
+
+        // Remover indicador de la selección
+        function removeIndicator(indicatorId) {
+          selectedIndicators = selectedIndicators.filter(si => si.id !== indicatorId);
+          renderSelectedIndicators();
+        }
+
+        // Confirmar selección de indicadores
+        function confirmIndicatorsSelection() {
+          const checkboxes = document.querySelectorAll('#indicatorsList input[type="checkbox"]:checked');
+          selectedIndicators = [];
+          
+          checkboxes.forEach(checkbox => {
+            const indicator = availableIndicators.find(i => i.id === parseInt(checkbox.value));
+            if (indicator) {
+              selectedIndicators.push(indicator);
+            }
+          });
+          
+          renderSelectedIndicators();
+          
+          // Cerrar modal
+          const modal = bootstrap.Modal.getInstance(document.getElementById('selectIndicatorsModal'));
+          modal.hide();
+        }
+
+        // Event listeners
+        document.getElementById('addIndicatorBtn').addEventListener('click', () => {
+          loadAvailableIndicators();
+          const modal = new bootstrap.Modal(document.getElementById('selectIndicatorsModal'));
+          modal.show();
+        });
+
+        document.getElementById('indicatorSearch').addEventListener('input', filterIndicators);
+        document.getElementById('indicatorCategory').addEventListener('change', filterIndicators);
+        document.getElementById('confirmIndicatorsBtn').addEventListener('click', confirmIndicatorsSelection);
+
+        // Hacer funciones globales para los onclick
+        window.removeIndicator = removeIndicator;
       }
     </script>
   </body>
