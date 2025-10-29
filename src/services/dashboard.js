@@ -3,7 +3,7 @@
  * Maneja las peticiones HTTP a la API del dashboard
  */
 
-import APIClient from "/src/utils/api-client.js";
+import APIClient from "../utils/api-client.js";
 
 export class DashboardService {
   /**
@@ -11,7 +11,7 @@ export class DashboardService {
    * @param {string} userRole - Rol del usuario (admin, coordinador, participante)
    * @returns {Promise<Object>} - Datos completos del dashboard
    */
-  static async getDashboardData(userRole = "participante") {
+  static async getDashboardData(userRole = 'participante') {
     try {
       const response = await APIClient.get(`/dashboard?role=${userRole}`);
 

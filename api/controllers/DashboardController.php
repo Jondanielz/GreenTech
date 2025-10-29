@@ -335,19 +335,14 @@ class DashboardController {
      */
     public function getParticipantDashboard($userData) {
         try {
-            error_log("getParticipantDashboard called for user ID: " . $userData['id']);
-            
             // Proyectos del usuario
             $myProjects = $this->dashboard->getUserProjects($userData['id']);
-            error_log("User projects count: " . count($myProjects));
             
             // Tareas del usuario
             $myTasks = $this->dashboard->getUserTasks($userData['id']);
-            error_log("User tasks count: " . count($myTasks));
             
             // Tareas completadas del usuario
             $completedTasks = $this->dashboard->getUserCompletedTasks($userData['id']);
-            error_log("User completed tasks count: " . count($completedTasks));
             
             // Estadísticas personales
             $personalStats = [
@@ -356,7 +351,7 @@ class DashboardController {
                 'completed_tasks' => count($completedTasks)
             ];
             
-            $response = [
+            return [
                 'success' => true,
                 'data' => [
                     'personal_stats' => $personalStats,
@@ -365,15 +360,11 @@ class DashboardController {
                     'completed_tasks' => $completedTasks
                 ]
             ];
-            
-            error_log("getParticipantDashboard response: " . json_encode($response));
-            return $response;
         } catch (Exception $e) {
             error_log("Error en getParticipantDashboard: " . $e->getMessage());
-            error_log("Stack trace: " . $e->getTraceAsString());
             return [
                 'success' => false,
-                'message' => 'Error al obtener datos del dashboard de participante: ' . $e->getMessage()
+                'message' => 'Error al obtener datos del dashboard de participante'
             ];
         }
     }

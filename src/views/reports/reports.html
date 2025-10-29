@@ -29,6 +29,9 @@
     <link rel="stylesheet" href="/src/assets/css/style.css" />
     <!-- Favicon -->
     <link rel="shortcut icon" href="/src/assets/images/favicon.png" />
+    <!-- jsPDF para exportar a PDF (fallback en cliente) -->
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
     <!-- Estilos personalizados para reportes -->
     <style>
       /* Estilos para tarjetas de reporte similares a proyectos */
@@ -517,6 +520,8 @@
     <script>
       let currentReportType = null;
       let currentFilters = {};
+      let lastReportData = null; // datos del último reporte generado (para PDF)
+      let lastReportType = null; // tipo del último reporte generado (para PDF)
 
       // Funciones de carga de componentes (versión simplificada)
       function loadSidebar() {
@@ -741,6 +746,8 @@
       // Mostrar reporte en la interfaz
       function displayReport(data, type) {
         const content = document.getElementById("report-content");
+        lastReportData = data;
+        lastReportType = type;
 
         switch (type) {
           case "users":
@@ -783,6 +790,9 @@
           <div class="export-buttons">
             <button class="btn btn-success btn-export" onclick="exportReport('users')">
               <i class="mdi mdi-download"></i> Exportar CSV
+            </button>
+            <button class="btn btn-danger btn-export" onclick="exportReportPDF('users')">
+              <i class="mdi mdi-file-pdf"></i> Exportar PDF
             </button>
           </div>
           
@@ -863,6 +873,9 @@
             <button class="btn btn-success btn-export" onclick="exportReport('users_by_project')">
               <i class="mdi mdi-download"></i> Exportar CSV
             </button>
+            <button class="btn btn-danger btn-export" onclick="exportReportPDF('users_by_project')">
+              <i class="mdi mdi-file-pdf"></i> Exportar PDF
+            </button>
           </div>
           
           ${generateReportHeader(data.config)}
@@ -936,6 +949,9 @@
           <div class="export-buttons">
             <button class="btn btn-success btn-export" onclick="exportReport('tasks_by_project')">
               <i class="mdi mdi-download"></i> Exportar CSV
+            </button>
+            <button class="btn btn-danger btn-export" onclick="exportReportPDF('tasks_by_project')">
+              <i class="mdi mdi-file-pdf"></i> Exportar PDF
             </button>
           </div>
           
@@ -1058,6 +1074,9 @@
             <button class="btn btn-success btn-export" onclick="exportReport('complete')">
               <i class="mdi mdi-download"></i> Exportar CSV
             </button>
+            <button class="btn btn-danger btn-export" onclick="exportReportPDF('complete')">
+              <i class="mdi mdi-file-pdf"></i> Exportar PDF
+            </button>
           </div>
           
           ${generateReportHeader(data.config)}
@@ -1144,6 +1163,241 @@
         } catch (error) {
           console.error("Error:", error);
           showError("Error de conexión al exportar reporte");
+        }
+      }
+
+      // Exportar reporte en PDF
+      async function exportReportPDF(type) {
+        // Fallback: generar PDF en cliente con jsPDF usando los últimos datos cargados
+        try {
+          if (!lastReportData || !lastReportType) {
+            lastReportData = lastReportData || {};
+            lastReportType = type;
+          }
+
+          const { jsPDF } = window.jspdf || {};
+          if (!jsPDF) {
+            showError("Librería jsPDF no disponible para exportar PDF");
+            return;
+          }
+
+          const doc = new jsPDF({ orientation: "p", unit: "pt", format: "a4" });
+          const pageWidth = doc.internal.pageSize.getWidth();
+          const marginX = 40;
+          const marginY = 40;
+
+          // Membrete
+          const cfg = lastReportData.config || {};
+          const orgName = cfg.company_name || "GreenTech";
+          const contactParts = [];
+          if (cfg.company_address) contactParts.push(cfg.company_address);
+          if (cfg.company_phone) contactParts.push(`Tel: ${cfg.company_phone}`);
+          if (cfg.company_email)
+            contactParts.push(`Email: ${cfg.company_email}`);
+          const contactLine = contactParts.join("  |  ");
+
+          // Logo (si es posible dibujarlo como imagen remota)
+          let titleX = marginX;
+          if (cfg.company_logo) {
+            try {
+              const imgResp = await fetch(`../../${cfg.company_logo}`);
+              const blob = await imgResp.blob();
+              const reader = new FileReader();
+              const dataURL = await new Promise((resolve) => {
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+              });
+              doc.addImage(
+                dataURL,
+                "PNG",
+                marginX,
+                marginY - 10,
+                80,
+                50,
+                undefined,
+                "FAST"
+              );
+              titleX = marginX + 90;
+            } catch (e) {
+              // Continuar sin logo si falla
+            }
+          }
+
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(16);
+          doc.text(orgName, titleX, marginY + 10);
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(10);
+          if (contactLine) doc.text(contactLine, titleX, marginY + 28);
+          const reportTitleMap = {
+            users: "Reporte de Usuarios",
+            users_by_project: "Usuarios por Proyecto",
+            tasks_by_project: "Tareas por Proyecto",
+            complete: "Reporte Completo",
+          };
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(13);
+          doc.text(
+            reportTitleMap[lastReportType] || "Reporte",
+            marginX,
+            marginY + 60
+          );
+          doc.setDrawColor(100);
+          doc.line(marginX, marginY + 68, pageWidth - marginX, marginY + 68);
+
+          // Tablas/Contenido
+          const startY = marginY + 88;
+          if (!doc.autoTable) {
+            showError("AutoTable no disponible para generar la tabla PDF");
+            return;
+          }
+
+          if (
+            lastReportType === "users" &&
+            Array.isArray(lastReportData.users)
+          ) {
+            const head = [
+              [
+                "ID",
+                "Nombre",
+                "Email",
+                "Usuario",
+                "Rol",
+                "Estado",
+                "Proy.",
+                "Tareas",
+                "Compl.",
+                "Últ. Login",
+              ],
+            ];
+            const body = lastReportData.users.map((u) => [
+              u.id,
+              u.name,
+              u.email,
+              u.user,
+              u.role_name || "-",
+              u.active ? "Activo" : "Inactivo",
+              u.projects_count ?? 0,
+              u.tasks_count ?? 0,
+              u.completed_tasks ?? 0,
+              u.last_login || "-",
+            ]);
+            doc.autoTable({ head, body, startY, styles: { fontSize: 9 } });
+          } else if (
+            lastReportType === "users_by_project" &&
+            Array.isArray(lastReportData.projects)
+          ) {
+            let y = startY;
+            lastReportData.projects.forEach((p, idx) => {
+              if (idx > 0)
+                y = doc.lastAutoTable ? doc.lastAutoTable.finalY + 20 : y + 20;
+              doc.setFont("helvetica", "bold");
+              doc.setFontSize(12);
+              doc.text(`${p.name} - ${p.total_members} miembros`, marginX, y);
+              const head = [
+                ["Usuario", "Email", "Rol", "Tareas", "Compl.", "Asignado"],
+              ];
+              const body = (p.members || []).map((m) => [
+                m.name,
+                m.email,
+                m.role_name || "-",
+                m.project_tasks_count ?? 0,
+                m.completed_project_tasks ?? 0,
+                m.assigned_at || "-",
+              ]);
+              doc.autoTable({
+                head,
+                body,
+                startY: y + 8,
+                styles: { fontSize: 9 },
+              });
+            });
+          } else if (
+            lastReportType === "tasks_by_project" &&
+            Array.isArray(lastReportData.projects)
+          ) {
+            let y = startY;
+            lastReportData.projects.forEach((p, idx) => {
+              if (idx > 0)
+                y = doc.lastAutoTable ? doc.lastAutoTable.finalY + 20 : y + 20;
+              doc.setFont("helvetica", "bold");
+              doc.setFontSize(12);
+              doc.text(p.name, marginX, y);
+              const head = [
+                [
+                  "Tarea",
+                  "Estado",
+                  "Prioridad",
+                  "Progreso",
+                  "Usuarios",
+                  "Vence",
+                ],
+              ];
+              const body = (p.tasks || []).map((t) => [
+                t.title,
+                t.status,
+                t.priority,
+                `${t.progress || 0}%`,
+                (t.assignments || []).map((a) => a.user_name).join(", "),
+                t.due_date || "-",
+              ]);
+              doc.autoTable({
+                head,
+                body,
+                startY: y + 8,
+                styles: { fontSize: 9 },
+              });
+            });
+          } else if (lastReportType === "complete") {
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(11);
+            const gy = startY;
+            doc.text(
+              `Generado: ${lastReportData.generated_at || "-"}`,
+              marginX,
+              gy
+            );
+            const head = [["Bloque", "Detalle", "Valor"]];
+            const body = [
+              [
+                "Usuarios",
+                "Total",
+                lastReportData.users_report?.total_users ?? 0,
+              ],
+              [
+                "Usuarios",
+                "Activos",
+                lastReportData.users_report?.active_users ?? 0,
+              ],
+              [
+                "Proyectos",
+                "Total",
+                lastReportData.users_by_project_report?.total_projects ?? 0,
+              ],
+            ];
+            doc.autoTable({
+              head,
+              body,
+              startY: gy + 14,
+              styles: { fontSize: 9 },
+            });
+          } else {
+            doc.text("No hay datos para exportar.", marginX, startY);
+          }
+
+          // Pie con fecha
+          const date = new Date().toLocaleString();
+          doc.setFontSize(9);
+          doc.text(
+            `Exportado: ${date}`,
+            marginX,
+            doc.internal.pageSize.getHeight() - 20
+          );
+
+          doc.save(`reporte_${lastReportType || type}.pdf`);
+        } catch (err) {
+          console.error(err);
+          showError("No se pudo generar el PDF");
         }
       }
 

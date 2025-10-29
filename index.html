@@ -95,111 +95,19 @@
               </h3>
               <nav aria-label="breadcrumb">
                 <ul class="breadcrumb">
-                  <li class="breadcrumb-item active" aria-current="page">
-                    <span></span>Overview
-                    <i
-                      class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"
-                    ></i>
-                  </li>
+                  
                 </ul>
               </nav>
             </div>
-            <div class="row">
-              <!-- Proyectos Activos -->
-              <div class="col-md-3 stretch-card grid-margin">
-                <div class="card bg-gradient-danger card-img-holder text-white">
-                  <div class="card-body">
-                    <img
-                      src="src/assets/images/dashboard/circle.svg"
-                      class="card-img-absolute"
-                      alt="circle-image"
-                    />
-                    <h4 class="font-weight-normal mb-3">
-                      Proyectos Activos
-                      <i class="mdi mdi-briefcase mdi-24px float-end"></i>
-                    </h4>
-                    <h2 class="mb-5" id="activeProjects">
-                      <span
-                        class="spinner-border spinner-border-sm"
-                        role="status"
-                      ></span>
-                    </h2>
-                    <h6 class="card-text" id="activeProjectsPercent">
-                      Cargando...
-                    </h6>
+            <!-- Dashboard dinámico según el rol del usuario -->
+            <div id="dashboard-content">
+              <!-- El contenido se cargará dinámicamente según el rol -->
+              <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Cargando dashboard...</span>
                   </div>
+                <p class="mt-2">Cargando dashboard personalizado...</p>
                 </div>
-              </div>
-
-              <!-- Tareas Completadas -->
-              <div class="col-md-3 stretch-card grid-margin">
-                <div class="card bg-gradient-info card-img-holder text-white">
-                  <div class="card-body">
-                    <img
-                      src="src/assets/images/dashboard/circle.svg"
-                      class="card-img-absolute"
-                      alt="circle-image"
-                    />
-                    <h4 class="font-weight-normal mb-3">
-                      Tareas Completadas
-                      <i class="mdi mdi-check-circle mdi-24px float-end"></i>
-                    </h4>
-                    <h2 class="mb-5" id="completedTasks">
-                      <span
-                        class="spinner-border spinner-border-sm"
-                        role="status"
-                      ></span>
-                    </h2>
-                    <h6 class="card-text" id="completedTasksPercent">
-                      Cargando...
-                    </h6>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Usuarios Activos -->
-              <div class="col-md-3 stretch-card grid-margin">
-                <div
-                  class="card bg-gradient-success card-img-holder text-white"
-                >
-                  <div class="card-body">
-                    <img
-                      src="src/assets/images/dashboard/circle.svg"
-                      class="card-img-absolute"
-                      alt="circle-image"
-                    />
-                    <h4 class="font-weight-normal mb-3">
-                      Usuarios Activos
-                      <i
-                        class="mdi mdi-account-multiple mdi-24px float-end"
-                      ></i>
-                    </h4>
-                    <h2 class="mb-5" id="activeUsers">
-                      <span
-                        class="spinner-border spinner-border-sm"
-                        role="status"
-                      ></span>
-                    </h2>
-                    <h6 class="card-text" id="activeUsersPercent">
-                      Cargando...
-                    </h6>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Presupuesto Disponible (oculto) -->
-              <!--
-              <div class="col-md-3 stretch-card grid-margin">
-                <div class="card bg-gradient-warning card-img-holder text-white">
-                  <div class="card-body">
-                    <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
-                    <h4 class="font-weight-normal mb-3">Presupuesto Disponible <i class="mdi mdi-cash-multiple mdi-24px float-end"></i></h4>
-                    <h2 class="mb-5" id="remainingBudget"><span class="spinner-border spinner-border-sm" role="status"></span></h2>
-                    <h6 class="card-text" id="remainingBudgetPercent">Cargando...</h6>
-                  </div>
-                </div>
-              </div>
-              -->
             </div>
             <div class="row">
               <!-- Visit And Sales Statistics (oculto) -->
@@ -230,40 +138,6 @@
                 </div>
               </div>
               -->
-            </div>
-            <div class="row">
-              <div class="col-12 grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Tareas Recientes</h4>
-                    <div class="table-responsive">
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th>Asignado a</th>
-                            <th>Tarea</th>
-                            <th>Estado</th>
-                            <th>Fecha de Vencimiento</th>
-                            <th>Proyecto</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td colspan="5" class="text-center">
-                              <div
-                                class="spinner-border text-primary"
-                                role="status"
-                              >
-                                <span class="visually-hidden">Cargando...</span>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
           <!-- content-wrapper ends -->
@@ -489,7 +363,7 @@
               let footerHTML = await response.text();
 
               // Ajustar rutas de imágenes para el index.html raíz
-              footerHTML = footerHTML.replace("/src/assets/", "src/assets/");
+              footerHTML = footerHTML.replace("../assets/", "src/assets/");
 
               document.getElementById("footer-container").innerHTML =
                 footerHTML;
@@ -542,9 +416,7 @@
           // Actualizar UI con datos del usuario e iniciales
           if (userData) {
             try {
-              const { ComponentsLoader } = await import(
-                "/src/utils/components-loader.js"
-              );
+              const { ComponentsLoader } = await import('/src/utils/components-loader.js');
               if (ComponentsLoader && ComponentsLoader.updateNavbar) {
                 ComponentsLoader.updateNavbar(userData);
               }
@@ -552,10 +424,7 @@
                 ComponentsLoader.updateSidebar(userData);
               }
             } catch (e) {
-              console.warn(
-                "No se pudo inicializar ComponentsLoader en index:",
-                e
-              );
+              console.warn('No se pudo inicializar ComponentsLoader en index:', e);
             }
             // Actualizar nombre en navbar
             const profileNameElements = document.querySelectorAll(
@@ -595,75 +464,27 @@
             }
           }
 
-          // ========== CARGAR DATOS DEL DASHBOARD ==========
+          // ========== CARGAR DASHBOARD DINÁMICO SEGÚN ROL ==========
           async function loadDashboardData() {
-            console.log("📊 Cargando datos del dashboard...");
+            console.log("📊 Cargando dashboard personalizado...");
 
             try {
-              // Obtener rol del usuario para cargar dashboard específico
-              const userRole = userData.role_name || "Participante";
-              console.log("🎭 Cargando dashboard para rol:", userRole);
-              console.log("👤 Datos completos del usuario:", userData);
+              const userRole = userData.role_name || userData.role || "Participante";
+              console.log("🎭 Rol del usuario:", userRole);
 
-              let response;
-
-              // Usar métodos específicos por rol si están disponibles
-              if (userRole === "Administrador" || userRole === "admin") {
-                response = await DashboardService.getAdminDashboardData();
-              } else if (userRole === "Coordinador") {
-                response = await DashboardService.getCoordinatorDashboardData();
-              } else {
-                response = await DashboardService.getParticipantDashboardData();
-              }
-
-              if (response.success) {
-                const data = response.data;
-                console.log("✅ Datos del dashboard cargados:", data);
-
-                // Actualizar estadísticas generales
-                if (data.general_stats) {
-                  updateGeneralStats(data.general_stats);
-                }
-
-                // Actualizar estadísticas financieras
-                if (data.financial_stats) {
-                  updateFinancialStats(data.financial_stats);
-                }
-
-                // Actualizar tareas recientes
-                if (data.recent_tasks) {
-                  updateRecentTasks(data.recent_tasks);
-                }
-
-                // Si es participante, actualizar widgets y lista usando sus datos
-                if (userRole === "Participante") {
-                  updateParticipantDashboard(data);
-                }
-
-                // Actualizar proyectos recientes (si tienes sección)
-                if (data.recent_projects) {
-                  console.log("📁 Proyectos recientes:", data.recent_projects);
-                }
-
-                // Mostrar datos específicos del rol
-                if (data.personal_stats) {
-                  console.log(
-                    "👤 Estadísticas personales:",
-                    data.personal_stats
-                  );
-                }
-                if (data.my_projects) {
-                  console.log("📁 Mis proyectos:", data.my_projects);
-                }
-                if (data.my_tasks) {
-                  console.log("✅ Mis tareas:", data.my_tasks);
-                }
-              } else {
-                console.error(
-                  "❌ Error al cargar dashboard:",
-                  response.message
-                );
-                showDashboardError(response.message);
+              // Cargar dashboard según el rol
+              switch (userRole.toLowerCase()) {
+                case "administrador":
+                case "admin":
+                  await loadAdminDashboard();
+                  break;
+                case "coordinador":
+                  await loadCoordinatorDashboard();
+                  break;
+                case "participante":
+                default:
+                  await loadParticipantDashboard();
+                  break;
               }
             } catch (error) {
               console.error("💥 Error crítico en dashboard:", error);
@@ -671,179 +492,839 @@
             }
           }
 
-          // Actualizar estadísticas generales
-          function updateGeneralStats(stats) {
-            if (!stats) return;
+          // ========== DASHBOARD PARA ADMINISTRADOR ==========
+          async function loadAdminDashboard() {
+            console.log("👑 Cargando dashboard de Administrador...");
+            
+            try {
+              const response = await DashboardService.getAdminDashboardData();
+              if (!response.success) {
+                throw new Error(response.message);
+              }
 
-            // Proyectos Activos
-            const activeProjects = stats.active_projects || 0;
-            const totalProjects = stats.total_projects || 0;
-            const projectsPercent = DashboardService.calculatePercentage(
-              activeProjects,
-              totalProjects
-            );
+                const data = response.data;
+              
+              // Crear HTML del dashboard de admin
+              const adminHTML = `
+                <!-- Estadísticas Generales -->
+                <div class="row">
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-primary card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Total de Proyectos
+                          <i class="mdi mdi-briefcase mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.general_stats?.total_projects || 0}</h2>
+                        <h6 class="card-text">Proyectos en el sistema</h6>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-info card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Total de Tareas
+                          <i class="mdi mdi-check-circle mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.general_stats?.total_tasks || 0}</h2>
+                        <h6 class="card-text">Tareas en el sistema</h6>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-success card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Total de Usuarios
+                          <i class="mdi mdi-account-multiple mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.general_stats?.total_users || 0}</h2>
+                        <h6 class="card-text">Usuarios registrados</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-            document.getElementById("activeProjects").textContent =
-              DashboardService.formatNumber(activeProjects);
-            document.getElementById(
-              "activeProjectsPercent"
-            ).textContent = `${projectsPercent}% del total (${totalProjects})`;
+                <!-- Separador de Sección: Estadísticas de Proyectos -->
+                <div class="row">
+                  <div class="col-12">
+                    <h3 class="page-title mb-4">
+                      <span class="page-title-icon bg-gradient-primary text-white me-2">
+                        <i class="mdi mdi-briefcase"></i>
+                      </span>
+                      Estadísticas de Proyectos
+                    </h3>
+                  </div>
+                </div>
 
-            // Tareas Completadas
-            const completedTasks = stats.completed_tasks || 0;
-            const totalTasks = stats.total_tasks || 0;
-            const tasksPercent = DashboardService.calculatePercentage(
-              completedTasks,
-              totalTasks
-            );
+                <!-- Estadísticas de Proyectos por Estado -->
+                <div class="row">
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-clock-outline mdi-36px text-warning"></i>
+                        </div>
+                        <h3 class="text-warning mb-2">${data.project_stats?.planificacion || 0}</h3>
+                        <h6 class="text-muted">Planificación</h6>
+                        <p class="text-muted small">Proyectos en planificación</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-play-circle mdi-36px text-info"></i>
+                        </div>
+                        <h3 class="text-info mb-2">${data.project_stats?.en_progreso || 0}</h3>
+                        <h6 class="text-muted">En Progreso</h6>
+                        <p class="text-muted small">Proyectos activos</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-check-circle mdi-36px text-success"></i>
+                        </div>
+                        <h3 class="text-success mb-2">${data.project_stats?.completado || 0}</h3>
+                        <h6 class="text-muted">Completado</h6>
+                        <p class="text-muted small">Proyectos finalizados</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-close-circle mdi-36px text-danger"></i>
+                        </div>
+                        <h3 class="text-danger mb-2">${data.project_stats?.cancelado || 0}</h3>
+                        <h6 class="text-muted">Cancelado</h6>
+                        <p class="text-muted small">Proyectos cancelados</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-pause-circle mdi-36px text-secondary"></i>
+                        </div>
+                        <h3 class="text-secondary mb-2">${data.project_stats?.en_espera || 0}</h3>
+                        <h6 class="text-muted">En Pausa</h6>
+                        <p class="text-muted small">Proyectos pausados</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-            document.getElementById("completedTasks").textContent =
-              DashboardService.formatNumber(completedTasks);
-            document.getElementById(
-              "completedTasksPercent"
-            ).textContent = `${tasksPercent}% completadas (${totalTasks} totales)`;
+                <!-- Top 5 Proyectos Recientes -->
+                <div class="row">
+                  <div class="col-12 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Últimos 5 Proyectos Creados</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+                                <th>Progreso</th>
+                                <th>Fecha de Creación</th>
+                                <th>Creado por</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.recent_projects?.map(project => `
+                                <tr>
+                                  <td>${project.name || 'Sin nombre'}</td>
+                                  <td>
+                                    ${project.status === 'Planificación' ? '<span class="badge badge-warning">Planificación</span>' : ''}
+                                    ${project.status === 'En progreso' ? '<span class="badge badge-info">En progreso</span>' : ''}
+                                    ${project.status === 'Completado' ? '<span class="badge badge-success">Completado</span>' : ''}
+                                    ${project.status === 'Cancelado' ? '<span class="badge badge-danger">Cancelado</span>' : ''}
+                                    ${project.status === 'En espera' ? '<span class="badge badge-secondary">En espera</span>' : ''}
+                                    ${!['Planificación', 'En progreso', 'Completado', 'Cancelado', 'En espera'].includes(project.status) ? `<span class="badge badge-dark">${project.status}</span>` : ''}
+                                  </td>
+                                  <td>
+                                    <div class="progress">
+                                      <div class="progress-bar" role="progressbar" style="width: ${project.progress || 0}%"></div>
+                                    </div>
+                                    <small>${project.progress || 0}%</small>
+                                  </td>
+                                  <td>${DashboardService.formatDate(project.created_at)}</td>
+                                  <td>${project.creator_name || 'N/A'}</td>
+                                </tr>
+                              `).join('') || '<tr><td colspan="5" class="text-center">No hay proyectos recientes</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-            // Usuarios Activos
-            const activeUsers = stats.active_users || 0;
-            const totalUsers = stats.total_users || 0;
-            const usersPercent = DashboardService.calculatePercentage(
-              activeUsers,
-              totalUsers
-            );
+                <!-- Separador de Sección: Estadísticas de Tareas -->
+                <div class="row">
+                  <div class="col-12">
+                    <h3 class="page-title mb-4">
+                      <span class="page-title-icon bg-gradient-primary text-white me-2">
+                        <i class="mdi mdi-check-circle"></i>
+                      </span>
+                      Estadísticas de Tareas
+                    </h3>
+                  </div>
+                </div>
 
-            document.getElementById("activeUsers").textContent =
-              DashboardService.formatNumber(activeUsers);
-            document.getElementById(
-              "activeUsersPercent"
-            ).textContent = `${usersPercent}% del total (${totalUsers})`;
+                <!-- Estadísticas de Tareas por Estado -->
+                <div class="row">
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-clock-outline mdi-36px text-warning"></i>
+                        </div>
+                        <h3 class="text-warning mb-2">${data.task_stats?.pendiente || 0}</h3>
+                        <h6 class="text-muted">Pendientes</h6>
+                        <p class="text-muted small">Tareas pendientes</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-play-circle mdi-36px text-info"></i>
+                        </div>
+                        <h3 class="text-info mb-2">${data.task_stats?.en_progreso || 0}</h3>
+                        <h6 class="text-muted">En Progreso</h6>
+                        <p class="text-muted small">Tareas en ejecución</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-check-circle mdi-36px text-success"></i>
+                        </div>
+                        <h3 class="text-success mb-2">${data.task_stats?.completada || 0}</h3>
+                        <h6 class="text-muted">Completadas</h6>
+                        <p class="text-muted small">Tareas finalizadas</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Top 5 Tareas Recientes -->
+                <div class="row">
+                  <div class="col-12 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Últimas 5 Tareas Creadas</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Título</th>
+                                <th>Estado</th>
+                                <th>Prioridad</th>
+                                <th>Fecha de Vencimiento</th>
+                                <th>Proyecto</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.recent_tasks?.map(task => `
+                                <tr>
+                                  <td>${task.title || 'Sin título'}</td>
+                                  <td>
+                                    ${task.status === 'Pendiente' ? '<span class="badge badge-warning">Pendiente</span>' : ''}
+                                    ${task.status === 'En progreso' ? '<span class="badge badge-info">En progreso</span>' : ''}
+                                    ${task.status === 'Completada' ? '<span class="badge badge-success">Completada</span>' : ''}
+                                    ${!['Pendiente', 'En progreso', 'Completada'].includes(task.status) ? `<span class="badge badge-dark">${task.status}</span>` : ''}
+                                  </td>
+                                  <td>
+                                    ${task.priority === 'Alta' ? '<span class="badge badge-danger">Alta</span>' : ''}
+                                    ${task.priority === 'Media' ? '<span class="badge badge-warning">Media</span>' : ''}
+                                    ${task.priority === 'Baja' ? '<span class="badge badge-success">Baja</span>' : ''}
+                                    ${!['Alta', 'Media', 'Baja'].includes(task.priority) ? `<span class="badge badge-secondary">${task.priority}</span>` : ''}
+                                  </td>
+                                  <td>${task.due_date ? DashboardService.formatDate(task.due_date) : 'Sin fecha'}</td>
+                                  <td>${task.project_name || 'Sin proyecto'}</td>
+                                </tr>
+                              `).join('') || '<tr><td colspan="5" class="text-center">No hay tareas recientes</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+
+              document.getElementById('dashboard-content').innerHTML = adminHTML;
+              console.log("✅ Dashboard de Administrador cargado");
+            } catch (error) {
+              console.error("❌ Error al cargar dashboard de admin:", error);
+              showDashboardError("Error al cargar datos del administrador");
+            }
           }
 
-          // Actualizar estadísticas financieras
-          function updateFinancialStats(stats) {
-            if (!stats) return;
+          // ========== DASHBOARD PARA COORDINADOR ==========
+          async function loadCoordinatorDashboard() {
+            console.log("👨‍💼 Cargando dashboard de Coordinador...");
+            
+            try {
+              const response = await DashboardService.getCoordinatorDashboardData();
+              if (!response.success) {
+                throw new Error(response.message);
+              }
 
-            const remainingBudget = parseFloat(stats.remaining_budget || 0);
-            const totalBudget = parseFloat(stats.total_budget || 0);
-            const budgetPercent = DashboardService.calculatePercentage(
-              remainingBudget,
-              totalBudget
-            );
+              const data = response.data;
+              
+              // Crear HTML del dashboard de coordinador
+              const coordinatorHTML = `
+                <!-- Estadísticas Generales -->
+                <div class="row">
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-primary card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Total de Proyectos
+                          <i class="mdi mdi-briefcase mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.general_stats?.total_projects || 0}</h2>
+                        <h6 class="card-text">Proyectos en el sistema</h6>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-info card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Total de Tareas
+                          <i class="mdi mdi-check-circle mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.general_stats?.total_tasks || 0}</h2>
+                        <h6 class="card-text">Tareas en el sistema</h6>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-success card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Total de Usuarios
+                          <i class="mdi mdi-account-multiple mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.general_stats?.total_users || 0}</h2>
+                        <h6 class="card-text">Usuarios registrados</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-            const remainingBudgetEl =
-              document.getElementById("remainingBudget");
-            const remainingBudgetPercentEl = document.getElementById(
-              "remainingBudgetPercent"
-            );
-            if (remainingBudgetEl) {
-              remainingBudgetEl.textContent =
-                DashboardService.formatCurrency(remainingBudget);
-            }
-            if (remainingBudgetPercentEl) {
-              remainingBudgetPercentEl.textContent = `${budgetPercent}% disponible`;
+                <!-- Separador de Sección: Estadísticas de Proyectos -->
+                <div class="row">
+                  <div class="col-12">
+                    <h3 class="page-title mb-4">
+                      <span class="page-title-icon bg-gradient-primary text-white me-2">
+                        <i class="mdi mdi-briefcase"></i>
+                      </span>
+                      Estadísticas de Proyectos
+                    </h3>
+                  </div>
+                </div>
+
+                <!-- Estadísticas de Proyectos por Estado -->
+                <div class="row">
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-clock-outline mdi-36px text-warning"></i>
+                        </div>
+                        <h3 class="text-warning mb-2">${data.project_stats?.planificacion || 0}</h3>
+                        <h6 class="text-muted">Planificación</h6>
+                        <p class="text-muted small">Proyectos en planificación</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-play-circle mdi-36px text-info"></i>
+                        </div>
+                        <h3 class="text-info mb-2">${data.project_stats?.en_progreso || 0}</h3>
+                        <h6 class="text-muted">En Progreso</h6>
+                        <p class="text-muted small">Proyectos activos</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-check-circle mdi-36px text-success"></i>
+                        </div>
+                        <h3 class="text-success mb-2">${data.project_stats?.completado || 0}</h3>
+                        <h6 class="text-muted">Completado</h6>
+                        <p class="text-muted small">Proyectos finalizados</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-close-circle mdi-36px text-danger"></i>
+                        </div>
+                        <h3 class="text-danger mb-2">${data.project_stats?.cancelado || 0}</h3>
+                        <h6 class="text-muted">Cancelado</h6>
+                        <p class="text-muted small">Proyectos cancelados</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-pause-circle mdi-36px text-secondary"></i>
+                        </div>
+                        <h3 class="text-secondary mb-2">${data.project_stats?.en_espera || 0}</h3>
+                        <h6 class="text-muted">En Pausa</h6>
+                        <p class="text-muted small">Proyectos pausados</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-account mdi-36px text-primary"></i>
+                        </div>
+                        <h3 class="text-primary mb-2">${data.assigned_projects?.length || 0}</h3>
+                        <h6 class="text-muted">Asignados a mí</h6>
+                        <p class="text-muted small">Mis proyectos</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Proyectos Recientes y Asignados -->
+                <div class="row">
+                  <div class="col-md-6 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Últimos 5 Proyectos Creados</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+                                <th>Progreso</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.recent_projects?.map(project => `
+                                <tr>
+                                  <td>${project.name || 'Sin nombre'}</td>
+                                  <td>
+                                    ${project.status === 'Planificación' ? '<span class="badge badge-warning">Planificación</span>' : ''}
+                                    ${project.status === 'En progreso' ? '<span class="badge badge-info">En progreso</span>' : ''}
+                                    ${project.status === 'Completado' ? '<span class="badge badge-success">Completado</span>' : ''}
+                                    ${project.status === 'Cancelado' ? '<span class="badge badge-danger">Cancelado</span>' : ''}
+                                    ${project.status === 'En espera' ? '<span class="badge badge-secondary">En espera</span>' : ''}
+                                    ${!['Planificación', 'En progreso', 'Completado', 'Cancelado', 'En espera'].includes(project.status) ? `<span class="badge badge-dark">${project.status}</span>` : ''}
+                                  </td>
+                                  <td>
+                                    <div class="progress">
+                                      <div class="progress-bar" role="progressbar" style="width: ${project.progress || 0}%"></div>
+                                    </div>
+                                    <small>${project.progress || 0}%</small>
+                                  </td>
+                                </tr>
+                              `).join('') || '<tr><td colspan="3" class="text-center">No hay proyectos recientes</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Mis Proyectos Asignados</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+                                <th>Progreso</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.assigned_projects?.map(project => `
+                                <tr>
+                                  <td>${project.name || 'Sin nombre'}</td>
+                                  <td>
+                                    ${project.status === 'Planificación' ? '<span class="badge badge-warning">Planificación</span>' : ''}
+                                    ${project.status === 'En progreso' ? '<span class="badge badge-info">En progreso</span>' : ''}
+                                    ${project.status === 'Completado' ? '<span class="badge badge-success">Completado</span>' : ''}
+                                    ${project.status === 'Cancelado' ? '<span class="badge badge-danger">Cancelado</span>' : ''}
+                                    ${project.status === 'En espera' ? '<span class="badge badge-secondary">En espera</span>' : ''}
+                                    ${!['Planificación', 'En progreso', 'Completado', 'Cancelado', 'En espera'].includes(project.status) ? `<span class="badge badge-dark">${project.status}</span>` : ''}
+                                  </td>
+                                  <td>
+                                    <div class="progress">
+                                      <div class="progress-bar" role="progressbar" style="width: ${project.progress || 0}%"></div>
+                                    </div>
+                                    <small>${project.progress || 0}%</small>
+                                  </td>
+                                </tr>
+                              `).join('') || '<tr><td colspan="3" class="text-center">No tienes proyectos asignados</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Separador de Sección: Estadísticas de Tareas -->
+                <div class="row">
+                  <div class="col-12">
+                    <h3 class="page-title mb-4">
+                      <span class="page-title-icon bg-gradient-primary text-white me-2">
+                        <i class="mdi mdi-check-circle"></i>
+                      </span>
+                      Estadísticas de Tareas
+                    </h3>
+                  </div>
+                </div>
+
+                <!-- Estadísticas de Tareas por Estado -->
+                <div class="row">
+                  <div class="col-md-3 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-clock-outline mdi-36px text-warning"></i>
+                        </div>
+                        <h3 class="text-warning mb-2">${data.task_stats?.pendiente || 0}</h3>
+                        <h6 class="text-muted">Pendientes</h6>
+                        <p class="text-muted small">Tareas pendientes</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-play-circle mdi-36px text-info"></i>
+                        </div>
+                        <h3 class="text-info mb-2">${data.task_stats?.en_progreso || 0}</h3>
+                        <h6 class="text-muted">En Progreso</h6>
+                        <p class="text-muted small">Tareas en ejecución</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-check-circle mdi-36px text-success"></i>
+                        </div>
+                        <h3 class="text-success mb-2">${data.task_stats?.completada || 0}</h3>
+                        <h6 class="text-muted">Completadas</h6>
+                        <p class="text-muted small">Tareas finalizadas</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body text-center">
+                        <div class="mb-3">
+                          <i class="mdi mdi-account mdi-36px text-primary"></i>
+                        </div>
+                        <h3 class="text-primary mb-2">${data.assigned_tasks?.length || 0}</h3>
+                        <h6 class="text-muted">Asignadas a mí</h6>
+                        <p class="text-muted small">Mis tareas</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Tareas Recientes y Asignadas -->
+                <div class="row">
+                  <div class="col-md-6 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Últimas 5 Tareas Creadas</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Título</th>
+                                <th>Estado</th>
+                                <th>Prioridad</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.recent_tasks?.map(task => `
+                                <tr>
+                                  <td>${task.title || 'Sin título'}</td>
+                                  <td>
+                                    ${task.status === 'Pendiente' ? '<span class="badge badge-warning">Pendiente</span>' : ''}
+                                    ${task.status === 'En progreso' ? '<span class="badge badge-info">En progreso</span>' : ''}
+                                    ${task.status === 'Completada' ? '<span class="badge badge-success">Completada</span>' : ''}
+                                    ${!['Pendiente', 'En progreso', 'Completada'].includes(task.status) ? `<span class="badge badge-dark">${task.status}</span>` : ''}
+                                  </td>
+                                  <td>
+                                    ${task.priority === 'Alta' ? '<span class="badge badge-danger">Alta</span>' : ''}
+                                    ${task.priority === 'Media' ? '<span class="badge badge-warning">Media</span>' : ''}
+                                    ${task.priority === 'Baja' ? '<span class="badge badge-success">Baja</span>' : ''}
+                                    ${!['Alta', 'Media', 'Baja'].includes(task.priority) ? `<span class="badge badge-secondary">${task.priority}</span>` : ''}
+                                  </td>
+                                </tr>
+                              `).join('') || '<tr><td colspan="3" class="text-center">No hay tareas recientes</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Mis Tareas Asignadas</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Título</th>
+                                <th>Estado</th>
+                                <th>Prioridad</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.assigned_tasks?.map(task => `
+                                <tr>
+                                  <td>${task.title || 'Sin título'}</td>
+                                  <td>
+                                    ${task.status === 'Pendiente' ? '<span class="badge badge-warning">Pendiente</span>' : ''}
+                                    ${task.status === 'En progreso' ? '<span class="badge badge-info">En progreso</span>' : ''}
+                                    ${task.status === 'Completada' ? '<span class="badge badge-success">Completada</span>' : ''}
+                                    ${!['Pendiente', 'En progreso', 'Completada'].includes(task.status) ? `<span class="badge badge-dark">${task.status}</span>` : ''}
+                                  </td>
+                                  <td>
+                                    ${task.priority === 'Alta' ? '<span class="badge badge-danger">Alta</span>' : ''}
+                                    ${task.priority === 'Media' ? '<span class="badge badge-warning">Media</span>' : ''}
+                                    ${task.priority === 'Baja' ? '<span class="badge badge-success">Baja</span>' : ''}
+                                    ${!['Alta', 'Media', 'Baja'].includes(task.priority) ? `<span class="badge badge-secondary">${task.priority}</span>` : ''}
+                                  </td>
+                                </tr>
+                              `).join('') || '<tr><td colspan="3" class="text-center">No tienes tareas asignadas</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+
+              document.getElementById('dashboard-content').innerHTML = coordinatorHTML;
+              console.log("✅ Dashboard de Coordinador cargado");
+            } catch (error) {
+              console.error("❌ Error al cargar dashboard de coordinador:", error);
+              showDashboardError("Error al cargar datos del coordinador");
             }
           }
 
-          // Actualizar tareas recientes en la tabla
-          function updateRecentTasks(tasks) {
-            if (!tasks || tasks.length === 0) return;
+          // ========== DASHBOARD PARA PARTICIPANTE ==========
+          async function loadParticipantDashboard() {
+            console.log("👤 Cargando dashboard de Participante...");
+            
+            try {
+              const response = await DashboardService.getParticipantDashboardData();
+              if (!response.success) {
+                throw new Error(response.message);
+              }
 
-            const tbody = document.querySelector(".table tbody");
-            if (!tbody) return;
+              const data = response.data;
+              
+              // Crear HTML del dashboard de participante
+              const participantHTML = `
+                <!-- Estadísticas Personales -->
+                <div class="row">
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-primary card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Mis Proyectos
+                          <i class="mdi mdi-briefcase mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.my_projects?.length || 0}</h2>
+                        <h6 class="card-text">Proyectos asignados</h6>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-info card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Mis Tareas
+                          <i class="mdi mdi-check-circle mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.my_tasks?.length || 0}</h2>
+                        <h6 class="card-text">Tareas asignadas</h6>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-success card-img-holder text-white">
+                      <div class="card-body">
+                        <img src="src/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                        <h4 class="font-weight-normal mb-3">
+                          Tareas Completadas
+                          <i class="mdi mdi-check-all mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">${data.completed_tasks?.length || 0}</h2>
+                        <h6 class="card-text">Tareas finalizadas</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-            tbody.innerHTML = "";
-
-            tasks.forEach((task) => {
-              const statusClass = DashboardService.getStatusClass(task.status);
-              const priorityClass = DashboardService.getPriorityClass(
-                task.priority
-              );
-              const dueDate = task.due_date
-                ? DashboardService.formatDate(task.due_date)
-                : "Sin fecha";
-
-              const row = `
-              <tr>
-                <td>
-                  <span class="text-muted">${
-                    task.assignee_name || "Sin asignar"
-                  }</span>
+                <!-- Mis Proyectos -->
+                <div class="row">
+                  <div class="col-12 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Mis Proyectos</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Nombre del Proyecto</th>
+                                <th>Estado</th>
+                                <th>Progreso</th>
+                                <th>Fecha de Inicio</th>
+                                <th>Fecha de Fin</th>
+                                <th>Prioridad</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.my_projects?.map(project => `
+                                <tr>
+                                  <td>${project.name || 'Sin nombre'}</td>
+                                  <td><label class="badge badge-gradient-${DashboardService.getStatusClass(project.status)}">${project.status}</label></td>
+                                  <td>
+                                    <div class="progress">
+                                      <div class="progress-bar" role="progressbar" style="width: ${project.progress || 0}%"></div>
+                                    </div>
+                                    <small>${project.progress || 0}%</small>
                 </td>
-                <td>${task.title || "Sin título"}</td>
-                <td>
-                  <label class="badge badge-gradient-${statusClass}">${
-                task.status
-              }</label>
+                                  <td>${project.start_date ? DashboardService.formatDate(project.start_date) : 'Sin fecha'}</td>
+                                  <td>${project.end_date ? DashboardService.formatDate(project.end_date) : 'Sin fecha'}</td>
+                                  <td><label class="badge badge-gradient-${DashboardService.getPriorityClass(project.priority)}">${project.priority}</label></td>
+                                </tr>
+                              `).join('') || '<tr><td colspan="6" class="text-center">No tienes proyectos asignados</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mis Tareas -->
+                <div class="row">
+                  <div class="col-12 grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Mis Tareas</h4>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Título de la Tarea</th>
+                                <th>Estado</th>
+                                <th>Prioridad</th>
+                                <th>Fecha de Vencimiento</th>
+                                <th>Progreso</th>
+                                <th>Proyecto</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${data.my_tasks?.map(task => `
+                                <tr>
+                                  <td>${task.title || 'Sin título'}</td>
+                                  <td><label class="badge badge-gradient-${DashboardService.getStatusClass(task.status)}">${task.status}</label></td>
+                                  <td><label class="badge badge-gradient-${DashboardService.getPriorityClass(task.priority)}">${task.priority}</label></td>
+                                  <td>${task.due_date ? DashboardService.formatDate(task.due_date) : 'Sin fecha'}</td>
+                                  <td>
+                                    <div class="progress">
+                                      <div class="progress-bar" role="progressbar" style="width: ${task.progress || 0}%"></div>
+                                    </div>
+                                    <small>${task.progress || 0}%</small>
                 </td>
-                <td>${dueDate}</td>
-                <td>${task.project_name || "Sin proyecto"}</td>
+                                  <td>${task.project_name || 'Sin proyecto'}</td>
               </tr>
-            `;
+                              `).join('') || '<tr><td colspan="6" class="text-center">No tienes tareas asignadas</td></tr>'}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
 
-              tbody.innerHTML += row;
-            });
-          }
-
-          // Actualizar widgets cuando el rol es Participante
-          function updateParticipantDashboard(data) {
-            const stats = data?.personal_stats || {};
-
-            // Evitar spinners dejando valores numéricos
-            const myProjects = Number(stats.my_projects || 0);
-            const myTasks = Number(stats.my_tasks || 0);
-            const completed = Number(stats.completed_tasks || 0);
-
-            const activeProjectsEl = document.getElementById("activeProjects");
-            if (activeProjectsEl) {
-              activeProjectsEl.textContent =
-                DashboardService.formatNumber(myProjects);
-            }
-            const activeProjectsPercentEl = document.getElementById(
-              "activeProjectsPercent"
-            );
-            if (activeProjectsPercentEl) {
-              activeProjectsPercentEl.textContent = `Mis proyectos`;
-            }
-
-            const completedTasksEl = document.getElementById("completedTasks");
-            if (completedTasksEl) {
-              completedTasksEl.textContent =
-                DashboardService.formatNumber(completed);
-            }
-            const completedTasksPercentEl = document.getElementById(
-              "completedTasksPercent"
-            );
-            if (completedTasksPercentEl) {
-              completedTasksPercentEl.textContent = `Mis tareas completadas`;
-            }
-
-            const activeUsersEl = document.getElementById("activeUsers");
-            if (activeUsersEl) {
-              activeUsersEl.textContent =
-                DashboardService.formatNumber(myTasks);
-            }
-            const activeUsersPercentEl =
-              document.getElementById("activeUsersPercent");
-            if (activeUsersPercentEl) {
-              activeUsersPercentEl.textContent = `Mis tareas asignadas`;
-            }
-
-            // Si no hay stats financieras para participante, limpiar spinners con valores default
-            const remainingBudgetEl =
-              document.getElementById("remainingBudget");
-            if (remainingBudgetEl && !data.financial_stats) {
-              remainingBudgetEl.textContent =
-                DashboardService.formatCurrency(0);
-            }
-            const remainingBudgetPercentEl = document.getElementById(
-              "remainingBudgetPercent"
-            );
-            if (remainingBudgetPercentEl && !data.financial_stats) {
-              remainingBudgetPercentEl.textContent = `0% disponible`;
-            }
-
-            // Actualizar tabla de tareas con mis tareas
-            if (Array.isArray(data.my_tasks)) {
-              updateRecentTasks(data.my_tasks);
+              document.getElementById('dashboard-content').innerHTML = participantHTML;
+              console.log("✅ Dashboard de Participante cargado");
+            } catch (error) {
+              console.error("❌ Error al cargar dashboard de participante:", error);
+              showDashboardError("Error al cargar datos del participante");
             }
           }
 

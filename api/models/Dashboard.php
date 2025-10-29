@@ -26,7 +26,7 @@ class Dashboard {
             (SELECT COUNT(*) FROM " . $this->table_projects . ") as total_projects,
             (SELECT COUNT(*) FROM " . $this->table_tasks . " WHERE status = 'Completada') as completed_tasks,
             (SELECT COUNT(*) FROM " . $this->table_tasks . ") as total_tasks,
-            (SELECT COUNT(*) FROM " . $this->table_users . " WHERE active = '1') as active_users,
+            (SELECT COUNT(*) FROM " . $this->table_users . " WHERE active = 1) as active_users,
             (SELECT COUNT(*) FROM " . $this->table_users . ") as total_users";
 
         $stmt = $this->conn->prepare($query);
