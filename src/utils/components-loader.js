@@ -3,7 +3,7 @@
  * Carga y configura los componentes comunes (navbar, sidebar, footer)
  */
 
-import AuthService from "../services/auth.js";
+import AuthService from "/src/services/auth.js";
 
 export class ComponentsLoader {
   /**
@@ -232,15 +232,15 @@ export class ComponentsLoader {
 
               // Ajustar rutas de imágenes según la profundidad
               if (depth > 0) {
-                // Para subcarpetas como views/projects/, necesitamos ../../assets/
-                // depth=1 significa que necesitamos 2 niveles hacia arriba: ../../assets/
+                // Para subcarpetas como views/projects/, necesitamos /src/assets/
+                // depth=1 significa que necesitamos 2 niveles hacia arriba: /src/assets/
                 const assetPath = "../".repeat(depth + 1) + "assets/";
                 html = html.replace(/\.\.\/assets\//g, assetPath);
                 console.log(
                   `📁 Ajustando rutas para subcarpeta (profundidad: ${depth}): ${assetPath}`
                 );
               } else {
-                // Para vistas directamente en src/views/, las rutas ya están correctas (../assets/)
+                // Para vistas directamente en src/views/, las rutas ya están correctas (/src/assets/)
                 console.log("📁 Rutas ya correctas para vista en src/views/");
               }
 
@@ -283,15 +283,15 @@ export class ComponentsLoader {
 
               // Ajustar rutas de imágenes según la profundidad
               if (depth > 0) {
-                // Para subcarpetas como views/projects/, necesitamos ../../assets/
-                // depth=1 significa que necesitamos 2 niveles hacia arriba: ../../assets/
+                // Para subcarpetas como views/projects/, necesitamos /src/assets/
+                // depth=1 significa que necesitamos 2 niveles hacia arriba: /src/assets/
                 const assetPath = "../".repeat(depth + 1) + "assets/";
                 html = html.replace(/\.\.\/assets\//g, assetPath);
                 console.log(
                   `📁 Ajustando rutas de footer para subcarpeta (profundidad: ${depth}): ${assetPath}`
                 );
               } else {
-                // Para vistas directamente en src/views/, las rutas ya están correctas (../assets/)
+                // Para vistas directamente en src/views/, las rutas ya están correctas (/src/assets/)
                 console.log(
                   "📁 Rutas de footer ya correctas para vista en src/views/"
                 );
@@ -325,7 +325,7 @@ export class ComponentsLoader {
       navbar: true,
       sidebar: true,
       footer: true,
-      basePath: "../../components/",
+      basePath: "/src/components/",
     };
 
     const settings = { ...defaults, ...config };

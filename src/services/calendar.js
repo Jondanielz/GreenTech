@@ -3,7 +3,7 @@
  * Maneja las operaciones relacionadas con el calendario y diagrama Gantt
  */
 
-import APIClient from "../utils/api-client.js";
+import APIClient from "/src/utils/api-client.js";
 
 export class CalendarService {
   /**

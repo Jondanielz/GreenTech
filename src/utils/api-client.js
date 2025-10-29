@@ -1,6 +1,7 @@
 /**
  * Cliente HTTP para la API PHP
  * Maneja todas las peticiones HTTP a la API backend
+ * Versión: 2.0.0 - URL corregida
  */
 
 // Configuración base de la API

@@ -2,11 +2,11 @@ import { requireAuth, redirectIfAuthenticated } from "./auth-guard.js";
 
 // Rutas públicas
 const publicRoutes = [
-  "http://localhost/eco-app/GreenTech/src/views/auth/login.html",
-  "http://localhost/eco-app/GreenTech/src/views/auth/register.html",
-  "http://localhost/eco-app/GreenTech/src/views/auth/forgot-password.html",
-  "http://localhost/eco-app/GreenTech/src/views/samples/error-404.html",
-  "http://localhost/eco-app/GreenTech/src/views/samples/error-500.html",
+  "/src/views/auth/login.html",
+  "/src/views/auth/register.html",
+  "/src/views/auth/forgot-password.html",
+  "/src/views/samples/error-404.html",
+  "/src/views/samples/error-500.html",
 ];
 
 // Verificar si la ruta actual es pública

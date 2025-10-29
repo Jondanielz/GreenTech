@@ -11,19 +11,19 @@
     <!-- plugins:css -->
     <link
       rel="stylesheet"
-      href="../../assets/vendors/mdi/css/materialdesignicons.min.css"
+      href="/src/assets/vendors/mdi/css/materialdesignicons.min.css"
     />
     <link
       rel="stylesheet"
-      href="../../assets/vendors/ti-icons/css/themify-icons.css"
+      href="/src/assets/vendors/ti-icons/css/themify-icons.css"
     />
     <link
       rel="stylesheet"
-      href="../../assets/vendors/css/vendor.bundle.base.css"
+      href="/src/assets/vendors/css/vendor.bundle.base.css"
     />
     <link
       rel="stylesheet"
-      href="../../assets/vendors/font-awesome/css/font-awesome.min.css"
+      href="/src/assets/vendors/font-awesome/css/font-awesome.min.css"
     />
     <!-- endinject -->
     <!-- Plugin css for this page -->
@@ -31,9 +31,9 @@
     <!-- inject:css -->
     <!-- endinject -->
     <!-- Layout styles -->
-    <link rel="stylesheet" href="../../assets/css/style.css" />
+    <link rel="stylesheet" href="/src/assets/css/style.css" />
     <!-- End layout styles -->
-    <link rel="shortcut icon" href="../../assets/images/favicon.png" />
+    <link rel="shortcut icon" href="/src/assets/images/favicon.png" />
   </head>
   <body>
     <div class="container-scroller">
@@ -53,7 +53,7 @@
               >
                 <div class="brand-logo mb-4">
                   <img
-                    src="../../assets/images/logo.svg"
+                    src="/src/assets/images/logo.svg"
                     alt="Logo GreenTech"
                   />
                 </div>
@@ -158,25 +158,25 @@
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
-    <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+    <script src="/src/assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
     <!-- End plugin js for this page -->
     <!-- inject:js -->
-    <script src="../../assets/js/off-canvas.js"></script>
-    <script src="../../assets/js/misc.js"></script>
-    <script src="../../assets/js/settings.js"></script>
-    <script src="../../assets/js/todolist.js"></script>
-    <script src="../../assets/js/jquery.cookie.js"></script>
+    <script src="/src/assets/js/off-canvas.js"></script>
+    <script src="/src/assets/js/misc.js"></script>
+    <script src="/src/assets/js/settings.js"></script>
+    <script src="/src/assets/js/todolist.js"></script>
+    <script src="/src/assets/js/jquery.cookie.js"></script>
     <!-- endinject -->
 
     <!-- Script de autenticación -->
     <script type="module">
-      import AuthService from "../../services/auth.js";
+      import AuthService from "/src/services/auth.js";
 
       // Redirigir si ya está autenticado
       if (AuthService.isAuthenticated()) {
-        window.location.href = "http://localhost/eco-app/GreenTech/";
+        window.location.href = "/";
       }
 
       // Manejar envío del formulario
@@ -223,7 +223,7 @@
 
               // Redirigir al dashboard después de 500ms
               setTimeout(() => {
-                window.location.href = "http://localhost/eco-app/GreenTech/";
+                window.location.href = "/";
               }, 500);
             } else {
               // Login falló

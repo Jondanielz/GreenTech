@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test API</title>
+  </head>
+  <body>
+    <h1>Test de API</h1>
+    <button onclick="testAPI()">Probar API</button>
+    <div id="result"></div>
+
+    <script type="module">
+      import APIClient from "./src/utils/api-client.js";
+
+      window.testAPI = async function () {
+        const resultDiv = document.getElementById("result");
+        resultDiv.innerHTML = "Probando API...";
+
+        try {
+          console.log("Configuración actual:", APIClient.getConfig());
+
+          const response = await APIClient.post("/auth/login", {
+            user: "admin",
+            password: "admin123",
+          });
+
+          resultDiv.innerHTML = `
+                    <h3>✅ API funcionando correctamente</h3>
+                    <pre>${JSON.stringify(response, null, 2)}</pre>
+                `;
+        } catch (error) {
+          resultDiv.innerHTML = `
+                    <h3>❌ Error en API</h3>
+                    <p>Error: ${error.message}</p>
+                    <p>Configuración: ${JSON.stringify(
+                      APIClient.getConfig(),
+                      null,
+                      2
+                    )}</p>
+                `;
+          console.error("Error:", error);
+        }
+      };
+    </script>
+  </body>
+</html>

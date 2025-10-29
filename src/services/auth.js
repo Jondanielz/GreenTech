@@ -4,7 +4,7 @@
  * Conectado con la API PHP backend
  */
 
-import APIClient from "../utils/api-client.js";
+import APIClient from "/src/utils/api-client.js";
 
 export class AuthService {
   /**
@@ -104,7 +104,7 @@ export class AuthService {
 
       // Redirigir al login
       window.location.href =
-        "http://localhost/eco-app/GreenTech/src/views/auth/login.html";
+        "/src/views/auth/login.html";
     }
   }
 

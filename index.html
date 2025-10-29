@@ -489,7 +489,7 @@
               let footerHTML = await response.text();
 
               // Ajustar rutas de imágenes para el index.html raíz
-              footerHTML = footerHTML.replace("../assets/", "src/assets/");
+              footerHTML = footerHTML.replace("/src/assets/", "src/assets/");
 
               document.getElementById("footer-container").innerHTML =
                 footerHTML;

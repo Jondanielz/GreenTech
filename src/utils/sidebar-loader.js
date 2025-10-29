@@ -3,7 +3,7 @@
  * Determina y carga el sidebar correcto según el rol del usuario
  */
 
-import AuthService from "../services/auth.js";
+import AuthService from "/src/services/auth.js";
 
 export class SidebarLoader {
   /**

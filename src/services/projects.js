@@ -3,7 +3,7 @@
  * Maneja todas las peticiones relacionadas con proyectos
  */
 
-import APIClient from "../utils/api-client.js";
+import APIClient from "/src/utils/api-client.js";
 
 class ProjectService {
   /**

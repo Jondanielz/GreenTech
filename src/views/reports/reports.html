@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Reportes del Sistema - GreenTech</title>
+    <!-- plugins:css -->
+    <link
+      rel="stylesheet"
+      href="/src/assets/vendors/mdi/css/materialdesignicons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/src/assets/vendors/ti-icons/css/themify-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/src/assets/vendors/css/vendor.bundle.base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/src/assets/vendors/font-awesome/css/font-awesome.min.css"
+    />
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/src/assets/css/style.css" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/src/assets/images/favicon.png" />
+    <!-- Estilos personalizados para reportes -->
+    <style>
+      /* Estilos para tarjetas de reporte similares a proyectos */
+      .report-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        height: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+      }
+
+      .report-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .report-header {
+        position: relative;
+        padding: 1.5rem;
+        color: white;
+        text-align: center;
+      }
+
+      .report-header.users {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .report-header.projects {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      .report-header.tasks {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      }
+
+      .report-header.complete {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      }
+
+      .report-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-size: 24px;
+        color: white;
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .report-body {
+        padding: 1.5rem;
+      }
+
+      .report-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+      }
+
+      .report-description {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+
+      /* Filtros similares a proyectos */
+      .filters-bar {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .filter-group label {
+        font-weight: 500;
+        margin-bottom: 0;
+        color: #495057;
+      }
+
+      /* Loading spinner */
+      .loading-spinner {
+        display: none;
+        text-align: center;
+        padding: 3rem;
+      }
+
+      .loading-spinner .spinner-border {
+        width: 3rem;
+        height: 3rem;
+      }
+
+      /* Contenido de reportes */
+      .report-content {
+        display: none;
+      }
+
+      .report-content.show {
+        display: block;
+      }
+
+      /* Estadísticas */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.2s;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-2px);
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-label {
+        color: #6c757d;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+      }
+
+      /* Tablas */
+      .table-responsive {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .table th {
+        background: #f8f9fa;
+        border: none;
+        font-weight: 600;
+        color: #495057;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+        padding: 1rem 0.75rem;
+      }
+
+      .table td {
+        border: none;
+        border-bottom: 1px solid #e9ecef;
+        vertical-align: middle;
+        padding: 0.75rem;
+      }
+
+      .table tbody tr:hover {
+        background-color: #f8f9fa;
+      }
+
+      /* Badges */
+      .badge-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .badge-active {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .badge-inactive {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .badge-completed {
+        background: #d1ecf1;
+        color: #0c5460;
+      }
+
+      .badge-pending {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .badge-progress {
+        background: #cce5ff;
+        color: #004085;
+      }
+
+      /* Barras de progreso */
+      .progress-bar-custom {
+        height: 8px;
+        border-radius: 4px;
+        background: #e9ecef;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        transition: width 0.3s ease;
+      }
+
+      /* Botones de exportación */
+      .export-buttons {
+        margin-bottom: 1.5rem;
+        text-align: right;
+      }
+
+      .btn-export {
+        margin-left: 0.5rem;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        font-size: 0.875rem;
+      }
+
+      /* Estado vacío */
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+      }
+
+      .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+      }
+
+      .empty-state h4 {
+        color: #495057;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .filters-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .filter-group {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- Navbar Container -->
+      <nav
+        id="navbar-container"
+        class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row"
+      >
+        <!-- Cargando navbar... -->
+      </nav>
+
+      <div class="container-fluid page-body-wrapper">
+        <!-- Sidebar Container -->
+        <div id="sidebar-container">
+          <!-- Cargando sidebar... -->
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <!-- Page Header -->
+            <div class="page-header">
+              <h3 class="page-title">
+                <span
+                  class="page-title-icon bg-gradient-primary text-white me-2"
+                >
+                  <i class="mdi mdi-chart-line"></i>
+                </span>
+                Reportes del Sistema
+              </h3>
+              <nav aria-label="breadcrumb">
+                <ul class="breadcrumb">
+                  <li class="breadcrumb-item active" aria-current="page">
+                    <span class="badge bg-info">Generar Reportes</span>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filters-bar" id="filter-section" style="display: none">
+              <div class="filter-group">
+                <label for="project-filter" class="mb-0">Proyecto:</label>
+                <select class="form-select form-select-sm" id="project-filter">
+                  <option value="">Todos los proyectos</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="date-from" class="mb-0">Desde:</label>
+                <input
+                  type="date"
+                  class="form-control form-control-sm"
+                  id="date-from"
+                />
+              </div>
+              <div class="filter-group">
+                <label for="date-to" class="mb-0">Hasta:</label>
+                <input
+                  type="date"
+                  class="form-control form-control-sm"
+                  id="date-to"
+                />
+              </div>
+              <div class="filter-group ms-auto">
+                <button class="btn btn-primary btn-sm" onclick="applyFilters()">
+                  <i class="mdi mdi-filter"></i> Aplicar
+                </button>
+                <button
+                  class="btn btn-secondary btn-sm"
+                  onclick="clearFilters()"
+                >
+                  <i class="mdi mdi-filter-remove"></i> Limpiar
+                </button>
+              </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div
+              id="loading-spinner"
+              class="loading-spinner"
+              style="display: none"
+            >
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Generando reporte...</span>
+              </div>
+              <p class="mt-2">Generando reporte, por favor espere...</p>
+            </div>
+
+            <!-- Reports Grid -->
+            <div id="reportsGrid" class="row">
+              <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
+                <div class="card report-card" onclick="generateReport('users')">
+                  <div class="report-header users">
+                    <div class="report-icon">
+                      <i class="mdi mdi-account-group"></i>
+                    </div>
+                    <h5 class="mb-2">Reporte de Usuarios</h5>
+                    <small>Información completa del sistema</small>
+                  </div>
+                  <div class="report-body">
+                    <div class="report-title">Usuarios del Sistema</div>
+                    <p class="report-description">
+                      Información detallada de todos los usuarios registrados
+                      con sus roles, proyectos y estadísticas de actividad.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
+                <div
+                  class="card report-card"
+                  onclick="generateReport('users_by_project')"
+                >
+                  <div class="report-header projects">
+                    <div class="report-icon">
+                      <i class="mdi mdi-account-multiple-outline"></i>
+                    </div>
+                    <h5 class="mb-2">Usuarios por Proyecto</h5>
+                    <small>Asignaciones y estadísticas</small>
+                  </div>
+                  <div class="report-body">
+                    <div class="report-title">Asignaciones de Usuarios</div>
+                    <p class="report-description">
+                      Usuarios asignados a cada proyecto con información de
+                      roles, tareas asignadas y fechas de participación.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
+                <div
+                  class="card report-card"
+                  onclick="generateReport('tasks_by_project')"
+                >
+                  <div class="report-header tasks">
+                    <div class="report-icon">
+                      <i class="mdi mdi-format-list-checks"></i>
+                    </div>
+                    <h5 class="mb-2">Tareas por Proyecto</h5>
+                    <small>Progreso y asignaciones</small>
+                  </div>
+                  <div class="report-body">
+                    <div class="report-title">Gestión de Tareas</div>
+                    <p class="report-description">
+                      Tareas de cada proyecto con información de progreso,
+                      usuarios asignados, prioridades y fechas de vencimiento.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
+                <div
+                  class="card report-card"
+                  onclick="generateReport('complete')"
+                >
+                  <div class="report-header complete">
+                    <div class="report-icon">
+                      <i class="mdi mdi-file-document-outline"></i>
+                    </div>
+                    <h5 class="mb-2">Reporte Completo</h5>
+                    <small>Vista integral del sistema</small>
+                  </div>
+                  <div class="report-body">
+                    <div class="report-title">Resumen General</div>
+                    <p class="report-description">
+                      Reporte integral que incluye todos los datos del sistema:
+                      usuarios, proyectos, tareas y estadísticas generales.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display: none">
+              <i class="mdi mdi-chart-line"></i>
+              <h4>No hay reportes disponibles</h4>
+              <p class="text-muted">
+                Selecciona un tipo de reporte para comenzar a generar
+                información del sistema.
+              </p>
+            </div>
+
+            <!-- Contenido de reportes -->
+            <div id="report-content" class="report-content">
+              <!-- El contenido se carga dinámicamente aquí -->
+            </div>
+          </div>
+
+          <!-- Footer Container -->
+          <div id="footer-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/src/assets/vendors/js/vendor.bundle.base.js"></script>
+    <script src="/src/assets/js/off-canvas.js"></script>
+    <script src="/src/assets/js/hoverable-collapse.js"></script>
+    <script src="/src/assets/js/misc.js"></script>
+    <script src="/src/assets/js/settings.js"></script>
+    <script src="/src/assets/js/todolist.js"></script>
+
+    <script>
+      let currentReportType = null;
+      let currentFilters = {};
+
+      // Funciones de carga de componentes (versión simplificada)
+      function loadSidebar() {
+        const userData = getCurrentUser();
+        if (!userData) return;
+
+        const roleId = userData.role_id;
+        let sidebarFile = "sidebar-participante.html";
+
+        if (roleId === 1) {
+          sidebarFile = "sidebar-admin.html";
+        } else if (roleId === 2) {
+          sidebarFile = "sidebar-coordinador.html";
+        }
+
+        fetch(`/src/components/${sidebarFile}`)
+          .then((response) => response.text())
+          .then((html) => {
+            document.getElementById("sidebar-container").innerHTML = html;
+            updateSidebarUserInfo(userData);
+          })
+          .catch((error) => console.error("Error cargando sidebar:", error));
+      }
+
+      function loadNavbar() {
+        fetch("/src/components/_navbar.html")
+          .then((response) => response.text())
+          .then((html) => {
+            document.getElementById("navbar-container").innerHTML = html;
+            updateNavbarUserInfo(getCurrentUser());
+          })
+          .catch((error) => console.error("Error cargando navbar:", error));
+      }
+
+      function loadFooter() {
+        fetch("/src/components/_footer.html")
+          .then((response) => response.text())
+          .then((html) => {
+            document.getElementById("footer-container").innerHTML = html;
+          })
+          .catch((error) => console.error("Error cargando footer:", error));
+      }
+
+      function getCurrentUser() {
+        const userData = localStorage.getItem("userData");
+        if (userData) {
+          try {
+            return JSON.parse(userData);
+          } catch (e) {
+            console.error("Error al parsear datos del usuario:", e);
+            return null;
+          }
+        }
+        return null;
+      }
+
+      function updateSidebarUserInfo(userData) {
+        if (!userData) return;
+
+        const sidebarUserName = document.getElementById("sidebarUserName");
+        const sidebarUserRole = document.getElementById("sidebarUserRole");
+        const sidebarUserAvatar = document.getElementById("sidebarUserAvatar");
+
+        if (sidebarUserName)
+          sidebarUserName.textContent = userData.name || userData.username;
+        if (sidebarUserRole)
+          sidebarUserRole.textContent =
+            userData.role_name || userData.role || "Usuario";
+        if (sidebarUserAvatar) {
+          const initials = getInitials(userData.name || userData.username);
+          sidebarUserAvatar.textContent = initials;
+        }
+      }
+
+      function updateNavbarUserInfo(userData) {
+        if (!userData) return;
+
+        const navbarUserName = document.getElementById("navbarUserName");
+        const navbarUserAvatar = document.getElementById("navbarUserAvatar");
+
+        if (navbarUserName)
+          navbarUserName.textContent = userData.name || userData.username;
+        if (navbarUserAvatar) {
+          const initials = getInitials(userData.name || userData.username);
+          navbarUserAvatar.textContent = initials;
+        }
+      }
+
+      function getInitials(name) {
+        if (!name) return "U";
+        const words = name.trim().split(" ");
+        if (words.length === 1) {
+          return words[0].charAt(0).toUpperCase();
+        }
+        return (
+          words[0].charAt(0) + words[words.length - 1].charAt(0)
+        ).toUpperCase();
+      }
+
+      // Cargar componentes al inicializar
+      document.addEventListener("DOMContentLoaded", function () {
+        // Verificar autenticación
+        const userData = getCurrentUser();
+        if (!userData) {
+          window.location.href = "/src/views/auth/login.html";
+          return;
+        }
+
+        // Verificar permisos (solo admin y coordinador pueden ver reportes)
+        if (userData.role_id !== 1 && userData.role_id !== 2) {
+          alert("No tienes permisos para acceder a esta sección");
+          window.location.href = "/";
+          return;
+        }
+
+        loadSidebar();
+        loadNavbar();
+        loadFooter();
+        loadProjects();
+      });
+
+      // Cargar lista de proyectos para filtros
+      async function loadProjects() {
+        try {
+          const response = await fetch(
+            "http://localhost/eco-app/GreenTech/api/projects",
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+              },
+            }
+          );
+
+          const data = await response.json();
+          if (data.success) {
+            const select = document.getElementById("project-filter");
+            select.innerHTML = '<option value="">Todos los proyectos</option>';
+            data.data.forEach((project) => {
+              const option = document.createElement("option");
+              option.value = project.id;
+              option.textContent = project.name;
+              select.appendChild(option);
+            });
+          }
+        } catch (error) {
+          console.error("Error al cargar proyectos:", error);
+        }
+      }
+
+      // Generar reporte
+      async function generateReport(type) {
+        currentReportType = type;
+
+        // Mostrar filtros si es necesario
+        if (type === "users_by_project" || type === "tasks_by_project") {
+          document.getElementById("filter-section").style.display = "block";
+        } else {
+          document.getElementById("filter-section").style.display = "none";
+        }
+
+        // Mostrar loading y ocultar grid
+        document.getElementById("loading-spinner").style.display = "block";
+        document.getElementById("reportsGrid").style.display = "none";
+        document.getElementById("emptyState").style.display = "none";
+        document.getElementById("report-content").classList.remove("show");
+
+        try {
+          let response;
+
+          if (type === "complete") {
+            response = await fetch(
+              "http://localhost/eco-app/GreenTech/api/reports/complete",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                },
+              }
+            );
+          } else {
+            const projectId = document.getElementById("project-filter").value;
+            const endpoint =
+              type === "users"
+                ? "users"
+                : type === "users_by_project"
+                ? "users-by-project"
+                : "tasks-by-project";
+
+            response = await fetch(
+              `http://localhost/eco-app/GreenTech/api/reports/${endpoint}`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                },
+                body: JSON.stringify({
+                  project_id: projectId || null,
+                }),
+              }
+            );
+          }
+
+          const data = await response.json();
+
+          if (data.success) {
+            displayReport(data.data, type);
+          } else {
+            showError("Error al generar reporte: " + data.message);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          showError("Error de conexión al generar reporte");
+        } finally {
+          document.getElementById("loading-spinner").style.display = "none";
+        }
+      }
+
+      // Mostrar reporte en la interfaz
+      function displayReport(data, type) {
+        const content = document.getElementById("report-content");
+
+        switch (type) {
+          case "users":
+            content.innerHTML = generateUsersReportHTML(data);
+            break;
+          case "users_by_project":
+            content.innerHTML = generateUsersByProjectReportHTML(data);
+            break;
+          case "tasks_by_project":
+            content.innerHTML = generateTasksByProjectReportHTML(data);
+            break;
+          case "complete":
+            content.innerHTML = generateCompleteReportHTML(data);
+            break;
+        }
+
+        content.classList.add("show");
+
+        // Agregar botón para volver a la vista de reportes
+        const backButton = `
+          <div class="mb-3">
+            <button class="btn btn-outline-secondary" onclick="showReportsGrid()">
+              <i class="mdi mdi-arrow-left"></i> Volver a Reportes
+            </button>
+          </div>
+        `;
+        content.insertAdjacentHTML("afterbegin", backButton);
+      }
+
+      // Mostrar grid de reportes
+      function showReportsGrid() {
+        document.getElementById("reportsGrid").style.display = "block";
+        document.getElementById("report-content").classList.remove("show");
+        document.getElementById("filter-section").style.display = "none";
+      }
+
+      // Generar HTML para reporte de usuarios
+      function generateUsersReportHTML(data) {
+        let html = `
+          <div class="export-buttons">
+            <button class="btn btn-success btn-export" onclick="exportReport('users')">
+              <i class="mdi mdi-download"></i> Exportar CSV
+            </button>
+          </div>
+          
+          ${generateReportHeader(data.config)}
+          
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">${data.total_users}</div>
+              <div class="stat-label">Total Usuarios</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">${data.active_users}</div>
+              <div class="stat-label">Usuarios Activos</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">${data.generated_at}</div>
+              <div class="stat-label">Generado</div>
+            </div>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Email</th>
+                  <th>Usuario</th>
+                  <th>Rol</th>
+                  <th>Posición</th>
+                  <th>Estado</th>
+                  <th>Proyectos</th>
+                  <th>Tareas</th>
+                  <th>Completadas</th>
+                  <th>Último Login</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+
+        data.users.forEach((user) => {
+          html += `
+            <tr>
+              <td>${user.id}</td>
+              <td>${user.name}</td>
+              <td>${user.email}</td>
+              <td>${user.user}</td>
+              <td>${user.role_name || "N/A"}</td>
+              <td>${user.position || "N/A"}</td>
+              <td>
+                <span class="badge-status ${
+                  user.active ? "badge-active" : "badge-inactive"
+                }">
+                  ${user.active ? "Activo" : "Inactivo"}
+                </span>
+              </td>
+              <td>${user.projects_count}</td>
+              <td>${user.tasks_count}</td>
+              <td>${user.completed_tasks}</td>
+              <td>${user.last_login || "Nunca"}</td>
+            </tr>
+          `;
+        });
+
+        html += `
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        return html;
+      }
+
+      // Generar HTML para reporte de usuarios por proyecto
+      function generateUsersByProjectReportHTML(data) {
+        let html = `
+          <div class="export-buttons">
+            <button class="btn btn-success btn-export" onclick="exportReport('users_by_project')">
+              <i class="mdi mdi-download"></i> Exportar CSV
+            </button>
+          </div>
+          
+          ${generateReportHeader(data.config)}
+          
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">${data.total_projects}</div>
+              <div class="stat-label">Total Proyectos</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">${data.generated_at}</div>
+              <div class="stat-label">Generado</div>
+            </div>
+          </div>
+        `;
+
+        data.projects.forEach((project) => {
+          html += `
+            <div class="card mb-4">
+              <div class="card-header">
+                <h5 class="mb-0">
+                  <i class="mdi mdi-folder-outline"></i>
+                  ${project.name} - ${project.total_members} miembros
+                </h5>
+                <small class="text-muted">${project.description}</small>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Tareas en Proyecto</th>
+                        <th>Tareas Completadas</th>
+                        <th>Fecha Asignación</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+          `;
+
+          project.members.forEach((member) => {
+            html += `
+              <tr>
+                <td>${member.name}</td>
+                <td>${member.email}</td>
+                <td>${member.role_name || "N/A"}</td>
+                <td>${member.project_tasks_count}</td>
+                <td>${member.completed_project_tasks}</td>
+                <td>${member.assigned_at}</td>
+              </tr>
+            `;
+          });
+
+          html += `
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        return html;
+      }
+
+      // Generar HTML para reporte de tareas por proyecto
+      function generateTasksByProjectReportHTML(data) {
+        let html = `
+          <div class="export-buttons">
+            <button class="btn btn-success btn-export" onclick="exportReport('tasks_by_project')">
+              <i class="mdi mdi-download"></i> Exportar CSV
+            </button>
+          </div>
+          
+          ${generateReportHeader(data.config)}
+          
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">${data.total_projects}</div>
+              <div class="stat-label">Total Proyectos</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">${data.generated_at}</div>
+              <div class="stat-label">Generado</div>
+            </div>
+          </div>
+        `;
+
+        data.projects.forEach((project) => {
+          const stats = project.task_stats;
+          html += `
+            <div class="card mb-4">
+              <div class="card-header">
+                <h5 class="mb-0">
+                  <i class="mdi mdi-folder-outline"></i>
+                  ${project.name}
+                </h5>
+                <small class="text-muted">${project.description}</small>
+              </div>
+              <div class="card-body">
+                <div class="row mb-3">
+                  <div class="col-md-3">
+                    <div class="stat-card">
+                      <div class="stat-number">${stats.total}</div>
+                      <div class="stat-label">Total Tareas</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="stat-card">
+                      <div class="stat-number">${stats.completed}</div>
+                      <div class="stat-label">Completadas</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="stat-card">
+                      <div class="stat-number">${stats.in_progress}</div>
+                      <div class="stat-label">En Progreso</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="stat-card">
+                      <div class="stat-number">${stats.completion_percentage}%</div>
+                      <div class="stat-label">Progreso</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="table-responsive">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Tarea</th>
+                        <th>Estado</th>
+                        <th>Prioridad</th>
+                        <th>Progreso</th>
+                        <th>Usuarios Asignados</th>
+                        <th>Fecha Vencimiento</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+          `;
+
+          project.tasks.forEach((task) => {
+            const assignedUsers = task.assignments
+              .map((a) => a.user_name)
+              .join(", ");
+            html += `
+              <tr>
+                <td>
+                  <strong>${task.title}</strong>
+                  <br><small class="text-muted">${task.description}</small>
+                </td>
+                <td>
+                  <span class="badge-status badge-${task.status
+                    .toLowerCase()
+                    .replace(" ", "-")}">
+                    ${task.status}
+                  </span>
+                </td>
+                <td>${task.priority}</td>
+                <td>
+                  <div class="progress-bar-custom">
+                    <div class="progress-fill" style="width: ${
+                      task.progress
+                    }%"></div>
+                  </div>
+                  <small>${task.progress}%</small>
+                </td>
+                <td>${assignedUsers || "Sin asignar"}</td>
+                <td>${task.due_date || "Sin fecha"}</td>
+              </tr>
+            `;
+          });
+
+          html += `
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        return html;
+      }
+
+      // Generar HTML para reporte completo
+      function generateCompleteReportHTML(data) {
+        return `
+          <div class="export-buttons">
+            <button class="btn btn-success btn-export" onclick="exportReport('complete')">
+              <i class="mdi mdi-download"></i> Exportar CSV
+            </button>
+          </div>
+          
+          ${generateReportHeader(data.config)}
+          
+          <div class="row">
+            <div class="col-12">
+              <h4>Reporte Completo del Sistema</h4>
+              <p class="text-muted">Generado el ${data.generated_at}</p>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h5>Resumen de Usuarios</h5>
+                </div>
+                <div class="card-body">
+                  <p><strong>Total de usuarios:</strong> ${
+                    data.users_report.total_users
+                  }</p>
+                  <p><strong>Usuarios activos:</strong> ${
+                    data.users_report.active_users
+                  }</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h5>Resumen de Proyectos</h5>
+                </div>
+                <div class="card-body">
+                  <p><strong>Total de proyectos:</strong> ${
+                    data.users_by_project_report.total_projects
+                  }</p>
+                  <p><strong>Total de tareas:</strong> ${
+                    data.tasks_by_project_report.total_projects
+                  }</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Exportar reporte
+      async function exportReport(type) {
+        try {
+          const projectId = document.getElementById("project-filter").value;
+          const response = await fetch(
+            "http://localhost/eco-app/GreenTech/api/reports/export",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+              },
+              body: JSON.stringify({
+                report_type: type,
+                project_id: projectId || null,
+              }),
+            }
+          );
+
+          const data = await response.json();
+
+          if (data.success) {
+            // Crear y descargar archivo CSV
+            const blob = new Blob([data.data.csv_content], {
+              type: "text/csv",
+            });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = data.data.filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          } else {
+            showError("Error al exportar reporte: " + data.message);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          showError("Error de conexión al exportar reporte");
+        }
+      }
+
+      // Aplicar filtros
+      function applyFilters() {
+        const projectId = document.getElementById("project-filter").value;
+        const dateFrom = document.getElementById("date-from").value;
+        const dateTo = document.getElementById("date-to").value;
+
+        currentFilters = {
+          project_id: projectId,
+          date_from: dateFrom,
+          date_to: dateTo,
+        };
+
+        if (currentReportType) {
+          generateReport(currentReportType);
+        }
+      }
+
+      // Limpiar filtros
+      function clearFilters() {
+        document.getElementById("project-filter").value = "";
+        document.getElementById("date-from").value = "";
+        document.getElementById("date-to").value = "";
+        currentFilters = {};
+
+        if (currentReportType) {
+          generateReport(currentReportType);
+        }
+      }
+
+      // Generar encabezado personalizado del reporte
+      function generateReportHeader(config) {
+        if (!config) return "";
+
+        let header = `
+          <div class="card mb-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div class="card-body text-center">
+        `;
+
+        // Logo si existe
+        if (config.company_logo) {
+          header += `
+            <img src="../../${config.company_logo}" alt="Logo" style="max-height: 60px; margin-bottom: 15px;">
+          `;
+        }
+
+        // Nombre de la empresa
+        header += `
+          <h3 class="mb-2">${config.company_name || "GreenTech"}</h3>
+        `;
+
+        // Información de contacto
+        let contactInfo = [];
+        if (config.company_address) contactInfo.push(config.company_address);
+        if (config.company_phone)
+          contactInfo.push(`Tel: ${config.company_phone}`);
+        if (config.company_email)
+          contactInfo.push(`Email: ${config.company_email}`);
+
+        if (contactInfo.length > 0) {
+          header += `
+            <p class="mb-0" style="opacity: 0.9;">${contactInfo.join(" | ")}</p>
+          `;
+        }
+
+        header += `
+            </div>
+          </div>
+        `;
+
+        return header;
+      }
+
+      // Mostrar error
+      function showError(message) {
+        const content = document.getElementById("report-content");
+        content.innerHTML = `
+          <div class="no-data">
+            <i class="mdi mdi-alert-circle-outline"></i>
+            <h4>Error</h4>
+            <p>${message}</p>
+          </div>
+        `;
+        content.classList.add("show");
+      }
+    </script>
+  </body>
+</html>

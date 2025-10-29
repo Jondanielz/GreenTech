@@ -3,7 +3,7 @@
  * Maneja las peticiones HTTP a la API del dashboard
  */
 
-import APIClient from "../utils/api-client.js";
+import APIClient from "/src/utils/api-client.js";
 
 export class DashboardService {
   /**

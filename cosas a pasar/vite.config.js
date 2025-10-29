@@ -13,7 +13,7 @@ export default defineConfig({
     // Configurar proxy para las rutas de la API
     proxy: {
       '/api': {
-        target: 'http://localhost/eco-app/GreenTech/api',
+        target: '/api',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ''),

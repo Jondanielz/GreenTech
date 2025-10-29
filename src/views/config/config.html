@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Configuración del Sistema - GreenTech</title>
+    <!-- plugins:css -->
+    <link
+      rel="stylesheet"
+      href="/src/assets/vendors/mdi/css/materialdesignicons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/src/assets/vendors/ti-icons/css/themify-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/src/assets/vendors/css/vendor.bundle.base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/src/assets/vendors/font-awesome/css/font-awesome.min.css"
+    />
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/src/assets/css/style.css" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/src/assets/images/favicon.png" />
+    <!-- Estilos personalizados para configuración -->
+    <style>
+      .config-card {
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .config-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .logo-preview {
+        max-width: 200px;
+        max-height: 100px;
+        border: 2px dashed #ddd;
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+        background: #f8f9fa;
+        margin: 10px 0;
+      }
+
+      .logo-preview img {
+        max-width: 100%;
+        max-height: 80px;
+        object-fit: contain;
+      }
+
+      .logo-upload-area {
+        border: 2px dashed #007bff;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        background: #f8f9ff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .logo-upload-area:hover {
+        background: #e3f2fd;
+        border-color: #0056b3;
+      }
+
+      .logo-upload-area.dragover {
+        background: #e3f2fd;
+        border-color: #0056b3;
+        transform: scale(1.02);
+      }
+
+      .form-section {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .section-title {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e9ecef;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      .form-control {
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        padding: 10px 12px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+
+      .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      }
+
+      .btn-save {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+      }
+
+      .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-reset {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+      }
+
+      .btn-reset:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+      }
+
+      .btn-upload {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-upload:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(79, 172, 254, 0.4);
+      }
+
+      .btn-delete-logo {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        border: none;
+        color: #721c24;
+        padding: 8px 16px;
+        border-radius: 15px;
+        font-weight: 600;
+        font-size: 12px;
+        transition: all 0.3s ease;
+      }
+
+      .btn-delete-logo:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(255, 154, 158, 0.4);
+      }
+
+      .loading-spinner {
+        display: none;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .alert {
+        border-radius: 8px;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        border: none;
+        font-weight: 500;
+      }
+
+      .alert-success {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .alert-danger {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .alert-info {
+        background: #d1ecf1;
+        color: #0c5460;
+      }
+
+      .config-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .stat-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        border-left: 4px solid #007bff;
+      }
+
+      .stat-item.success {
+        border-left-color: #28a745;
+      }
+
+      .stat-item.warning {
+        border-left-color: #ffc107;
+      }
+
+      .stat-label {
+        font-size: 12px;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+      }
+
+      .stat-value {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .preview-section {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+      }
+
+      .preview-header {
+        text-align: center;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .preview-logo {
+        max-height: 60px;
+        margin-bottom: 10px;
+      }
+
+      .preview-company-name {
+        font-size: 24px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 5px;
+      }
+
+      .preview-company-details {
+        color: #6c757d;
+        font-size: 14px;
+      }
+
+      .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+      }
+
+      .file-input-wrapper input[type="file"] {
+        position: absolute;
+        left: -9999px;
+      }
+
+      .no-data {
+        text-align: center;
+        padding: 40px;
+        color: #7f8c8d;
+      }
+
+      .no-data i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- Navbar -->
+      <div id="navbar-container"></div>
+
+      <!-- Sidebar -->
+      <div id="sidebar-container"></div>
+
+      <!-- Contenido principal -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <!-- Header de la página -->
+          <div class="row">
+            <div class="col-12">
+              <div class="page-header">
+                <h3 class="page-title">
+                  <i class="mdi mdi-cog text-primary"></i>
+                  Configuración del Sistema
+                </h3>
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Configuración
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alertas -->
+          <div id="alert-container"></div>
+
+          <!-- Estadísticas de configuración -->
+          <div class="config-stats" id="config-stats">
+            <!-- Se llena dinámicamente -->
+          </div>
+
+          <!-- Formulario de configuración -->
+          <div class="row">
+            <div class="col-lg-8">
+              <div class="form-section">
+                <h4 class="section-title">
+                  <i class="mdi mdi-information-outline"></i>
+                  Información de la Empresa
+                </h4>
+
+                <form id="config-form">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="company_name" class="form-label">
+                          Nombre de la Empresa *
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="company_name"
+                          name="company_name"
+                          required
+                          placeholder="Ingrese el nombre de la empresa"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="company_email" class="form-label">
+                          Email de la Empresa
+                        </label>
+                        <input
+                          type="email"
+                          class="form-control"
+                          id="company_email"
+                          name="company_email"
+                          placeholder="empresa@ejemplo.com"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="company_phone" class="form-label">
+                          Teléfono
+                        </label>
+                        <input
+                          type="tel"
+                          class="form-control"
+                          id="company_phone"
+                          name="company_phone"
+                          placeholder="+1 (555) 123-4567"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="company_address" class="form-label">
+                          Dirección
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="company_address"
+                          name="company_address"
+                          placeholder="Dirección de la empresa"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="report_footer_text" class="form-label">
+                      Texto del Pie de Página de Reportes
+                    </label>
+                    <textarea
+                      class="form-control"
+                      id="report_footer_text"
+                      name="report_footer_text"
+                      rows="3"
+                      placeholder="Texto que aparecerá en el pie de página de los reportes"
+                    ></textarea>
+                  </div>
+
+                  <div class="text-right">
+                    <button
+                      type="button"
+                      class="btn btn-reset"
+                      onclick="resetConfig()"
+                    >
+                      <i class="mdi mdi-refresh"></i>
+                      Resetear
+                    </button>
+                    <button type="submit" class="btn btn-save">
+                      <i class="mdi mdi-content-save"></i>
+                      Guardar Configuración
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="form-section">
+                <h4 class="section-title">
+                  <i class="mdi mdi-image"></i>
+                  Logo de la Empresa
+                </h4>
+
+                <div class="logo-upload-area" id="logo-upload-area">
+                  <i
+                    class="mdi mdi-cloud-upload"
+                    style="font-size: 2rem; color: #007bff"
+                  ></i>
+                  <p class="mt-2 mb-0">Arrastra y suelta el logo aquí</p>
+                  <p class="text-muted small">o haz clic para seleccionar</p>
+                  <div class="file-input-wrapper">
+                    <label for="logo-file" style="display: none"
+                      >Seleccionar logo</label
+                    >
+                    <input
+                      type="file"
+                      id="logo-file"
+                      name="logo"
+                      accept="image/*"
+                      onchange="handleFileSelect(event)"
+                      title="Seleccionar archivo de logo"
+                    />
+                  </div>
+                </div>
+
+                <div class="logo-preview" id="logo-preview">
+                  <p class="text-muted">Vista previa del logo</p>
+                </div>
+
+                <div class="text-center">
+                  <button
+                    type="button"
+                    class="btn btn-upload"
+                    onclick="document.getElementById('logo-file').click()"
+                  >
+                    <i class="mdi mdi-upload"></i>
+                    Seleccionar Logo
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-delete-logo"
+                    id="delete-logo-btn"
+                    onclick="deleteLogo()"
+                    style="display: none"
+                  >
+                    <i class="mdi mdi-delete"></i>
+                    Eliminar Logo
+                  </button>
+                </div>
+
+                <div class="mt-3">
+                  <small class="text-muted">
+                    <i class="mdi mdi-information"></i>
+                    Formatos permitidos: JPG, PNG, GIF, SVG. Tamaño máximo: 2MB
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vista previa del encabezado -->
+          <div class="row">
+            <div class="col-12">
+              <div class="form-section">
+                <h4 class="section-title">
+                  <i class="mdi mdi-eye"></i>
+                  Vista Previa del Encabezado de Reportes
+                </h4>
+
+                <div class="preview-section">
+                  <div class="preview-header" id="preview-header">
+                    <div id="preview-logo-container">
+                      <img
+                        id="preview-logo"
+                        class="preview-logo"
+                        style="display: none"
+                      />
+                    </div>
+                    <div id="preview-company-name" class="preview-company-name">
+                      GreenTech
+                    </div>
+                    <div
+                      id="preview-company-details"
+                      class="preview-company-details"
+                    >
+                      Sistema de Gestión de Proyectos Ecológicos
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Loading spinner -->
+          <div class="loading-spinner" id="loading-spinner">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Cargando...</span>
+            </div>
+            <p class="mt-2">Procesando, por favor espere...</p>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div id="footer-container"></div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/src/assets/vendors/js/vendor.bundle.base.js"></script>
+    <script src="/src/assets/js/off-canvas.js"></script>
+    <script src="/src/assets/js/hoverable-collapse.js"></script>
+    <script src="/src/assets/js/misc.js"></script>
+    <script src="/src/assets/js/settings.js"></script>
+    <script src="/src/assets/js/todolist.js"></script>
+    <script src="/src/utils/sidebar-loader.js"></script>
+    <script src="/src/utils/components-loader.js"></script>
+    <script src="/src/services/auth.js"></script>
+
+    <script>
+      let currentConfig = {};
+
+      // Cargar componentes al inicializar
+      document.addEventListener("DOMContentLoaded", function () {
+        loadSidebar();
+        loadNavbar();
+        loadFooter();
+        loadConfig();
+        setupEventListeners();
+      });
+
+      // Configurar event listeners
+      function setupEventListeners() {
+        // Formulario de configuración
+        document
+          .getElementById("config-form")
+          .addEventListener("submit", handleFormSubmit);
+
+        // Área de subida de archivos
+        const uploadArea = document.getElementById("logo-upload-area");
+        uploadArea.addEventListener("dragover", handleDragOver);
+        uploadArea.addEventListener("dragleave", handleDragLeave);
+        uploadArea.addEventListener("drop", handleDrop);
+        uploadArea.addEventListener("click", () => {
+          document.getElementById("logo-file").click();
+        });
+
+        // Input de archivo
+        document
+          .getElementById("logo-file")
+          .addEventListener("change", handleFileSelect);
+
+        // Actualizar vista previa en tiempo real
+        const formInputs = document.querySelectorAll(
+          "#config-form input, #config-form textarea"
+        );
+        formInputs.forEach((input) => {
+          input.addEventListener("input", updatePreview);
+        });
+      }
+
+      // Cargar configuración actual
+      async function loadConfig() {
+        try {
+          showLoading(true);
+
+          const response = await fetch("../../api/config", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            currentConfig = data.data;
+            populateForm(data.data);
+            updatePreview();
+            loadConfigStats();
+          } else {
+            showAlert(
+              "Error al cargar configuración: " + data.message,
+              "danger"
+            );
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          showAlert("Error de conexión al cargar configuración", "danger");
+        } finally {
+          showLoading(false);
+        }
+      }
+
+      // Llenar formulario con datos actuales
+      function populateForm(config) {
+        document.getElementById("company_name").value =
+          config.company_name || "";
+        document.getElementById("company_email").value =
+          config.company_email || "";
+        document.getElementById("company_phone").value =
+          config.company_phone || "";
+        document.getElementById("company_address").value =
+          config.company_address || "";
+        document.getElementById("report_footer_text").value =
+          config.report_footer_text || "";
+
+        // Mostrar logo si existe
+        if (config.company_logo) {
+          showLogoPreview(config.company_logo);
+        }
+      }
+
+      // Manejar envío del formulario
+      async function handleFormSubmit(e) {
+        e.preventDefault();
+
+        try {
+          showLoading(true);
+
+          const formData = new FormData(e.target);
+          const data = Object.fromEntries(formData.entries());
+
+          const response = await fetch("../../api/config", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify(data),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            showAlert("Configuración guardada exitosamente", "success");
+            currentConfig = result.data;
+            updatePreview();
+            loadConfigStats();
+          } else {
+            showAlert(
+              "Error al guardar configuración: " + result.message,
+              "danger"
+            );
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          showAlert("Error de conexión al guardar configuración", "danger");
+        } finally {
+          showLoading(false);
+        }
+      }
+
+      // Manejar selección de archivo
+      function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (file) {
+          uploadLogo(file);
+        }
+      }
+
+      // Manejar drag over
+      function handleDragOver(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add("dragover");
+      }
+
+      // Manejar drag leave
+      function handleDragLeave(e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove("dragover");
+      }
+
+      // Manejar drop
+      function handleDrop(e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove("dragover");
+
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          uploadLogo(files[0]);
+        }
+      }
+
+      // Subir logo
+      async function uploadLogo(file) {
+        try {
+          showLoading(true);
+
+          const formData = new FormData();
+          formData.append("logo", file);
+
+          const response = await fetch("../../api/config/logo", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: formData,
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            showAlert("Logo subido exitosamente", "success");
+            showLogoPreview(result.data.logo_path);
+            loadConfigStats();
+          } else {
+            showAlert("Error al subir logo: " + result.message, "danger");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          showAlert("Error de conexión al subir logo", "danger");
+        } finally {
+          showLoading(false);
+        }
+      }
+
+      // Mostrar vista previa del logo
+      function showLogoPreview(logoPath) {
+        const preview = document.getElementById("logo-preview");
+        const deleteBtn = document.getElementById("delete-logo-btn");
+
+        preview.innerHTML = `<img src="../../${logoPath}" alt="Logo" style="max-width: 100%; max-height: 80px; object-fit: contain;">`;
+        deleteBtn.style.display = "inline-block";
+
+        // Actualizar vista previa del encabezado
+        const previewLogo = document.getElementById("preview-logo");
+        previewLogo.src = `../../${logoPath}`;
+        previewLogo.style.display = "block";
+      }
+
+      // Eliminar logo
+      async function deleteLogo() {
+        if (!confirm("¿Estás seguro de que quieres eliminar el logo?")) {
+          return;
+        }
+
+        try {
+          showLoading(true);
+
+          const response = await fetch("../../api/config/logo", {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            showAlert("Logo eliminado exitosamente", "success");
+            document.getElementById("logo-preview").innerHTML =
+              '<p class="text-muted">Vista previa del logo</p>';
+            document.getElementById("delete-logo-btn").style.display = "none";
+            document.getElementById("preview-logo").style.display = "none";
+            loadConfigStats();
+          } else {
+            showAlert("Error al eliminar logo: " + result.message, "danger");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          showAlert("Error de conexión al eliminar logo", "danger");
+        } finally {
+          showLoading(false);
+        }
+      }
+
+      // Resetear configuración
+      async function resetConfig() {
+        if (
+          !confirm(
+            "¿Estás seguro de que quieres resetear la configuración a valores por defecto?"
+          )
+        ) {
+          return;
+        }
+
+        try {
+          showLoading(true);
+
+          const response = await fetch("../../api/config/reset", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            showAlert("Configuración reseteada exitosamente", "success");
+            currentConfig = result.data;
+            populateForm(result.data);
+            updatePreview();
+            loadConfigStats();
+          } else {
+            showAlert(
+              "Error al resetear configuración: " + result.message,
+              "danger"
+            );
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          showAlert("Error de conexión al resetear configuración", "danger");
+        } finally {
+          showLoading(false);
+        }
+      }
+
+      // Actualizar vista previa
+      function updatePreview() {
+        const companyName =
+          document.getElementById("company_name").value || "GreenTech";
+        const companyAddress =
+          document.getElementById("company_address").value ||
+          "Sistema de Gestión de Proyectos Ecológicos";
+        const companyPhone = document.getElementById("company_phone").value;
+        const companyEmail = document.getElementById("company_email").value;
+
+        document.getElementById("preview-company-name").textContent =
+          companyName;
+
+        let details = companyAddress;
+        if (companyPhone) details += ` | ${companyPhone}`;
+        if (companyEmail) details += ` | ${companyEmail}`;
+
+        document.getElementById("preview-company-details").textContent =
+          details;
+      }
+
+      // Cargar estadísticas de configuración
+      async function loadConfigStats() {
+        try {
+          const response = await fetch("../../api/config/stats", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            displayConfigStats(data.data);
+          }
+        } catch (error) {
+          console.error("Error al cargar estadísticas:", error);
+        }
+      }
+
+      // Mostrar estadísticas de configuración
+      function displayConfigStats(stats) {
+        const container = document.getElementById("config-stats");
+
+        container.innerHTML = `
+          <div class="stat-item ${stats.has_logo ? "success" : "warning"}">
+            <div class="stat-label">Logo</div>
+            <div class="stat-value">${
+              stats.has_logo ? "Configurado" : "Sin configurar"
+            }</div>
+          </div>
+          <div class="stat-item ${stats.has_address ? "success" : "warning"}">
+            <div class="stat-label">Dirección</div>
+            <div class="stat-value">${
+              stats.has_address ? "Configurado" : "Sin configurar"
+            }</div>
+          </div>
+          <div class="stat-item ${stats.has_phone ? "success" : "warning"}">
+            <div class="stat-label">Teléfono</div>
+            <div class="stat-value">${
+              stats.has_phone ? "Configurado" : "Sin configurar"
+            }</div>
+          </div>
+          <div class="stat-item ${stats.has_email ? "success" : "warning"}">
+            <div class="stat-label">Email</div>
+            <div class="stat-value">${
+              stats.has_email ? "Configurado" : "Sin configurar"
+            }</div>
+          </div>
+        `;
+      }
+
+      // Mostrar/ocultar loading
+      function showLoading(show) {
+        document.getElementById("loading-spinner").style.display = show
+          ? "block"
+          : "none";
+      }
+
+      // Mostrar alerta
+      function showAlert(message, type) {
+        const container = document.getElementById("alert-container");
+        const alertId = "alert-" + Date.now();
+
+        container.innerHTML = `
+          <div id="${alertId}" class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="close" onclick="closeAlert('${alertId}')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        `;
+
+        // Auto-ocultar después de 5 segundos
+        setTimeout(() => {
+          closeAlert(alertId);
+        }, 5000);
+      }
+
+      // Cerrar alerta
+      function closeAlert(alertId) {
+        const alert = document.getElementById(alertId);
+        if (alert) {
+          alert.remove();
+        }
+      }
+    </script>
+  </body>
+</html>

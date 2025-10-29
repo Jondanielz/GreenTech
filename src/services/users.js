@@ -3,7 +3,7 @@
  * Maneja todas las operaciones relacionadas con usuarios
  */
 
-import APIClient from '../utils/api-client.js';
+import APIClient from '/src/utils/api-client.js';
 
 class UserService {
     constructor() {

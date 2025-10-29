@@ -13,6 +13,8 @@ require_once 'controllers/DashboardController.php';
 require_once 'controllers/ProjectController.php';
 require_once 'controllers/TaskController.php';
 require_once 'controllers/UserController.php';
+require_once 'controllers/ReportsController.php';
+require_once 'controllers/ConfigController.php';
 
 // Manejo de errores
 error_reporting(E_ALL);
@@ -857,6 +859,206 @@ try {
         }
     }
 
+    // ========== RUTAS DE CONFIGURACIÓN ==========
+    else if (isset($uri_parts[0]) && $uri_parts[0] === 'config') {
+        require_once 'config/database.php';
+        $database = new Database();
+        $db = $database->getConnection();
+        $configController = new ConfigController();
+        
+        // Verificar autenticación para configuración
+        $userData = getUserFromToken();
+        
+        // Solo administradores pueden acceder a la configuración
+        if ($userData['role_id'] != 1) {
+            sendResponse([
+                'success' => false,
+                'message' => 'No tienes permisos para acceder a la configuración'
+            ], 403);
+        }
+        
+        $action = $uri_parts[1] ?? '';
+        
+        switch ($action) {
+            // GET /api/config - Obtener configuración actual
+            case '':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $response = $configController->getConfig();
+                sendResponse($response, $response['success'] ? 200 : 400);
+                break;
+                
+            // PUT /api/config - Actualizar configuración
+            case '':
+                if ($method !== 'PUT') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $response = $configController->updateConfig($input);
+                sendResponse($response, $response['success'] ? 200 : 400);
+                break;
+                
+            // POST /api/config/logo - Subir logo
+            case 'logo':
+                if ($method !== 'POST') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $file = $_FILES['logo'] ?? null;
+                if (!$file) {
+                    sendResponse([
+                        'success' => false,
+                        'message' => 'No se ha subido ningún archivo'
+                    ], 400);
+                }
+                
+                $response = $configController->uploadLogo($file);
+                sendResponse($response, $response['success'] ? 200 : 400);
+                break;
+                
+            // DELETE /api/config/logo - Eliminar logo
+            case 'logo':
+                if ($method !== 'DELETE') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $response = $configController->deleteLogo();
+                sendResponse($response, $response['success'] ? 200 : 400);
+                break;
+                
+            // POST /api/config/reset - Resetear configuración
+            case 'reset':
+                if ($method !== 'POST') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $response = $configController->resetConfig();
+                sendResponse($response, $response['success'] ? 200 : 400);
+                break;
+                
+            // GET /api/config/stats - Obtener estadísticas de configuración
+            case 'stats':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $response = $configController->getConfigStats();
+                sendResponse($response, $response['success'] ? 200 : 400);
+                break;
+                
+            // GET /api/config/report-config - Obtener configuración para reportes
+            case 'report-config':
+                if ($method !== 'GET') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $response = $configController->getReportConfig();
+                sendResponse($response, $response['success'] ? 200 : 400);
+                break;
+                
+            default:
+                sendResponse([
+                    'error' => 'Ruta no encontrada',
+                    'path' => '/config/' . $action
+                ], 404);
+                break;
+        }
+    }
+
+    // ========== RUTAS DE REPORTES ==========
+    else if (isset($uri_parts[0]) && $uri_parts[0] === 'reports') {
+        require_once 'config/database.php';
+        $database = new Database();
+        $db = $database->getConnection();
+        $reportsController = new ReportsController();
+        
+        // Verificar autenticación para reportes
+        $userData = getUserFromToken();
+        
+        // Solo administradores y coordinadores pueden generar reportes
+        if ($userData['role_id'] != 1 && $userData['role_id'] != 2) {
+            sendResponse([
+                'success' => false,
+                'message' => 'No tienes permisos para acceder a los reportes'
+            ], 403);
+        }
+        
+        $action = $uri_parts[1] ?? '';
+        
+        switch ($action) {
+            // POST /api/reports/users
+            case 'users':
+                if ($method !== 'POST') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $response = $reportsController->generateUsersReport();
+                sendResponse($response, $response['success'] ? 200 : 400);
+                break;
+                
+            // POST /api/reports/users-by-project
+            case 'users-by-project':
+                if ($method !== 'POST') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $project_id = $input['project_id'] ?? null;
+                $response = $reportsController->generateUsersByProjectReport($project_id);
+                sendResponse($response, $response['success'] ? 200 : 400);
+                break;
+                
+            // POST /api/reports/tasks-by-project
+            case 'tasks-by-project':
+                if ($method !== 'POST') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $project_id = $input['project_id'] ?? null;
+                $response = $reportsController->generateTasksByProjectReport($project_id);
+                sendResponse($response, $response['success'] ? 200 : 400);
+                break;
+                
+            // POST /api/reports/complete
+            case 'complete':
+                if ($method !== 'POST') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $response = $reportsController->generateCompleteReport();
+                sendResponse($response, $response['success'] ? 200 : 400);
+                break;
+                
+            // POST /api/reports/export
+            case 'export':
+                if ($method !== 'POST') {
+                    sendResponse(['error' => 'Método no permitido'], 405);
+                }
+                
+                $report_type = $input['report_type'] ?? '';
+                $project_id = $input['project_id'] ?? null;
+                
+                if (empty($report_type)) {
+                    sendResponse([
+                        'success' => false,
+                        'message' => 'Tipo de reporte requerido'
+                    ], 400);
+                }
+                
+                $response = $reportsController->exportToCSV($report_type, $project_id);
+                sendResponse($response, $response['success'] ? 200 : 400);
+                break;
+                
+            default:
+                sendResponse([
+                    'error' => 'Ruta no encontrada',
+                    'path' => '/reports/' . $action
+                ], 404);
+                break;
+        }
+    }
+
     // ========== RUTA RAÍZ ==========
     else if (empty($uri_parts[0])) {
         sendResponse([
@@ -913,6 +1115,22 @@ try {
                     'POST /users/create' => 'Crear nuevo usuario (solo admin)',
                     'PUT /users/{id}' => 'Actualizar usuario (solo admin)',
                     'DELETE /users/{id}' => 'Eliminar usuario (solo admin)'
+                ],
+                'config' => [
+                    'GET /config' => 'Obtener configuración actual del sistema',
+                    'PUT /config' => 'Actualizar configuración del sistema',
+                    'POST /config/logo' => 'Subir logo de la empresa',
+                    'DELETE /config/logo' => 'Eliminar logo de la empresa',
+                    'POST /config/reset' => 'Resetear configuración a valores por defecto',
+                    'GET /config/stats' => 'Obtener estadísticas de configuración',
+                    'GET /config/report-config' => 'Obtener configuración para reportes'
+                ],
+                'reports' => [
+                    'POST /reports/users' => 'Generar reporte de usuarios del sistema',
+                    'POST /reports/users-by-project' => 'Generar reporte de usuarios por proyecto',
+                    'POST /reports/tasks-by-project' => 'Generar reporte de tareas por proyecto',
+                    'POST /reports/complete' => 'Generar reporte completo del sistema',
+                    'POST /reports/export' => 'Exportar reporte a CSV'
                 ]
             ]
         ], 200);

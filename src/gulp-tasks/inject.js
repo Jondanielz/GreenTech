@@ -69,16 +69,16 @@ gulp.task("replacePath", function () {
     .src("./views/**/*.html", {
       base: "./",
     })
-    .pipe(replace('="../assets/', '="../../assets/'))
-    .pipe(replace('href="../views/', 'href="../../views/'))
+    .pipe(replace('="/src/assets/', '="/src/assets/'))
+    .pipe(replace('href="/src/views/', 'href="/src/views/'))
     .pipe(replace('="../docs/', '="../../docs/'))
     .pipe(replace('href="../src/index.html"', 'href="../../src/index.html"'))
     .pipe(gulp.dest("."));
   var replacePath2 = gulp
     .src("./src/index.html", { base: "./" })
-    .pipe(replace('="../assets/', '="assets/'))
+    .pipe(replace('="/src/assets/', '="assets/'))
     .pipe(replace('="../docs/', '="docs/'))
-    .pipe(replace('="../views/', '="views/'))
+    .pipe(replace('="/src/views/', '="views/'))
     .pipe(replace('="../src/index.html"', '="src/index.html"'))
     .pipe(gulp.dest("."));
   return merge(replacePath1, replacePath2);
